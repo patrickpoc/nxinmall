@@ -8,65 +8,69 @@ interface SectionProps {
 }
 
 export function ContactForm({ content, handleSubmit }: SectionProps) {
+  const inputClasses = "mt-2 w-full rounded-2xl border-none bg-white px-4 py-4 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:shadow-md transition-all duration-300 placeholder:text-gray-400";
+  const labelClasses = "text-[11px] font-black text-brand-900/50 uppercase tracking-[0.2em] ml-1 mb-1";
+
   return (
-    <section className="py-20" id="solicitud">
+    <section className="py-24 bg-gray-50/50" id="solicitud">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="max-w-2xl mx-auto text-center reveal" data-animate="fade-up">
-          <p className="text-sm font-semibold text-brand-700 mb-3">{content.form.kicker}</p>
-          <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05] mb-3">
+        <div className="max-w-2xl mx-auto text-center reveal mb-16" data-animate="fade-up">
+          <p className="text-xs font-bold text-brand-700 mb-4 uppercase tracking-[0.3em]">{content.form.kicker}</p>
+          <h2 className="text-[2.25rem] sm:text-[2.75rem] font-black text-ink font-display leading-[1.05] mb-6">
             {content.form.title}
           </h2>
-          <p className="text-gray-600 leading-relaxed">{content.form.subtitle}</p>
+          <p className="text-gray-600 text-lg leading-relaxed">{content.form.subtitle}</p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="mt-8 bg-white rounded-3xl border border-brand-100 p-7 shadow-[0_24px_60px_-40px_rgba(10,99,214,0.35)]"
+          className="max-w-4xl mx-auto reveal"
+          data-animate="fade-up"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs font-semibold text-gray-500">{content.form.fields.name}</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+            <div className="flex flex-col">
+              <label className={labelClasses}>{content.form.fields.name}</label>
               <input
                 name="nombre"
                 required
-                className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                className={inputClasses}
                 placeholder="Maria Perez"
               />
             </div>
-            <div>
-              <label className="text-xs font-semibold text-gray-500">{content.form.fields.company}</label>
+            <div className="flex flex-col">
+              <label className={labelClasses}>{content.form.fields.company}</label>
               <input
                 name="empresa"
                 required
-                className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                className={inputClasses}
                 placeholder="Agroexportadora Andina"
               />
             </div>
-            <div>
-              <label className="text-xs font-semibold text-gray-500">{content.form.fields.email}</label>
+            <div className="flex flex-col">
+              <label className={labelClasses}>{content.form.fields.email}</label>
               <input
                 name="email"
                 type="email"
                 required
-                className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                className={inputClasses}
                 placeholder="maria@empresa.com"
               />
             </div>
-            <div>
-              <label className="text-xs font-semibold text-gray-500">{content.form.fields.whatsapp}</label>
+            <div className="flex flex-col">
+              <label className={labelClasses}>{content.form.fields.whatsapp}</label>
               <input
                 name="whatsapp"
                 required
-                className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                className={inputClasses}
                 placeholder="+51 999 000 000"
               />
             </div>
-            <div>
-              <label className="text-xs font-semibold text-gray-500">{content.form.fields.country}</label>
+            <div className="flex flex-col sm:col-span-2">
+              <label className={labelClasses}>{content.form.fields.country}</label>
               <select
                 name="pais"
                 required
-                className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm bg-white"
+                className={inputClasses}
                 defaultValue=""
               >
                 <option value="" disabled>
@@ -78,22 +82,25 @@ export function ContactForm({ content, handleSubmit }: SectionProps) {
                 <option value="Ecuador">Ecuador</option>
               </select>
             </div>
+            <div className="sm:col-span-2 flex flex-col">
+              <label className={labelClasses}>{content.form.fields.message}</label>
+              <textarea
+                name="mensaje"
+                rows={4}
+                className={inputClasses}
+                placeholder={content.form.fields.messagePlaceholder}
+              />
+            </div>
           </div>
-          <div className="mt-4">
-            <label className="text-xs font-semibold text-gray-500">{content.form.fields.message}</label>
-            <textarea
-              name="mensaje"
-              rows={4}
-              className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
-              placeholder={content.form.fields.messagePlaceholder}
-            />
+          
+          <div className="mt-12 flex justify-center">
+            <button
+              type="submit"
+              className="w-full sm:w-auto px-12 py-4 rounded-full bg-brand-900 text-white text-lg font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-brand-900/25"
+            >
+              {content.form.submit}
+            </button>
           </div>
-          <button
-            type="submit"
-            className="mt-5 w-full rounded-full bg-brand-900 text-white py-3 text-sm font-semibold hover:bg-brand-900/90 transition-colors"
-          >
-            {content.form.submit}
-          </button>
         </form>
       </div>
     </section>
@@ -102,8 +109,8 @@ export function ContactForm({ content, handleSubmit }: SectionProps) {
 
 export function FaqSection({ content }: { content: any }) {
   return (
-    <section className="py-24 bg-brand-50" id="faq">
-      <div className="max-w-4xl mx-auto px-6">
+    <section className="py-24 bg-gray-50/50" id="faq">
+      <div className="max-w-4xl mx-auto px-6 border-t border-gray-100 pt-24">
         <div className="text-center mb-10 reveal" data-animate="fade-up">
           <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05] mb-3">
             {content.faq.title}
