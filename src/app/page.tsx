@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Globe } from 'lucide-react';
@@ -9,7 +9,7 @@ import { useScrollReveal, useActiveSection } from '@/lib/hooks';
 import { Hero, Benefits, Logistics, Process, Buyers } from '@/components/landing/Sections';
 import { ContactForm, FaqSection } from '@/components/landing/ContactAndFaq';
 
-export default function HomePage() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const langParam = (searchParams.get('lang') || '') as Lang;
   const initialLang: Lang = ['es', 'en', 'pt'].includes(langParam) ? langParam : 'es';
@@ -186,5 +186,13 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={null}>
+      <HomeContent />
+    </Suspense>
   );
 }
