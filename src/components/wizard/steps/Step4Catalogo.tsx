@@ -67,6 +67,7 @@ export default function Step4Catalogo({ onNext, onBack }: Step4Props) {
         precio: { min: prod.precioRef.min, max: prod.precioRef.max, moneda: 'USD' },
         imagen: null,
         descripcion_en: prod.descripcion_en,
+        nxin: prod.nxin,
       });
     }
   };

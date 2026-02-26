@@ -10,6 +10,12 @@ export interface ProductoSeleccionado {
   precio: { min: number; max: number; moneda: 'USD' | 'PEN' };
   imagen: { dataUrl: string; fuente: 'upload' | 'stock' } | null;
   descripcion_en: string;
+  /** Mapeo directo a la taxonomía de la plataforma NXIN Mall */
+  nxin?: {
+    categoria: string;
+    subcategoria: string;
+    esNueva: boolean;
+  };
 }
 
 export interface OnboardingState {
@@ -104,6 +110,11 @@ export interface StoreConfig {
       moq: { valor: number; unidad: string };
       precio: { min: number; max: number; moneda: 'USD' | 'PEN' };
       imagen: { dataUrl: string; fuente: 'upload' | 'stock' } | null;
+      nxin?: {
+        categoria: string;
+        subcategoria: string;
+        esNueva: boolean;
+      };
     }>;
   };
 }

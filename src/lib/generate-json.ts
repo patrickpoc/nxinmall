@@ -54,6 +54,7 @@ export function generateStoreJson(state: OnboardingState): StoreConfig {
         moq: p.moq,
         precio: p.precio,
         imagen: p.imagen,
+        nxin: p.nxin,
       })),
     },
   };
