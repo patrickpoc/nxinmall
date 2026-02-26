@@ -20,11 +20,15 @@ function OnboardingContent() {
     const nombre = searchParams.get('nombre');
     const empresa = searchParams.get('empresa');
     const email = searchParams.get('email');
-    if (nombre || empresa || email) {
+    const whatsapp = searchParams.get('whatsapp');
+    const pais = searchParams.get('pais');
+    if (nombre || empresa || email || whatsapp || pais) {
       setRegistro({
-        ...(nombre ? { nombre } : {}),
-        ...(empresa ? { empresa } : {}),
-        ...(email ? { email } : {}),
+        ...(nombre   ? { nombre }   : {}),
+        ...(empresa  ? { empresa }  : {}),
+        ...(email    ? { email }    : {}),
+        ...(whatsapp ? { whatsapp } : {}),
+        ...(pais     ? { pais }     : {}),
       });
     }
   }, []);

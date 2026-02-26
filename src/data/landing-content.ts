@@ -15,7 +15,7 @@ export const COPY: Record<Lang, {
   footer: { tagline: string; cta: string };
 }> = {
   es: {
-    nav: { suppliers: 'Soy proveedor', process: 'Proceso', faq: 'Preguntas', cta: 'Solicitar acceso' },
+    nav: { suppliers: 'Beneficios', process: 'Proceso', faq: 'Preguntas', cta: 'Solicitar acceso' },
     hero: {
       badge: 'Proveedores exportadores',
       title: 'Tu produccion lista para compradores internacionales.',
@@ -71,11 +71,9 @@ export const COPY: Record<Lang, {
         email: 'Email',
         whatsapp: 'WhatsApp',
         country: 'Pais',
-        message: 'Mensaje',
         countryPlaceholder: 'Selecciona un pais',
-        messagePlaceholder: 'Categorias, volumen, certificaciones.',
       },
-      submit: 'Enviar solicitud',
+      submit: 'Solicitar acceso',
     },
     faq: {
       title: 'Preguntas frecuentes',
@@ -92,7 +90,7 @@ export const COPY: Record<Lang, {
     },
   },
   en: {
-    nav: { suppliers: 'Suppliers', process: 'Process', faq: 'FAQ', cta: 'Request access' },
+    nav: { suppliers: 'Benefits', process: 'Process', faq: 'FAQ', cta: 'Request access' },
     hero: {
       badge: 'Export suppliers',
       title: 'Your production ready for international buyers.',
@@ -148,11 +146,9 @@ export const COPY: Record<Lang, {
         email: 'Email',
         whatsapp: 'WhatsApp',
         country: 'Country',
-        message: 'Message',
         countryPlaceholder: 'Select a country',
-        messagePlaceholder: 'Categories, volume, certifications.',
       },
-      submit: 'Send request',
+      submit: 'Request access',
     },
     faq: {
       title: 'Frequently asked questions',
@@ -169,7 +165,7 @@ export const COPY: Record<Lang, {
     },
   },
   pt: {
-    nav: { suppliers: 'Sou fornecedor', process: 'Processo', faq: 'Perguntas', cta: 'Solicitar acesso' },
+    nav: { suppliers: 'Benefícios', process: 'Processo', faq: 'Perguntas', cta: 'Solicitar acesso' },
     hero: {
       badge: 'Fornecedores exportadores',
       title: 'Sua producao pronta para compradores internacionales.',
@@ -225,11 +221,9 @@ export const COPY: Record<Lang, {
         email: 'Email',
         whatsapp: 'WhatsApp',
         country: 'Pais',
-        message: 'Mensagem',
         countryPlaceholder: 'Selecione um pais',
-        messagePlaceholder: 'Categorias, volumen, certificacoes.',
       },
-      submit: 'Enviar solicitacao',
+      submit: 'Solicitar acesso',
     },
     faq: {
       title: 'Perguntas frequentes',

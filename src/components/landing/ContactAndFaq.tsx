@@ -5,9 +5,10 @@ import { FaqItem } from './LandingComponents';
 interface SectionProps {
   content: any;
   handleSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
+  submitted?: boolean;
 }
 
-export function ContactForm({ content, handleSubmit }: SectionProps) {
+export function ContactForm({ content, handleSubmit, submitted }: SectionProps) {
   const inputClasses = "mt-2 w-full rounded-2xl border-none bg-white px-4 py-4 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:shadow-md transition-all duration-300 placeholder:text-gray-400";
   const labelClasses = "text-[11px] font-black text-brand-900/50 uppercase tracking-[0.2em] ml-1 mb-1";
 
@@ -22,86 +23,89 @@ export function ContactForm({ content, handleSubmit }: SectionProps) {
           <p className="text-gray-600 text-lg leading-relaxed">{content.form.subtitle}</p>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-4xl mx-auto reveal"
-          data-animate="fade-up"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-            <div className="flex flex-col">
-              <label className={labelClasses}>{content.form.fields.name}</label>
-              <input
-                name="nombre"
-                required
-                className={inputClasses}
-                placeholder="Maria Perez"
-              />
+        {submitted ? (
+          <div className="max-w-4xl mx-auto text-center py-16">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-900/10 mb-6">
+              <svg className="w-8 h-8 text-brand-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
             </div>
-            <div className="flex flex-col">
-              <label className={labelClasses}>{content.form.fields.company}</label>
-              <input
-                name="empresa"
-                required
-                className={inputClasses}
-                placeholder="Agroexportadora Andina"
-              />
+            <h3 className="text-2xl font-black text-ink font-display mb-3">¡Solicitud enviada!</h3>
+            <p className="text-gray-600 text-lg">Un ejecutivo te contactará en las próximas 24–48 horas.</p>
+          </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="max-w-4xl mx-auto reveal"
+            data-animate="fade-up"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+              <div className="flex flex-col">
+                <label className={labelClasses}>{content.form.fields.name}</label>
+                <input
+                  name="nombre"
+                  required
+                  className={inputClasses}
+                  placeholder="Maria Perez"
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className={labelClasses}>{content.form.fields.company}</label>
+                <input
+                  name="empresa"
+                  required
+                  className={inputClasses}
+                  placeholder="Agroexportadora Andina"
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className={labelClasses}>{content.form.fields.email}</label>
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  className={inputClasses}
+                  placeholder="maria@empresa.com"
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className={labelClasses}>{content.form.fields.whatsapp}</label>
+                <input
+                  name="whatsapp"
+                  required
+                  className={inputClasses}
+                  placeholder="+51 999 000 000"
+                />
+              </div>
+              <div className="flex flex-col sm:col-span-2">
+                <label className={labelClasses}>{content.form.fields.country}</label>
+                <select
+                  name="pais"
+                  required
+                  className={inputClasses}
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    {content.form.fields.countryPlaceholder}
+                  </option>
+                  <option value="Peru">Peru</option>
+                  <option value="Brasil">Brasil</option>
+                  <option value="Colombia">Colombia</option>
+                  <option value="Ecuador">Ecuador</option>
+                </select>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <label className={labelClasses}>{content.form.fields.email}</label>
-              <input
-                name="email"
-                type="email"
-                required
-                className={inputClasses}
-                placeholder="maria@empresa.com"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label className={labelClasses}>{content.form.fields.whatsapp}</label>
-              <input
-                name="whatsapp"
-                required
-                className={inputClasses}
-                placeholder="+51 999 000 000"
-              />
-            </div>
-            <div className="flex flex-col sm:col-span-2">
-              <label className={labelClasses}>{content.form.fields.country}</label>
-              <select
-                name="pais"
-                required
-                className={inputClasses}
-                defaultValue=""
+
+            <div className="mt-12 flex justify-center">
+              <button
+                type="submit"
+                className="w-full sm:w-auto px-12 py-4 rounded-full bg-brand-900 text-white text-lg font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-brand-900/25"
               >
-                <option value="" disabled>
-                  {content.form.fields.countryPlaceholder}
-                </option>
-                <option value="Peru">Peru</option>
-                <option value="Brasil">Brasil</option>
-                <option value="Colombia">Colombia</option>
-                <option value="Ecuador">Ecuador</option>
-              </select>
+                {content.form.submit}
+              </button>
             </div>
-            <div className="sm:col-span-2 flex flex-col">
-              <label className={labelClasses}>{content.form.fields.message}</label>
-              <textarea
-                name="mensaje"
-                rows={4}
-                className={inputClasses}
-                placeholder={content.form.fields.messagePlaceholder}
-              />
-            </div>
-          </div>
-          
-          <div className="mt-12 flex justify-center">
-            <button
-              type="submit"
-              className="w-full sm:w-auto px-12 py-4 rounded-full bg-brand-900 text-white text-lg font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-brand-900/25"
-            >
-              {content.form.submit}
-            </button>
-          </div>
-        </form>
+          </form>
+        )}
       </div>
     </section>
   );

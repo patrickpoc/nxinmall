@@ -17,6 +17,7 @@ function HomeContent() {
   const [lang, setLang] = useState<Lang>(initialLang);
   const [langOpen, setLangOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   
   const sectionIds = useMemo(() => ['inicio', 'beneficios', 'proceso', 'faq'], []);
   const activeSection = useActiveSection(sectionIds);
@@ -55,26 +56,17 @@ function HomeContent() {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
 
-    const body = [
-      `Nombre: ${data.nombre || ''}`,
-      `Empresa: ${data.empresa || ''}`,
-      `Email: ${data.email || ''}`,
-      `WhatsApp: ${data.whatsapp || ''}`,
-      `Pais: ${data.pais || ''}`,
-      `Mensaje: ${data.mensaje || ''}`,
-    ].join('\n');
-
-    const mailto = `mailto:peru@nxinmall.com?subject=${encodeURIComponent(
-      'Solicitud de proveedor NxinMall',
-    )}&body=${encodeURIComponent(body)}`;
-
-    window.location.href = mailto;
-    form.reset();
+    const res = await fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (res.ok) setSubmitted(true);
   };
 
   return (
@@ -142,7 +134,7 @@ function HomeContent() {
             <a
               href="#solicitud"
               onClick={scrollToId('solicitud')}
-              className="px-5 py-2.5 rounded-full bg-brand-900 text-white text-[16px] font-semibold hover:bg-brand-900/90 transition-colors"
+              className="whitespace-nowrap px-4 sm:px-5 py-1.5 sm:py-2 rounded-full border-2 border-brand-900 text-brand-900 text-[13px] sm:text-[15px] font-black hover:bg-brand-900 hover:text-white transition-all duration-300"
             >
               {content.nav.cta}
             </a>
@@ -157,7 +149,7 @@ function HomeContent() {
         <Logistics content={content} />
         <Process content={content} />
         <Buyers content={content} />
-        <ContactForm content={content} handleSubmit={handleSubmit} />
+        <ContactForm content={content} handleSubmit={handleSubmit} submitted={submitted} />
         <FaqSection content={content} />
       </main>
 

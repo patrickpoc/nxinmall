@@ -21,18 +21,18 @@ export function Hero({ content, scrollToId }: SectionProps) {
             {content.hero.title}
           </h1>
           <p className="text-lg text-gray-600 leading-relaxed mb-6">{content.hero.subtitle}</p>
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3 mt-8">
             <a
               href="#solicitud"
               onClick={scrollToId?.('solicitud')}
-              className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-brand-900 text-white font-semibold text-[16px] hover:bg-brand-900/90 transition-colors"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-brand-900 text-white font-black text-[16px] hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-brand-900/20"
             >
-              {content.hero.primary} <ArrowUpRight className="w-4 h-4" />
+              {content.hero.primary} <ArrowUpRight className="w-4 h-4 stroke-[3]" />
             </a>
             <a
               href="#beneficios"
               onClick={scrollToId?.('beneficios')}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-brand-100 text-ink font-semibold text-[16px] hover:bg-white/70 transition-colors"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-brand-900 font-black text-[16px] hover:bg-brand-50 transition-all duration-300"
             >
               {content.hero.secondary}
             </a>
