@@ -102,17 +102,24 @@ export function ContactForm({ content, handleSubmit }: SectionProps) {
 
 export function FaqSection({ content }: { content: any }) {
   return (
-    <section className="py-20 bg-brand-50" id="faq">
-      <div className="max-w-3xl mx-auto px-6">
-        <div className="text-center mb-8 reveal" data-animate="fade-up">
-          <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05] mb-2">
+    <section className="py-24 bg-brand-50" id="faq">
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="text-center mb-10 reveal" data-animate="fade-up">
+          <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05] mb-3">
             {content.faq.title}
           </h2>
-          <p className="text-gray-500">{content.faq.subtitle}</p>
+          <p className="text-gray-600 max-w-2xl mx-auto">{content.faq.subtitle}</p>
         </div>
-        <div className="flex flex-col gap-4">
-          {content.faq.items.map((faq: any) => (
-            <FaqItem key={faq.q} q={faq.q} a={faq.a} />
+        <div className="flex flex-col gap-6">
+          {content.faq.items.map((faq: any, index: number) => (
+            <div 
+              key={faq.q} 
+              className="reveal" 
+              data-animate="fade-up"
+              style={{ animationDelay: `${index * 120}ms` }}
+            >
+              <FaqItem q={faq.q} a={faq.a} />
+            </div>
           ))}
         </div>
       </div>

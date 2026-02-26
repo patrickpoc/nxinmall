@@ -113,33 +113,35 @@ export function Logistics({ content }: SectionProps) {
 
 export function Process({ content }: SectionProps) {
   return (
-    <section className="py-20 bg-white" id="proceso">
+    <section className="py-12 bg-white" id="proceso">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center max-w-2xl mx-auto mb-10 reveal" data-animate="fade-up">
-          <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05]">
-            {content.process.title}
-          </h2>
-          <p className="text-gray-600 mt-3">{content.process.subtitle}</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {content.process.steps.map((step: any, index: number) => (
-            <div
-              key={step.title}
-              className="bg-white rounded-2xl border border-brand-100 p-4 reveal"
-              data-animate="fade-up"
-              style={{ animationDelay: `${index * 180}ms` }}
-            >
-              <div className="flex items-center gap-3">
-                <span className="w-8 h-8 rounded-full bg-brand-900 text-white text-xs font-semibold flex items-center justify-center">
-                  0{index + 1}
-                </span>
-                <div>
-                  <p className="font-medium text-ink">{step.title}</p>
-                  <p className="text-sm text-gray-600">{step.desc}</p>
+        <div className="bg-gray-50/80 rounded-[40px] border border-gray-100 p-8 sm:p-16">
+          <div className="text-center max-w-2xl mx-auto mb-12 reveal" data-animate="fade-up">
+            <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05]">
+              {content.process.title}
+            </h2>
+            <p className="text-gray-600 mt-4 text-lg">{content.process.subtitle}</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {content.process.steps.map((step: any, index: number) => (
+              <div
+                key={step.title}
+                className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm reveal"
+                data-animate="fade-up"
+                style={{ animationDelay: `${index * 180}ms` }}
+              >
+                <div className="flex flex-col gap-4">
+                  <span className="w-10 h-10 rounded-full bg-brand-900 text-white text-sm font-bold flex items-center justify-center shrink-0">
+                    0{index + 1}
+                  </span>
+                  <div>
+                    <p className="font-bold text-ink text-lg mb-1">{step.title}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed">{step.desc}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

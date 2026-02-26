@@ -22,19 +22,48 @@ export function GradientIcon({ node, id }: { node: IconNode; id: string }) {
   );
 }
 
+import { ChevronDown } from 'lucide-react';
+import clsx from 'clsx';
+
 export function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-brand-100 rounded-xl overflow-hidden bg-white">
+    <div 
+      className={clsx(
+        "border rounded-2xl overflow-hidden transition-all duration-500",
+        open ? "border-brand-500 bg-brand-50/30 shadow-sm" : "border-brand-100 bg-white hover:border-brand-300"
+      )}
+    >
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full flex justify-between items-center px-4 py-3 text-left text-sm font-medium text-brand-900"
+        className="w-full flex justify-between items-center px-6 py-5 text-left transition-colors"
       >
-        <span>{q}</span>
-        <span className="text-brand-500">{open ? '−' : '+'}</span>
+        <span className={clsx(
+          "text-lg sm:text-xl font-black font-display leading-tight transition-colors",
+          open ? "text-brand-900" : "text-ink"
+        )}>
+          {q}
+        </span>
+        <ChevronDown 
+          className={clsx(
+            "w-6 h-6 text-brand-500 transition-transform duration-500 shrink-0 ml-4",
+            open && "rotate-180"
+          )} 
+        />
       </button>
-      {open && <div className="px-4 pb-3 text-sm text-gray-600 leading-relaxed">{a}</div>}
+      <div 
+        className={clsx(
+          "grid transition-all duration-500 ease-in-out",
+          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className="px-6 pb-6 text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl">
+            {a}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
