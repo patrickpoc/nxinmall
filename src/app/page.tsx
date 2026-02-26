@@ -326,7 +326,8 @@ function GradientIcon({ node, id }: { node: IconNode; id: string }) {
       </defs>
       {node.map(([tag, attrs], index) => {
         const Tag = tag;
-        return <Tag key={`${id}-${index}`} {...attrs} />;
+        const { key: _key, ...rest } = attrs;
+        return <Tag key={`${id}-${index}`} {...rest} />;
       })}
     </svg>
   );
@@ -362,6 +363,7 @@ export default function HomePage() {
   const [lang, setLang] = useState<Lang>(initialLang);
   const [langOpen, setLangOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('inicio');
   const content = COPY[lang];
 
   useEffect(() => {
@@ -382,6 +384,53 @@ export default function HomePage() {
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const scrollToId = (id: string) => (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    const target = document.getElementById(id);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  useEffect(() => {
+    const sectionIds = ['inicio', 'beneficios', 'proceso', 'faq'];
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    let ticking = false;
+    const update = () => {
+      const offset = 120;
+      const scrollY = window.scrollY + offset;
+      let current = sectionIds[0];
+
+      sections.forEach((section) => {
+        if (scrollY >= section.offsetTop) {
+          current = section.id;
+        }
+      });
+
+      setActiveSection(current);
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -449,15 +498,29 @@ export default function HomePage() {
             <img src="/visuals/logo.png" alt="NxinMall" className="h-10 w-auto" />
           </div>
           <nav className="hidden md:flex items-center gap-6 text-[16px] font-bold text-gray-600 justify-center">
-            <Link href="#beneficios" className="hover:text-brand-900 transition-colors">
+            <a
+              href="#beneficios"
+              onClick={scrollToId('beneficios')}
+              className={`transition-colors ${
+                activeSection === 'beneficios' ? 'text-brand-900' : 'hover:text-brand-900'
+              }`}
+            >
               {content.nav.suppliers}
-            </Link>
-            <Link href="#proceso" className="hover:text-brand-900 transition-colors">
+            </a>
+            <a
+              href="#proceso"
+              onClick={scrollToId('proceso')}
+              className={`transition-colors ${activeSection === 'proceso' ? 'text-brand-900' : 'hover:text-brand-900'}`}
+            >
               {content.nav.process}
-            </Link>
-            <Link href="#faq" className="hover:text-brand-900 transition-colors">
+            </a>
+            <a
+              href="#faq"
+              onClick={scrollToId('faq')}
+              className={`transition-colors ${activeSection === 'faq' ? 'text-brand-900' : 'hover:text-brand-900'}`}
+            >
               {content.nav.faq}
-            </Link>
+            </a>
           </nav>
           <div className="flex-1 flex items-center justify-end gap-3">
             <div className="relative">
@@ -489,12 +552,13 @@ export default function HomePage() {
                 </div>
               )}
             </div>
-            <Link
+            <a
               href="#solicitud"
+              onClick={scrollToId('solicitud')}
               className="px-5 py-2.5 rounded-full bg-brand-900 text-white text-[16px] font-semibold hover:bg-brand-900/90 transition-colors"
             >
               {content.nav.cta}
-            </Link>
+            </a>
           </div>
         </div>
         {!scrolled && <div className="h-px w-full bg-transparent" />}
@@ -512,18 +576,20 @@ export default function HomePage() {
               </h1>
               <p className="text-lg text-gray-600 leading-relaxed mb-6">{content.hero.subtitle}</p>
               <div className="flex flex-wrap justify-center gap-3">
-                <Link
+                <a
                   href="#solicitud"
+                  onClick={scrollToId('solicitud')}
                   className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-brand-900 text-white font-semibold text-[16px] hover:bg-brand-900/90 transition-colors"
                 >
                   {content.hero.primary} <ArrowUpRight className="w-4 h-4" />
-                </Link>
-                <Link
+                </a>
+                <a
                   href="#beneficios"
+                  onClick={scrollToId('beneficios')}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-brand-100 text-ink font-semibold text-[16px] hover:bg-white/70 transition-colors"
                 >
                   {content.hero.secondary}
-                </Link>
+                </a>
               </div>
             </div>
           </div>
@@ -533,11 +599,7 @@ export default function HomePage() {
                 className="relative overflow-hidden rounded-[28px] border border-brand-100 bg-white aspect-[16/7] reveal-zoom"
                 data-animate="soft-zoom"
               >
-                <img
-                  src="/visuals/hero.jpg"
-                  alt="Cadena de suministro agricola"
-                  className="w-full h-full object-cover"
-                />
+                <img src="/visuals/hero.png" alt="NxinMall Banner" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(10,99,214,0.18),transparent_55%)]" />
               </div>
             </div>
@@ -587,7 +649,7 @@ export default function HomePage() {
                 className="rounded-[26px] border border-brand-100 overflow-hidden bg-white shadow-[0_24px_60px_-40px_rgba(10,99,214,0.35)] reveal-zoom"
                 data-animate="soft-zoom"
               >
-                <img src="/visuals/logistics.jpg" alt="Logistica y exportacion" className="w-full h-full object-cover" />
+                <img src="/visuals/control.png" alt="Control sobre cada etapa" className="w-full h-full object-cover" />
               </div>
             </div>
           </div>
@@ -631,7 +693,7 @@ export default function HomePage() {
                 className="rounded-[26px] border border-brand-100 overflow-hidden bg-white shadow-[0_24px_60px_-40px_rgba(10,99,214,0.35)] reveal-zoom"
                 data-animate="soft-zoom"
               >
-                <img src="/visuals/buyers.jpg" alt="Compradores globales" className="w-full h-full object-cover" />
+                <img src="/visuals/buyers.png" alt="Catalogo y demanda activa" className="w-full h-full object-cover" />
               </div>
             </div>
             <div className="order-1 lg:order-2 reveal" data-animate="fade-up">

@@ -41,7 +41,7 @@ body {
 
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -51,7 +51,7 @@ body {
 }
 
 .animate-fade-up {
-  animation: fadeUp 0.9s ease both;
+  animation: fadeUp 5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animate-fade-in {
@@ -68,22 +68,22 @@ body {
 }
 
 .animate-soft-zoom {
-  animation: softZoom 1.4s ease both;
+  animation: softZoom 6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes softZoom {
-  from { transform: scale(1.01); opacity: 0; }
+  from { transform: scale(1.006); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
 .reveal {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(8px);
 }
 
 .reveal-zoom {
   opacity: 0;
-  transform: scale(1.01);
+  transform: scale(1.006);
 }
 
 .reveal.is-visible {
