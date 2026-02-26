@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #f7f4ee;
-  --color-brand-100: #efe7d8;
-  --color-brand-500: #1f7a68;
-  --color-brand-700: #175b50;
-  --color-brand-900: #0f3f38;
-  --color-ink: #111311;
-  --color-success: #4ba66a;
+  --color-brand-50: #f4f9ff;
+  --color-brand-100: #eaf3ff;
+  --color-brand-500: #1a9bff;
+  --color-brand-700: #108fff;
+  --color-brand-900: #0a63d6;
+  --color-ink: #0b0b0b;
+  --color-success: #5fbf7a;
 
-  --font-sans: var(--font-sora), 'Segoe UI', sans-serif;
-  --font-display: var(--font-fraunces), 'Times New Roman', serif;
+  --font-sans: var(--font-inter), 'Segoe UI', sans-serif;
+  --font-display: var(--font-inter), 'Segoe UI', sans-serif;
 }
 
 :root {
-  --store-color: #0f3f38;
+  --store-color: #0a63d6;
 }
 
 html {
@@ -24,8 +24,8 @@ html {
 body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  background: radial-gradient(circle at 15% 20%, #ffffff 0%, #f7f4ee 45%, #efe7d8 100%);
-  color: #111311;
+  background-color: #ffffff;
+  color: #0b0b0b;
 }
 
 .font-display {
@@ -57,4 +57,22 @@ body {
 
 .animate-float-up {
   animation: floatUp 0.8s ease both;
+}
+
+.animate-soft-zoom {
+  animation: softZoom 1.1s ease both;
+}
+
+@keyframes softZoom {
+  from { transform: scale(1.02); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-float-up,
+  .animate-soft-zoom {
+    animation: none;
+  }
 }

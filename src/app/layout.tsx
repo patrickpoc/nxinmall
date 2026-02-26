@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { Fraunces, Sora } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 
-const sora = Sora({ subsets: ['latin'], variable: '--font-sora' });
-const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: 'NxinMall | Exportadores',
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${sora.variable} ${fraunces.variable}`}>
+    <html lang="es" className={inter.variable}>
       <body>{children}</body>
     </html>
   );
