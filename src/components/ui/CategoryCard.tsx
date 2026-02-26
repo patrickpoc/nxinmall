@@ -3,6 +3,9 @@
 import clsx from 'clsx';
 import { CategoriaCatalogo } from '@/data/catalog';
 
+import { useOnboardingStore } from '@/lib/store';
+import { t, TKey } from '@/lib/i18n';
+
 interface CategoryCardProps {
   categoria: CategoriaCatalogo;
   selected: boolean;
@@ -10,6 +13,10 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({ categoria, selected, onClick }: CategoryCardProps) {
+  const { idioma } = useOnboardingStore();
+  const nombreTraducido = t(`cat_${categoria.id}` as TKey, idioma);
+  const subtituloTraducido = t(`cat_${categoria.id}_sub` as TKey, idioma);
+
   return (
     <button
       type="button"
@@ -37,10 +44,10 @@ export default function CategoryCard({ categoria, selected, onClick }: CategoryC
         className="font-black text-xs uppercase tracking-widest leading-tight"
         style={selected ? { color: categoria.colorPrimario } : { color: '#0b0b0b' }}
       >
-        {categoria.nombre}
+        {nombreTraducido}
       </p>
       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter leading-snug">
-        {categoria.subtitulo}
+        {subtituloTraducido}
       </p>
     </button>
   );

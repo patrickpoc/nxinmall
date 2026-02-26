@@ -105,13 +105,15 @@ export default function Step4Catalogo({ onNext, onBack }: Step4Props) {
   const labelClass = "text-[11px] font-black text-brand-900/50 uppercase tracking-[0.2em] ml-1 mb-1";
   const inputClass = "w-full px-4 py-3 text-sm rounded-2xl bg-gray-50 border-none shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:bg-white focus:shadow-md transition-all duration-300";
 
+  const catNombreTraducido = catData ? t(`cat_${catData.id}` as TKey, idioma) : '';
+
   return (
     <div className="flex flex-col gap-6">
       {catData && (
         <div className="flex items-center gap-4 bg-gray-50/50 p-4 rounded-2xl border border-gray-100/50">
           <span className="text-4xl filter drop-shadow-sm">{catData.emoji}</span>
           <div className="flex-1">
-            <h3 className="font-black text-ink text-lg uppercase tracking-tight">{catData.nombre}</h3>
+            <h3 className="font-black text-ink text-lg uppercase tracking-tight">{catNombreTraducido}</h3>
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t('paso4Subtitulo', idioma)}</p>
           </div>
           {selected.length > 0 && (
@@ -278,14 +280,14 @@ export default function Step4Catalogo({ onNext, onBack }: Step4Props) {
           onClick={onBack}
           className="px-6 py-3 rounded-full border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 hover:text-ink transition-all duration-300"
         >
-          ← {t('btnAtras', idioma)}
+          {t('btnAtras', idioma)}
         </button>
         <button
           type="button"
           onClick={handleNext}
           className="px-8 py-3 rounded-full bg-brand-900 text-white text-sm font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-brand-900/20"
         >
-          {t('btnSiguiente', idioma)} →
+          {t('btnSiguiente', idioma)}
         </button>
       </div>
     </div>

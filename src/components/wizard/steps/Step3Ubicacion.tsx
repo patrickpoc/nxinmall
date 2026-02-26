@@ -277,14 +277,14 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
           onClick={onBack}
           className="px-6 py-3 rounded-full border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 hover:text-ink transition-all duration-300"
         >
-          ← {t('btnAtras', idioma)}
+          {t('btnAtras', idioma)}
         </button>
         <button
           type="button"
           onClick={handleNext}
           className="px-8 py-3 rounded-full bg-brand-900 text-white text-sm font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-brand-900/20"
         >
-          {t('btnSiguiente', idioma)} →
+          {t('btnSiguiente', idioma)}
         </button>
       </div>
     </div>

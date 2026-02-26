@@ -18,6 +18,18 @@ const CARGOS = [
 
 const PAISES = ['Peru', 'Colombia', 'Ecuador', 'Chile', 'Bolivia', 'Brasil', 'Argentina', 'México', 'Otro'];
 
+const PREFIJOS: Record<string, string> = {
+  Peru: '+51',
+  Colombia: '+57',
+  Ecuador: '+593',
+  Chile: '+56',
+  Bolivia: '+591',
+  Brasil: '+55',
+  Argentina: '+54',
+  México: '+52',
+  Otro: '+',
+};
+
 interface Step1Props {
   onNext: () => void;
 }
@@ -45,6 +57,7 @@ export default function Step1Registro({ onNext }: Step1Props) {
   });
 
   const whatsapp = watch('whatsapp');
+  const paisSeleccionado = watch('pais');
 
   const onSubmit = (data: Step1Data) => {
     setRegistro(data);
@@ -61,6 +74,17 @@ export default function Step1Registro({ onNext }: Step1Props) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+      {/* País (MOVIDO AL INICIO) */}
+      <div className="flex flex-col sm:col-span-2">
+        <label className={labelClass}>{t('paisPaso1Label', idioma)}</label>
+        <select {...register('pais')} className={inputClass(errors.pais)}>
+          {PAISES.map((p) => (
+            <option key={p} value={p}>{p}</option>
+          ))}
+        </select>
+        {errors.pais && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.pais.message}</p>}
+      </div>
+
       {/* Nombre */}
       <div className="flex flex-col">
         <label className={labelClass}>{t('nombreLabel', idioma)}</label>
@@ -103,6 +127,7 @@ export default function Step1Registro({ onNext }: Step1Props) {
           value={whatsapp}
           onChange={(e) => setValue('whatsapp', e.target.value)}
           error={errors.whatsapp?.message}
+          defaultCountryCode={PREFIJOS[paisSeleccionado] || '+51'}
         />
       </div>
 
@@ -130,17 +155,6 @@ export default function Step1Registro({ onNext }: Step1Props) {
           ))}
         </select>
         {errors.cargo && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.cargo.message}</p>}
-      </div>
-
-      {/* País */}
-      <div className="flex flex-col sm:col-span-2">
-        <label className={labelClass}>{t('paisPaso1Label', idioma)}</label>
-        <select {...register('pais')} className={inputClass(errors.pais)}>
-          {PAISES.map((p) => (
-            <option key={p} value={p}>{p}</option>
-          ))}
-        </select>
-        {errors.pais && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.pais.message}</p>}
       </div>
 
       <div className="sm:col-span-2 mt-4">

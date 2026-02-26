@@ -26,7 +26,7 @@ const T = {
     cargoLabel: 'Cargo *',
     cargoPlaceholder: 'Selecciona tu cargo',
     paisPaso1Label: 'País *',
-    btnContinuar: 'Continuar →',
+    btnContinuar: 'Continuar',
     opcional: '(opcional)',
     // Paso 2 — Perfil
     paso2Titulo: '¿Qué tipo de productos ofreces?',
@@ -106,7 +106,7 @@ const T = {
     resumenFooterLeyenda: 'Al enviar, confirmas que la información es veraz y autorizas el contacto comercial.',
     btnEnviar: 'Enviar al equipo NxinMall',
     btnDescargar: 'Descargar copia de mi perfil (.json)',
-    btnRegresar: '← Regresar',
+    btnRegresar: 'Regresar',
     procesando: 'Procesando...',
     // ProductRow
     moqLabel: 'MOQ (cantidad mínima de pedido)',
@@ -116,8 +116,8 @@ const T = {
     fotoProductoHint: 'JPG, PNG hasta 5MB',
     seleccionadoBadge: 'Seleccionado',
     // Botones nav
-    btnAtras: '← Atrás',
-    btnSiguiente: 'Siguiente →',
+    btnAtras: 'Atrás',
+    btnSiguiente: 'Siguiente',
     // Errores
     errCategoria: 'Selecciona una categoría',
     errTagline: 'El tagline debe tener al menos 10 caracteres',
@@ -127,6 +127,19 @@ const T = {
     errNivel3: 'Selecciona esta opción',
     errDireccion: 'La dirección es requerida',
     errProductos: 'Selecciona al menos un producto',
+    // Categories
+    cat_frutas: 'Frutas y Verduras',
+    cat_frutas_sub: 'Frutas premium para el mundo',
+    cat_flores: 'Flores de Exportación',
+    cat_flores_sub: 'Flores frescas con mayor vida en florero',
+    cat_viveros: 'Viveros y Plantas',
+    cat_viveros_sub: 'Plantones de calidad certificada',
+    cat_empacadoras: 'Materiales de Empaque',
+    cat_empacadoras_sub: 'Empaque seguro para exportación agrícola',
+    cat_plasticos: 'Plásticos Agrícolas',
+    cat_plasticos_sub: 'Plásticos de alta resistencia UV para campo',
+    cat_insumos: 'Insumos Agrícolas',
+    cat_insumos_sub: 'Insumos certificados para producción de exportación',
   },
   pt: {
     // Meta
@@ -153,7 +166,7 @@ const T = {
     cargoLabel: 'Cargo *',
     cargoPlaceholder: 'Selecione seu cargo',
     paisPaso1Label: 'País *',
-    btnContinuar: 'Continuar →',
+    btnContinuar: 'Continuar',
     opcional: '(opcional)',
     // Paso 2 — Perfil
     paso2Titulo: 'Que tipo de produtos você oferece?',
@@ -173,7 +186,7 @@ const T = {
     // Paso 3 — Ubicación
     paso3Titulo: 'Indique a localização da sua empresa ou ponto de operação principal.',
     paisLabel: 'País *',
-    paisPlaceholder: 'Seleccione um país',
+    paisPlaceholder: 'Selecione um país',
     nivel1LabelPeru: 'Estado/Departamento *',
     nivel1PlaceholderPeru: 'Selecione uma opção',
     nivel1PlaceholderPrimero: 'Primeiro selecione um estado',
@@ -209,7 +222,7 @@ const T = {
     // Paso 4 — Catálogo
     paso4Subtitulo: 'Marque os produtos que você oferece',
     paso4Buscar: 'Buscar produto...',
-    paso4SinResultados: 'Sem resultados. Você pode adicioná-lo com o botão abaixo.',
+    paso4SinResultados: 'Sem resultados. Você pode adicioná-lo com o botón abaixo.',
     paso4SeleccionadoBadge: 'selecionado',
     paso4SeleccionadosBadge: 'selecionados',
     paso4AgregarPersonalizado: 'Adicionar produto que não está na lista',
@@ -233,7 +246,7 @@ const T = {
     resumenFooterLeyenda: 'Ao enviar, você confirma que as informações são verdadeiras e autoriza o contato comercial.',
     btnEnviar: 'Enviar para a equipe NxinMall',
     btnDescargar: 'Baixar cópia do meu perfil (.json)',
-    btnRegresar: '← Voltar',
+    btnRegresar: 'Voltar',
     procesando: 'Processando...',
     // ProductRow
     moqLabel: 'MOQ (quantidade mínima de pedido)',
@@ -243,8 +256,8 @@ const T = {
     fotoProductoHint: 'JPG, PNG até 5MB',
     seleccionadoBadge: 'Selecionado',
     // Botones nav
-    btnAtras: '← Voltar',
-    btnSiguiente: 'Próximo →',
+    btnAtras: 'Voltar',
+    btnSiguiente: 'Próximo',
     // Errores
     errCategoria: 'Selecione uma categoria',
     errTagline: 'O tagline deve ter pelo menos 10 caracteres',
@@ -254,6 +267,19 @@ const T = {
     errNivel3: 'Selecione esta opção',
     errDireccion: 'O endereço é obrigatório',
     errProductos: 'Selecione pelo menos um produto',
+    // Categories
+    cat_frutas: 'Frutas e Verduras',
+    cat_frutas_sub: 'Frutas premium para o mundo',
+    cat_flores: 'Flores de Exportação',
+    cat_flores_sub: 'Flores frescas com maior vida útil',
+    cat_viveros: 'Viveiros e Plantas',
+    cat_viveros_sub: 'Mudas de qualidade certificada',
+    cat_empacadoras: 'Materiais de Embalagem',
+    cat_empacadoras_sub: 'Embalagem segura para exportação agrícola',
+    cat_plasticos: 'Plásticos Agrícolas',
+    cat_plasticos_sub: 'Plásticos de alta resistência UV para campo',
+    cat_insumos: 'Insumos Agrícolas',
+    cat_insumos_sub: 'Insumos certificados para produção de exportação',
   },
 } as const;
 

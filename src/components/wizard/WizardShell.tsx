@@ -109,7 +109,7 @@ export default function WizardShell({
                 onClick={onBack}
                 className="px-6 py-3 rounded-full border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 hover:text-ink transition-all duration-300"
               >
-                ← {backLabel}
+                {backLabel}
               </button>
             ) : (
               <div />
@@ -121,7 +121,7 @@ export default function WizardShell({
                 disabled={nextDisabled || isLoading}
                 className="px-8 py-3 rounded-full bg-brand-900 text-white text-sm font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 transition-all duration-300 shadow-lg shadow-brand-900/20"
               >
-                {isLoading ? 'Procesando...' : `${nextLabel} →`}
+                {isLoading ? 'Procesando...' : nextLabel}
               </button>
             )}
           </div>
