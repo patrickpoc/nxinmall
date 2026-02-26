@@ -2,241 +2,323 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Globe, Shield, FileText, Truck, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowUpRight, BadgeCheck, ClipboardCheck, Globe2, LineChart, ShieldCheck } from 'lucide-react';
 
 const BENEFITS = [
   {
-    icon: Globe,
-    title: 'Acceso a nuevos mercados',
-    desc: 'Tendrás oportunidades para que tus productos lleguen a nuevos destinos internacionales.',
+    icon: Globe2,
+    title: 'Acceso internacional validado',
+    desc: 'Conecta con compradores globales con procesos de compliance y trazabilidad desde el primer contacto.',
   },
   {
-    icon: Shield,
-    title: 'Transacciones seguras',
-    desc: 'Olvídate de las preocupaciones por los pagos. Operamos con verificación KYB y trazabilidad.',
+    icon: ShieldCheck,
+    title: 'Operación segura y documentada',
+    desc: 'Contratos, documentos y pagos bajo un flujo KYB que prioriza seguridad y claridad comercial.',
   },
   {
-    icon: FileText,
-    title: 'Documentos y pagos en línea',
-    desc: 'Revisa el estado de los pagos y sube o descarga documentos en cualquier momento.',
+    icon: LineChart,
+    title: 'Datos para negociar mejor',
+    desc: 'Tendencias y visibilidad de demanda para que cotices con más confianza.',
+  },
+];
+
+const PROCESS = [
+  {
+    icon: ClipboardCheck,
+    title: 'Solicitud de acceso',
+    desc: 'Completa el formulario con la información de tu empresa y productos.',
   },
   {
-    icon: Truck,
-    title: 'Seguimiento de carga',
-    desc: 'Coordina la logística con COSCO o tu proveedor y haz seguimiento del envío.',
+    icon: ShieldCheck,
+    title: 'Validación ejecutiva',
+    desc: 'Nuestro equipo revisa tu operación, certificados y capacidad exportadora.',
+  },
+  {
+    icon: BadgeCheck,
+    title: 'Onboarding con enlace único',
+    desc: 'Te enviamos un link personalizado para activar tu tienda B2B.',
   },
 ];
 
 const FAQS = [
   {
-    q: '¿NxinMall tiene costo adicional?',
-    a: 'Las tarifas se muestran automáticamente según el método de pago seleccionado. El onboarding es gratuito.',
+    q: '¿Por qué no hay onboarding directo?',
+    a: 'El acceso es por invitación para garantizar la calidad de la oferta y cumplir con requisitos comerciales y regulatorios.',
   },
   {
-    q: '¿Cómo obtengo acceso?',
-    a: 'Completa el formulario de onboarding y nuestro equipo configurará tu tienda en la plataforma en menos de 24 horas.',
+    q: '¿Cuánto demora la validación?',
+    a: 'El equipo responde en menos de 48 horas hábiles con el estado de tu solicitud.',
   },
   {
-    q: '¿Qué monedas manejan?',
-    a: 'Precios en USD y liquidación en USD o moneda local según el acuerdo comercial.',
-  },
-  {
-    q: '¿Quién coordina la logística?',
-    a: 'Puede ser COSCO o el proveedor logístico del vendedor según el acuerdo establecido.',
-  },
-  {
-    q: '¿Necesito experiencia previa en exportación?',
-    a: 'No es indispensable. Nuestro equipo te guía en cada etapa del proceso desde el KYB hasta tu primera venta.',
+    q: '¿Qué información debo tener a la mano?',
+    a: 'RUC o equivalente, líneas de producto, capacidad mensual, certificaciones y contacto comercial.',
   },
 ];
 
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-gray-200 rounded-xl overflow-hidden bg-brand-50">
+    <div className="border border-brand-100 rounded-xl overflow-hidden bg-white">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full flex justify-between items-center px-5 py-4 text-left text-sm font-semibold text-brand-900"
+        className="w-full flex justify-between items-center px-4 py-3 text-left text-sm font-semibold text-brand-900"
       >
         <span>{q}</span>
-        {open ? <ChevronUp className="w-4 h-4 flex-shrink-0" /> : <ChevronDown className="w-4 h-4 flex-shrink-0" />}
+        <span className="text-brand-500">{open ? '−' : '+'}</span>
       </button>
-      {open && (
-        <div className="px-5 pb-4 text-sm text-ink leading-relaxed">{a}</div>
-      )}
+      {open && <div className="px-4 pb-3 text-sm text-gray-600 leading-relaxed">{a}</div>}
     </div>
   );
 }
 
 export default function HomePage() {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    const body = [
+      `Nombre: ${data.nombre || ''}`,
+      `Empresa: ${data.empresa || ''}`,
+      `Cargo: ${data.cargo || ''}`,
+      `Email: ${data.email || ''}`,
+      `WhatsApp: ${data.whatsapp || ''}`,
+      `País: ${data.pais || ''}`,
+      `Categoría principal: ${data.categoria || ''}`,
+      `Capacidad mensual: ${data.capacidad || ''}`,
+      `Mensaje: ${data.mensaje || ''}`,
+    ].join('\n');
+
+    const mailto = `mailto:peru@nxinmall.com?subject=${encodeURIComponent(
+      'Solicitud de acceso NxinMall',
+    )}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailto;
+    form.reset();
+  };
+
   return (
-    <div className="min-h-screen bg-brand-50">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-brand-50 border-b border-gray-200 z-50 py-4">
+    <div className="min-h-screen text-ink">
+      <header className="fixed top-0 left-0 right-0 bg-brand-50/90 backdrop-blur border-b border-brand-100 z-50 py-3">
         <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
-          <div className="text-xl font-bold text-ink">
+          <div className="text-lg font-semibold text-ink">
             Nxin<span className="text-brand-900">Mall</span>
           </div>
           <Link
-            href="/onboarding"
-            className="px-5 py-2 rounded-full bg-brand-900 text-white text-sm font-semibold hover:bg-brand-900/90 transition-colors"
+            href="#solicitud"
+            className="px-4 py-2 rounded-full bg-brand-900 text-white text-sm font-semibold hover:bg-brand-900/90 transition-colors"
           >
-            Solicitar demo
+            Solicitar acceso
           </Link>
         </div>
       </header>
 
       <main>
-        {/* Hero */}
-        <section className="pt-36 pb-24 bg-brand-50" id="inicio">
-          <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
-            {/* Left */}
-            <div className="animate-fade-up">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-100 text-brand-900 rounded-full text-xs font-medium mb-5">
-                Exportadores B2B
+        <section className="pt-28 pb-14" id="inicio">
+          <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 items-center">
+            <div className="animate-float-up">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-white text-brand-700 rounded-full text-xs font-semibold border border-brand-100 mb-4">
+                Acceso por invitación · Exportadores B2B
               </span>
-              <h1 className="text-4xl sm:text-5xl font-bold text-brand-700 leading-tight mb-5">
-                ¿Eres exportador agrícola?
+              <h1 className="text-4xl sm:text-5xl font-semibold text-ink leading-tight mb-4 font-display">
+                Tu canal directo a compradores internacionales.
               </h1>
-              <p className="text-lg text-ink mb-3 leading-relaxed">
-                NxinMall es una plataforma global B2B para exportadores agrícolas. Operamos hoy en Brasil y Perú con alcance internacional.
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                Primero recibimos tu solicitud y validamos tu operación. Luego un ejecutivo te envía un enlace único de
+                onboarding.
               </p>
-              <p className="text-base text-gray-500 mb-8 leading-relaxed">
-                Intermediario neutral que conecta compradores y proveedores internacionales mediante servicios digitales.
-              </p>
-              <Link
-                href="/onboarding"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-brand-900 text-white font-semibold text-base hover:bg-brand-900/90 transition-colors shadow-sm"
-              >
-                Activar mi tienda →
-              </Link>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href="#solicitud"
+                  className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-brand-900 text-white font-semibold text-sm hover:bg-brand-900/90 transition-colors"
+                >
+                  Iniciar solicitud <ArrowUpRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="#proceso"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-brand-100 text-ink font-semibold text-sm hover:bg-white/70 transition-colors"
+                >
+                  Ver proceso
+                </Link>
+              </div>
             </div>
 
-            {/* Right — quick info card */}
-            <div>
-              <div className="bg-white rounded-2xl border border-gray-200 p-7 shadow-sm max-w-md ml-auto animate-fade-up">
-                <p className="text-xs font-medium text-brand-900 mb-2">Solicita onboarding</p>
-                <h3 className="text-xl font-semibold text-ink mb-5">Acceso para exportadores</h3>
-
-                <div className="flex flex-col gap-2.5 mb-6">
-                  {[
-                    { emoji: '🍇', label: 'Frutas y verduras de exportación' },
-                    { emoji: '🌹', label: 'Flores premium' },
-                    { emoji: '🌱', label: 'Viveros y ornamentales' },
-                    { emoji: '📦', label: 'Materiales de empaque' },
-                    { emoji: '🧴', label: 'Plásticos agrícolas' },
-                    { emoji: '🌾', label: 'Insumos agroquímicos' },
-                  ].map(({ emoji, label }) => (
-                    <div key={label} className="flex items-center gap-2.5 text-sm text-gray-600">
-                      <span>{emoji}</span>
-                      {label}
+            <div className="animate-fade-up">
+              <div className="bg-white rounded-3xl border border-brand-100 p-6 shadow-[0_24px_60px_-40px_rgba(15,63,56,0.6)]">
+                <p className="text-xs font-semibold text-brand-700 mb-4">Ruta de activación</p>
+                <div className="flex flex-col gap-4">
+                  {PROCESS.map(({ icon: Icon, title, desc }) => (
+                    <div key={title} className="flex gap-3">
+                      <div className="w-9 h-9 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-700">
+                        <Icon className="w-4.5 h-4.5" strokeWidth={1.6} />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-sm text-ink">{title}</p>
+                        <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
-
-                <Link
-                  href="/onboarding"
-                  className="block w-full py-3 rounded-full bg-brand-900 text-white font-semibold text-sm text-center hover:bg-brand-900/90 transition-colors"
-                >
-                  Comenzar onboarding gratuito
-                </Link>
-                <p className="text-xs text-center text-gray-400 mt-3">
-                  Tu tienda configurada en menos de 24 horas.
-                </p>
+                <div className="mt-5 rounded-2xl bg-brand-50 border border-brand-100 px-4 py-3 text-xs text-brand-700">
+                  El onboarding no está habilitado de forma pública.
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Benefits */}
-        <section className="py-24 bg-brand-100">
+        <section className="py-16 bg-white" id="proceso">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center max-w-xl mx-auto mb-10">
-              <h2 className="text-3xl font-bold text-ink">Por qué con NxinMall</h2>
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <h2 className="text-3xl font-semibold text-ink font-display">Qué gana tu operación</h2>
+              <p className="text-gray-500 mt-3">
+                Diseñado para exportadores agrícolas que necesitan velocidad, compliance y acceso a demanda real.
+              </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {BENEFITS.map(({ icon: Icon, title, desc }) => (
-                <div key={title} className="p-5 rounded-2xl bg-white border border-gray-200">
-                  <div className="w-12 h-12 rounded-2xl bg-brand-50 border border-gray-200 flex items-center justify-center text-brand-900 mb-3">
-                    <Icon className="w-6 h-6" strokeWidth={1.5} />
+                <div key={title} className="p-5 rounded-2xl bg-brand-50 border border-brand-100">
+                  <div className="w-11 h-11 rounded-2xl bg-white border border-brand-100 flex items-center justify-center text-brand-700 mb-3">
+                    <Icon className="w-5 h-5" strokeWidth={1.5} />
                   </div>
-                  <h3 className="font-semibold text-base text-ink mb-1.5">{title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+                  <h3 className="font-semibold text-base text-ink mb-2">{title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Platform */}
-        <section className="py-24 bg-white">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-ink">Plataforma</h2>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-              <div className="flex justify-center">
-                <div className="w-full max-w-md p-6 rounded-2xl bg-brand-50 border border-gray-200">
-                  <div className="inline-block px-3 py-1.5 rounded-full bg-white text-brand-900 font-semibold text-sm mb-4 border border-gray-200">
-                    Dashboard B2B
+        <section className="py-16" id="solicitud">
+          <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 items-start">
+            <div>
+              <p className="text-sm font-semibold text-brand-700 mb-3">Solicitud de acceso</p>
+              <h2 className="text-3xl font-semibold text-ink font-display mb-3">
+                Primero conocemos tu operación. Luego te habilitamos.
+              </h2>
+              <p className="text-gray-600 leading-relaxed mb-5">
+                Completa este formulario y un ejecutivo te contactará para validar requisitos y enviarte un enlace de
+                onboarding personalizado.
+              </p>
+              <div className="space-y-3">
+                {[
+                  'RUC o identificación tributaria vigente',
+                  'Certificaciones fitosanitarias o de calidad',
+                  'Volumen mensual de exportación',
+                  'Contacto comercial con WhatsApp',
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3 text-sm text-gray-600">
+                    <div className="w-2 h-2 rounded-full bg-brand-700" />
+                    {item}
                   </div>
-                  <div className="h-2.5 rounded-full bg-gray-200 mb-3" />
-                  <div className="h-2.5 rounded-full bg-gray-200 mb-5 w-3/4" />
-                  {[['RFQ activos', '12'], ['Órdenes en proceso', '5'], ['Documentos', 'OK']].map(([label, val]) => (
-                    <div key={label} className="flex justify-between font-semibold text-brand-900 py-2.5 border-b border-gray-200 last:border-0 text-sm">
-                      <span>{label}</span>
-                      <span>{val}</span>
-                    </div>
-                  ))}
+                ))}
+              </div>
+            </div>
+
+            <form
+              onSubmit={handleSubmit}
+              className="bg-white rounded-3xl border border-brand-100 p-7 shadow-[0_24px_60px_-40px_rgba(15,63,56,0.6)]"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-semibold text-gray-500">Nombre completo</label>
+                  <input
+                    name="nombre"
+                    required
+                    className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                    placeholder="María Pérez"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-gray-500">Empresa</label>
+                  <input
+                    name="empresa"
+                    required
+                    className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                    placeholder="Agroexportadora Andina"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-gray-500">Cargo</label>
+                  <input
+                    name="cargo"
+                    className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                    placeholder="Gerente Comercial"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-gray-500">Email</label>
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                    placeholder="maria@empresa.com"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-gray-500">WhatsApp</label>
+                  <input
+                    name="whatsapp"
+                    required
+                    className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                    placeholder="+51 999 000 000"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-gray-500">País</label>
+                  <input
+                    name="pais"
+                    required
+                    className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                    placeholder="Perú"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-gray-500">Categoría principal</label>
+                  <input
+                    name="categoria"
+                    className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                    placeholder="Uvas, arándanos, espárragos"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-gray-500">Capacidad mensual</label>
+                  <input
+                    name="capacidad"
+                    className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                    placeholder="120 toneladas"
+                  />
                 </div>
               </div>
-
-              <div>
-                <p className="text-gray-500 mb-4 leading-relaxed">
-                  Como exportador, tendrás acceso a una cuenta empresarial para gestionar tus productos, RFQs y operaciones de manera simple y transparente.
-                </p>
-                <h3 className="text-xl font-semibold text-ink mb-3 leading-snug">
-                  Acceso a mercados, trazabilidad en vivo, información comercial y productos financieros.
-                </h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  Incluye contratos, firma electrónica y gestión de roles internos.
-                </p>
-                <h4 className="text-sm font-semibold text-brand-900 mb-1">Guía de uso</h4>
-                <p className="text-sm text-gray-500">
-                  Onboarding guiado por nuestro equipo para activar tu cuenta y tu primer flujo de venta.
-                </p>
+              <div className="mt-4">
+                <label className="text-xs font-semibold text-gray-500">Mensaje</label>
+                <textarea
+                  name="mensaje"
+                  rows={4}
+                  className="mt-2 w-full rounded-xl border border-brand-100 px-3 py-2.5 text-sm"
+                  placeholder="Certificaciones, experiencia exportadora o destinos actuales."
+                />
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="py-20 bg-brand-100">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center shadow-sm">
-              <h2 className="text-2xl sm:text-3xl font-bold text-ink mb-3">
-                ¿Te gustaría exportar con NxinMall? ¡Contáctanos!
-              </h2>
-              <p className="text-gray-500 mb-6">
-                Agenda una llamada corta para validar tu operación y activar tu cuenta B2B.
-              </p>
-              <Link
-                href="/onboarding"
-                className="inline-flex px-8 py-3.5 rounded-full bg-brand-900 text-white font-semibold text-sm hover:bg-brand-900/90 transition-colors"
+              <button
+                type="submit"
+                className="mt-5 w-full rounded-full bg-brand-900 text-white py-3 text-sm font-semibold hover:bg-brand-900/90 transition-colors"
               >
-                Solicitar onboarding
-              </Link>
-            </div>
+                Enviar solicitud
+              </button>
+              <p className="text-xs text-center text-gray-400 mt-3">
+                Un ejecutivo valida tu operación y te envía un link de onboarding personalizado.
+              </p>
+            </form>
           </div>
         </section>
 
-        {/* FAQ */}
-        <section className="py-24 bg-white">
+        <section className="py-16 bg-white">
           <div className="max-w-3xl mx-auto px-6">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-ink mb-2">Preguntas frecuentes</h2>
-              <p className="text-gray-500">Resuelve tus dudas sobre NxinMall Exportadores</p>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-semibold text-ink font-display mb-2">Preguntas frecuentes</h2>
+              <p className="text-gray-500">Todo lo que debes saber antes de solicitar acceso.</p>
             </div>
             <div className="flex flex-col gap-4">
               {FAQS.map((faq) => (
@@ -247,28 +329,25 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-brand-900 py-14">
+      <footer className="bg-brand-900 py-12">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 pb-8 border-b border-white/20 mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 pb-7 border-b border-white/20 mb-7">
             <div>
-              <div className="text-xl font-bold text-white mb-1">
+              <div className="text-lg font-semibold text-white mb-1">
                 Nxin<span className="text-brand-100">Mall</span>
               </div>
-              <p className="text-white/70 text-sm">Plataforma global de transacciones B2B agrícolas</p>
+              <p className="text-white/70 text-sm">Plataforma global B2B para exportadores agrícolas.</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
-              <Link href="/onboarding" className="text-white/80 text-sm hover:text-white transition-colors">
-                Solicitar demo
+              <Link href="#solicitud" className="text-white/80 text-sm hover:text-white transition-colors">
+                Solicitar acceso
               </Link>
               <a href="mailto:peru@nxinmall.com" className="text-white/80 text-sm hover:text-white transition-colors">
                 peru@nxinmall.com
               </a>
             </div>
           </div>
-          <p className="text-center text-white/60 text-xs">
-            &copy; 2026 NxinMall. Todos los derechos reservados.
-          </p>
+          <p className="text-center text-white/60 text-xs">&copy; 2026 NxinMall. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

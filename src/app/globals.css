@@ -1,19 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #f4f9ff;
-  --color-brand-100: #eaf3ff;
-  --color-brand-500: #1a9bff;
-  --color-brand-700: #108fff;
-  --color-brand-900: #0a63d6;
-  --color-ink: #0b0b0b;
-  --color-success: #5fbf7a;
+  --color-brand-50: #f7f4ee;
+  --color-brand-100: #efe7d8;
+  --color-brand-500: #1f7a68;
+  --color-brand-700: #175b50;
+  --color-brand-900: #0f3f38;
+  --color-ink: #111311;
+  --color-success: #4ba66a;
 
-  --font-sans: 'Inter', 'Segoe UI', sans-serif;
+  --font-sans: var(--font-sora), 'Segoe UI', sans-serif;
+  --font-display: var(--font-fraunces), 'Times New Roman', serif;
 }
 
 :root {
-  --store-color: #0a63d6;
+  --store-color: #0f3f38;
 }
 
 html {
@@ -23,8 +24,12 @@ html {
 body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  background-color: #f4f9ff;
-  color: #0b0b0b;
+  background: radial-gradient(circle at 15% 20%, #ffffff 0%, #f7f4ee 45%, #efe7d8 100%);
+  color: #111311;
+}
+
+.font-display {
+  font-family: var(--font-display);
 }
 
 @keyframes fadeUp {
@@ -43,4 +48,13 @@ body {
 
 .animate-fade-in {
   animation: fadeIn 0.6s ease both;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(14px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-float-up {
+  animation: floatUp 0.8s ease both;
 }
