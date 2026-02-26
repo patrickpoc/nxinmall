@@ -324,9 +324,7 @@ export default function HomePage() {
     <div className="min-h-screen text-ink bg-white">
       <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur border-b border-brand-100 z-50">
         <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="text-lg font-semibold text-ink">
-            Nxin<span className="text-brand-900">Mall</span>
-          </div>
+          <img src="/visuals/logo.png" alt="NxinMall" className="h-10 w-auto" />
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
             <Link href="#beneficios" className="hover:text-brand-900 transition-colors">
               {content.nav.suppliers}
@@ -385,7 +383,7 @@ export default function HomePage() {
               <p className="text-xs uppercase tracking-[0.3em] text-brand-700 font-semibold mb-4">
                 {content.hero.badge}
               </p>
-              <h1 className="text-[3.5rem] sm:text-[4rem] font-black text-ink leading-[1.05] mb-4 font-display">
+              <h1 className="text-[2.6rem] sm:text-[4rem] font-black text-ink leading-[1.05] mb-4 font-display">
                 {content.hero.title}
               </h1>
               <p className="text-lg text-gray-600 leading-relaxed mb-6">{content.hero.subtitle}</p>
@@ -617,13 +615,16 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="bg-brand-900 py-10">
+      <footer className="bg-ink py-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 pb-6 border-b border-white/20 mb-6">
             <div>
-              <div className="text-lg font-semibold text-white mb-1">
-                Nxin<span className="text-brand-100">Mall</span>
-              </div>
+              <img
+                src="/visuals/logo.png"
+                alt="NxinMall"
+                className="h-9 w-auto mb-2"
+                style={{ filter: 'brightness(0) invert(1)' }}
+              />
               <p className="text-white/70 text-sm">{content.footer.tagline}</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
