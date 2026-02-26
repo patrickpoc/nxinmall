@@ -74,7 +74,12 @@ function HomeContent() {
       <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur z-50">
         <div className="max-w-6xl mx-auto px-6 py-3 flex items-center">
           <div className="flex-1">
-            <img src="/visuals/logo.png" alt="NxinMall" className="h-10 w-auto" />
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="cursor-pointer transition-opacity hover:opacity-80 flex items-center"
+            >
+              <img src="/visuals/logo.png" alt="NxinMall" className="h-10 w-auto" />
+            </button>
           </div>
           <nav className="hidden md:flex items-center gap-6 text-[16px] font-bold text-gray-600 justify-center">
             <a
