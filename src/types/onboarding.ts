@@ -1,0 +1,103 @@
+export type Categoria = 'frutas' | 'flores' | 'viveros' | 'empacadoras' | 'plasticos' | 'insumos';
+
+export interface ProductoSeleccionado {
+  id: string;
+  nombre: string;
+  categoria: Categoria;
+  esPersonalizado: boolean;
+  moq: { valor: number; unidad: string };
+  precio: { min: number; max: number; moneda: 'USD' | 'PEN' };
+  imagen: { dataUrl: string; fuente: 'upload' | 'stock' } | null;
+}
+
+export interface OnboardingState {
+  meta: {
+    sessionId: string;
+    startedAt: string;
+    currentStep: number;
+  };
+  registro: {
+    nombre: string;
+    empresa: string;
+    ruc: string;
+    email: string;
+    whatsapp: string;
+    cargo: string;
+    pais: string;
+  };
+  perfil: {
+    categoria: Categoria | '';
+    tagline: string;
+    descripcion: string;
+    anosFundacion: string;
+    capacidadMensual: string;
+    certificaciones: string[];
+    logo: { dataUrl: string; name: string } | null;
+    banner: { dataUrl: string; name: string } | null;
+  };
+  ubicacion: {
+    departamento: string;
+    provincia: string;
+    distrito: string;
+    direccion: string;
+    referencia: string;
+    codigoPostal: string;
+  };
+  catalogo: {
+    productosSeleccionados: ProductoSeleccionado[];
+    productosPersonalizados: ProductoSeleccionado[];
+  };
+  activacion: {
+    enviado: boolean;
+    jsonGenerado: boolean;
+  };
+}
+
+export interface StoreConfig {
+  metadata: {
+    version: string;
+    generatedAt: string;
+    sessionId: string;
+    status: string;
+    fuente: string;
+  };
+  proveedor: {
+    nombre: string;
+    cargo: string;
+    empresa: string;
+    ruc: string;
+    email: string;
+    whatsapp: string;
+    pais: string;
+  };
+  ubicacion: {
+    departamento: string;
+    provincia: string;
+    distrito: string;
+    direccion: string;
+    referencia: string;
+    codigoPostal: string;
+  };
+  tienda: {
+    categoria: Categoria | '';
+    tagline: string;
+    descripcion: string;
+    anosFundacion: string;
+    capacidadMensual: string;
+    certificaciones: string[];
+    colorPrimario: string;
+    logo: { dataUrl: string; name: string } | null;
+    banner: { dataUrl: string; name: string } | null;
+  };
+  catalogo: {
+    totalProductos: number;
+    productos: Array<{
+      id: string;
+      nombre: string;
+      esPersonalizado: boolean;
+      moq: { valor: number; unidad: string };
+      precio: { min: number; max: number; moneda: 'USD' | 'PEN' };
+      imagen: { dataUrl: string; fuente: 'upload' | 'stock' } | null;
+    }>;
+  };
+}
