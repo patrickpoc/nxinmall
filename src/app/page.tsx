@@ -565,7 +565,7 @@ export default function HomePage() {
       </header>
 
       <main>
-        <section className="pt-28" id="inicio">
+        <section className="pt-28 bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_55%,#f3f7ff_100%)]" id="inicio">
           <div className="max-w-6xl mx-auto px-6">
             <div className="text-center max-w-3xl mx-auto reveal" data-animate="fade-up">
               <p className="text-xs uppercase tracking-[0.3em] text-brand-700 font-semibold mb-4">
@@ -593,13 +593,13 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <div className="mt-10">
-            <div className="mx-auto max-w-6xl px-6">
+          <div className="relative mt-10">
+            <div className="relative mx-auto max-w-6xl px-6">
               <div
-                className="relative overflow-hidden rounded-[28px] border border-brand-100 bg-white aspect-[16/7] reveal-zoom"
+                className="relative overflow-hidden rounded-[28px] bg-white aspect-[16/7] reveal-zoom"
                 data-animate="soft-zoom"
               >
-                <img src="/visuals/hero.png" alt="NxinMall Banner" className="w-full h-full object-cover" />
+                <img src="/visuals/hero_nxinmall.jpg" alt="NxinMall Banner" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(10,99,214,0.18),transparent_55%)]" />
               </div>
             </div>
@@ -646,7 +646,7 @@ export default function HomePage() {
             </div>
             <div className="reveal" data-animate="fade-up">
               <div
-                className="rounded-[26px] border border-brand-100 overflow-hidden bg-white shadow-[0_24px_60px_-40px_rgba(10,99,214,0.35)] reveal-zoom"
+                className="rounded-[26px] overflow-hidden bg-white shadow-[0_24px_60px_-40px_rgba(10,99,214,0.35)] reveal-zoom"
                 data-animate="soft-zoom"
               >
                 <img src="/visuals/control.png" alt="Control sobre cada etapa" className="w-full h-full object-cover" />
@@ -690,7 +690,7 @@ export default function HomePage() {
           <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-10 items-center">
             <div className="order-2 lg:order-1 reveal" data-animate="fade-up">
               <div
-                className="rounded-[26px] border border-brand-100 overflow-hidden bg-white shadow-[0_24px_60px_-40px_rgba(10,99,214,0.35)] reveal-zoom"
+                className="rounded-[26px] overflow-hidden bg-white shadow-[0_24px_60px_-40px_rgba(10,99,214,0.35)] reveal-zoom"
                 data-animate="soft-zoom"
               >
                 <img src="/visuals/buyers.png" alt="Catalogo y demanda activa" className="w-full h-full object-cover" />
