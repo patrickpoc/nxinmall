@@ -24,7 +24,7 @@ export default function WizardProgress({ currentStep }: WizardProgressProps) {
             <div className="flex flex-col items-center flex-1">
               <div
                 className={clsx(
-                  'h-1.5 w-full rounded-full transition-all',
+                  'h-1.5 w-full rounded-full transition-all duration-700 ease-in-out',
                   step.number < currentStep
                     ? 'bg-brand-900'
                     : step.number === currentStep
@@ -35,7 +35,7 @@ export default function WizardProgress({ currentStep }: WizardProgressProps) {
               <div className="flex items-center gap-1 mt-1.5">
                 <span
                   className={clsx(
-                    'text-xs font-medium transition-colors',
+                    'text-xs font-medium transition-colors duration-500',
                     step.number <= currentStep ? 'text-brand-900' : 'text-gray-400'
                   )}
                 >

@@ -52,7 +52,7 @@ export default function Step1Registro({ onNext }: Step1Props) {
 
   const inputClass = (error?: { message?: string }) =>
     clsx(
-      'w-full px-3 py-2.5 text-sm border rounded-xl bg-white focus:outline-none focus:border-brand-900 transition-colors',
+      'w-full px-3 py-2.5 text-sm border rounded-xl bg-white focus:outline-none focus:border-brand-900 transition-all duration-300',
       error ? 'border-red-400' : 'border-gray-200'
     );
 
@@ -143,7 +143,7 @@ export default function Step1Registro({ onNext }: Step1Props) {
       <div className="sm:col-span-2">
         <button
           type="submit"
-          className="w-full py-3 rounded-full bg-brand-900 text-white font-semibold text-sm hover:bg-brand-900/90 transition-colors"
+          className="w-full py-3 rounded-full bg-brand-900 text-white font-semibold text-sm hover:bg-brand-900/90 transition-all duration-300"
         >
           Continuar →
         </button>

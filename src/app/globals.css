@@ -41,7 +41,7 @@ body {
 
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -51,47 +51,47 @@ body {
 }
 
 .animate-fade-up {
-  animation: fadeUp 5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fadeUp 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.6s ease both;
+  animation: fadeIn 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 @keyframes floatUp {
-  from { transform: translateY(14px); opacity: 0; }
+  from { transform: translateY(40px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
 .animate-float-up {
-  animation: floatUp 0.8s ease both;
+  animation: floatUp 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .animate-soft-zoom {
-  animation: softZoom 6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: softZoom 3.5s cubic-bezier(0.1, 0.7, 0.1, 1) both;
 }
 
 @keyframes softZoom {
-  from { transform: scale(1.006); opacity: 0; }
+  from { transform: scale(1.1); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
 .reveal {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(30px);
 }
 
 .reveal-zoom {
   opacity: 0;
-  transform: scale(1.006);
+  transform: scale(1.1);
 }
 
 .reveal.is-visible {
-  animation: fadeUp 0.7s ease both;
+  animation: fadeUp 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .reveal-zoom.is-visible {
-  animation: softZoom 1.1s ease both;
+  animation: softZoom 2.2s cubic-bezier(0.1, 0.7, 0.1, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

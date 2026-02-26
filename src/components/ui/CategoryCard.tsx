@@ -15,7 +15,7 @@ export default function CategoryCard({ categoria, selected, onClick }: CategoryC
       type="button"
       onClick={onClick}
       className={clsx(
-        'relative flex flex-col items-center text-center p-4 rounded-2xl border-2 transition-all cursor-pointer gap-2',
+        'relative flex flex-col items-center text-center p-4 rounded-2xl border-2 transition-all duration-500 ease-in-out cursor-pointer gap-2',
         selected
           ? 'border-current bg-white shadow-md scale-[1.02]'
           : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'

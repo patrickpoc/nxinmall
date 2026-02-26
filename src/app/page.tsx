@@ -621,7 +621,7 @@ export default function HomePage() {
                     key={benefit.title}
                     className="p-5 rounded-2xl bg-white border border-brand-100 reveal"
                     data-animate="fade-up"
-                    style={{ animationDelay: `${index * 80}ms` }}
+                    style={{ animationDelay: `${index * 150}ms` }}
                   >
                     <div className="mb-3">
                       <GradientIcon node={iconNode} id={`benefit-grad-${index}`} />
@@ -669,7 +669,7 @@ export default function HomePage() {
                   key={step.title}
                   className="bg-white rounded-2xl border border-brand-100 p-4 reveal"
                   data-animate="fade-up"
-                  style={{ animationDelay: `${index * 90}ms` }}
+                  style={{ animationDelay: `${index * 180}ms` }}
                 >
                   <div className="flex items-center gap-3">
                     <span className="w-8 h-8 rounded-full bg-brand-900 text-white text-xs font-semibold flex items-center justify-center">

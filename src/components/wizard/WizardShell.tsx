@@ -53,7 +53,7 @@ export default function WizardShell({
           {subtitle && <p className="mt-1.5 text-gray-500 text-sm">{subtitle}</p>}
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-7 shadow-sm">
+        <div key={currentStep} className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-7 shadow-sm animate-fade-in">
           {children}
         </div>
 
