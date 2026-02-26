@@ -46,7 +46,7 @@ function HomeContent() {
   }, []);
 
   // Initialize animations
-  useScrollReveal();
+  useScrollReveal([lang]);
 
   const scrollToId = (id: string) => (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();

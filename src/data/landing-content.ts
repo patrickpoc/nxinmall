@@ -15,7 +15,7 @@ export const COPY: Record<Lang, {
   footer: { tagline: string; cta: string };
 }> = {
   es: {
-    nav: { suppliers: 'Beneficios', process: 'Proceso', faq: 'Preguntas', cta: 'Solicitar acceso' },
+    nav: { suppliers: '¿Por qué?', process: 'Proceso', faq: 'Preguntas', cta: 'Solicitar acceso' },
     hero: {
       badge: 'Proveedores exportadores',
       title: 'Tu produccion lista para compradores internacionales.',
@@ -23,7 +23,7 @@ export const COPY: Record<Lang, {
       primary: 'Quiero ser proveedor',
       secondary: 'Ver beneficios',
     },
-    benefitsTitle: 'Por que con NxinMall',
+    benefitsTitle: '¿Por qué con NxinMall?',
     benefits: [
       {
         title: 'Acceso a nuevos mercados',
@@ -90,7 +90,7 @@ export const COPY: Record<Lang, {
     },
   },
   en: {
-    nav: { suppliers: 'Benefits', process: 'Process', faq: 'FAQ', cta: 'Request access' },
+    nav: { suppliers: 'Why?', process: 'Process', faq: 'FAQ', cta: 'Request access' },
     hero: {
       badge: 'Export suppliers',
       title: 'Your production ready for international buyers.',
@@ -98,7 +98,7 @@ export const COPY: Record<Lang, {
       primary: 'Become a supplier',
       secondary: 'See benefits',
     },
-    benefitsTitle: 'Why NxinMall',
+    benefitsTitle: 'Why NxinMall?',
     benefits: [
       {
         title: 'Access to new markets',
@@ -165,7 +165,7 @@ export const COPY: Record<Lang, {
     },
   },
   pt: {
-    nav: { suppliers: 'Benefícios', process: 'Processo', faq: 'Perguntas', cta: 'Solicitar acesso' },
+    nav: { suppliers: 'Por quê?', process: 'Processo', faq: 'Perguntas', cta: 'Solicitar acesso' },
     hero: {
       badge: 'Fornecedores exportadores',
       title: 'Sua producao pronta para compradores internacionales.',
@@ -173,7 +173,7 @@ export const COPY: Record<Lang, {
       primary: 'Quero ser fornecedor',
       secondary: 'Ver beneficios',
     },
-    benefitsTitle: 'Por que NxinMall',
+    benefitsTitle: 'Por que NxinMall?',
     benefits: [
       {
         title: 'Acesso a novos mercados',
@@ -208,7 +208,7 @@ export const COPY: Record<Lang, {
     },
     buyers: {
       kicker: 'Compradores globais',
-      title: 'Seu catalogo diante de demanda ativa.',
+      title: 'Seu catalogo diante de demanda activa.',
       body: 'Ajudamos a posicionar sua oferta com compradores recorrentes e acordos claros.',
     },
     form: {

@@ -1,46 +1,38 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, DependencyList } from 'react';
 
 /**
  * Hook to handle scroll reveal animations using [data-animate] attribute.
- * It adds 'is-visible' class when elements enter the viewport.
+ * Uses IntersectionObserver for better performance and reliability on mobile.
  */
-export function useScrollReveal() {
+export function useScrollReveal(deps: DependencyList = []) {
   useEffect(() => {
-    const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-animate]'));
-    let ticking = false;
+    // Small timeout to ensure DOM is fully rendered
+    const timer = setTimeout(() => {
+      const elements = document.querySelectorAll<HTMLElement>('[data-animate]');
+      
+      if (elements.length === 0) return;
 
-    const update = () => {
-      const trigger = window.innerHeight * 0.85;
-      elements.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        const inView = rect.top < trigger && rect.bottom > 0;
-        if (inView) {
-          el.classList.add('is-visible');
-        } else {
-          el.classList.remove('is-visible');
-        }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.01,
+        rootMargin: '0px'
       });
-      ticking = false;
-    };
 
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(update);
-        ticking = true;
-      }
-    };
+      elements.forEach((el) => observer.observe(el));
 
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+      return () => observer.disconnect();
+    }, 100);
 
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, []);
+    return () => clearTimeout(timer);
+  }, deps);
 }
 
 /**
