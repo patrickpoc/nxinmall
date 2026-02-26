@@ -5,7 +5,7 @@ import { Plus, X, Search } from 'lucide-react';
 import { useOnboardingStore } from '@/lib/store';
 import { CATEGORIAS } from '@/data/catalog';
 import { ProductoSeleccionado, Categoria } from '@/types/onboarding';
-import { t } from '@/lib/i18n';
+import { t, TKey } from '@/lib/i18n';
 import { generateId } from '@/lib/utils';
 import ProductRow from '@/components/ui/ProductRow';
 
