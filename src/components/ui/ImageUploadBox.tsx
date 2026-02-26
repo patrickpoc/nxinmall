@@ -49,47 +49,51 @@ export default function ImageUploadBox({
   });
 
   const previewClass = clsx(
-    'object-cover',
-    previewVariant === 'circle' && 'w-20 h-20 rounded-full',
-    previewVariant === 'banner' && 'w-full h-20 rounded-lg',
-    previewVariant === 'square' && 'w-20 h-20 rounded-lg'
+    'object-cover shadow-md',
+    previewVariant === 'circle' && 'w-24 h-24 rounded-full border-4 border-white ring-1 ring-gray-100',
+    previewVariant === 'banner' && 'w-full h-24 rounded-2xl border-4 border-white ring-1 ring-gray-100',
+    previewVariant === 'square' && 'w-24 h-24 rounded-2xl border-4 border-white ring-1 ring-gray-100'
   );
 
   return (
-    <div className="flex flex-col gap-1.5">
-      {label && <span className="text-sm font-medium text-ink">{label}</span>}
-
+    <div className="flex flex-col">
       {value ? (
-        <div className="relative inline-flex">
+        <div className="relative inline-flex self-start">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={value.dataUrl} alt="preview" className={previewClass} />
           <button
             type="button"
             onClick={() => onChange(null)}
-            className="absolute -top-2 -right-2 bg-white border border-gray-200 rounded-full p-0.5 shadow-sm hover:bg-red-50"
+            className="absolute -top-1 -right-1 bg-white border border-gray-100 rounded-full p-1 shadow-lg hover:bg-red-50 hover:text-red-500 transition-all"
             aria-label="Eliminar imagen"
           >
-            <X className="w-3.5 h-3.5 text-red-500" />
+            <X className="w-4 h-4" />
           </button>
         </div>
       ) : (
         <div
           {...getRootProps()}
           className={clsx(
-            'flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-4 cursor-pointer transition-colors',
-            isDragActive ? 'border-brand-700 bg-brand-50' : 'border-gray-200 hover:border-brand-500 hover:bg-brand-50'
+            'flex flex-col items-center justify-center gap-3 border-2 border-dashed rounded-[32px] p-8 cursor-pointer transition-all duration-300',
+            isDragActive 
+              ? 'border-brand-500 bg-brand-50/50 scale-[0.98]' 
+              : 'border-gray-100 bg-gray-50/30 hover:border-brand-200 hover:bg-white hover:shadow-inner'
           )}
         >
           <input {...getInputProps()} />
-          <Upload className="w-5 h-5 text-gray-400" />
-          <p className="text-xs text-gray-500 text-center">
-            {isDragActive ? 'Suelta aquí...' : 'Arrastra o haz clic para subir'}
-          </p>
-          {hint && <p className="text-xs text-gray-400">{hint}</p>}
+          <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-gray-400 group-hover:text-brand-500 transition-colors">
+            <Upload className="w-6 h-6" />
+          </div>
+          <div className="text-center">
+            <p className="text-[11px] font-black text-ink uppercase tracking-widest">
+              {isDragActive ? 'Suelta aquí' : 'Subir imagen'}
+            </p>
+            {hint && <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter mt-1">{hint}</p>}
+          </div>
         </div>
       )}
 
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && <p className="mt-2 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{error}</p>}
     </div>
   );
 }

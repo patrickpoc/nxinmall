@@ -12,29 +12,23 @@ interface PhoneInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
   ({ label, error, defaultCountryCode = '+51', className, ...props }, ref) => {
     return (
-      <div className="flex flex-col gap-1.5">
-        {label && (
-          <label className="text-sm font-medium text-ink">
-            {label}
-          </label>
-        )}
-        <div className="flex">
-          <span className="inline-flex items-center px-3 border border-r-0 border-gray-200 rounded-l-xl bg-gray-50 text-sm text-gray-600 font-medium">
+      <div className="flex flex-col">
+        <div className="flex shadow-sm rounded-2xl overflow-hidden">
+          <span className="inline-flex items-center px-4 bg-gray-100 text-sm text-gray-500 font-black tracking-tight">
             {defaultCountryCode}
           </span>
           <input
             ref={ref}
             type="tel"
             className={clsx(
-              'flex-1 px-3 py-2.5 text-sm border border-gray-200 rounded-r-xl bg-white',
-              'focus:outline-none focus:border-brand-900 transition-colors',
-              error && 'border-red-400',
+              'flex-1 px-4 py-3.5 text-sm bg-gray-50 border-none focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:bg-white transition-all duration-300',
+              error && 'ring-2 ring-red-400/20 bg-red-50/30',
               className
             )}
             {...props}
           />
         </div>
-        {error && <p className="text-xs text-red-500">{error}</p>}
+        {error && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{error}</p>}
       </div>
     );
   }

@@ -34,36 +34,39 @@ export default function WizardShell({
   return (
     <div className="min-h-screen bg-brand-50 flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-          <Link href="/" className="text-lg font-bold text-ink">
-            Nxin<span className="text-brand-900">Mall</span>
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="transition-opacity hover:opacity-80">
+            <img src="/visuals/logo.png" alt="NxinMall" className="h-9 w-auto" />
           </Link>
-          <span className="text-xs text-gray-400">Paso {currentStep} de 5</span>
+          <div className="flex flex-col items-end">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-900/40 leading-none mb-1">Onboarding</span>
+            <span className="text-xs font-bold text-gray-400">Paso {currentStep} de 5</span>
+          </div>
         </div>
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-3">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-2">
           <WizardProgress currentStep={currentStep} />
         </div>
       </header>
 
       {/* Content */}
-      <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-ink">{title}</h1>
-          {subtitle && <p className="mt-1.5 text-gray-500 text-sm">{subtitle}</p>}
+      <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-12">
+        <div className="mb-10 text-center sm:text-left">
+          <h1 className="text-3xl sm:text-4xl font-black text-ink font-display leading-[1.1] mb-3">{title}</h1>
+          {subtitle && <p className="text-gray-500 text-base sm:text-lg leading-relaxed">{subtitle}</p>}
         </div>
 
-        <div key={currentStep} className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-7 shadow-sm animate-fade-in">
+        <div key={currentStep} className="bg-white rounded-[32px] border border-gray-100 p-6 sm:p-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.05)] animate-fade-in">
           {children}
         </div>
 
         {!hideNav && (
-          <div className="flex items-center justify-between mt-6 gap-4">
+          <div className="flex items-center justify-between mt-8 gap-4">
             {onBack ? (
               <button
                 type="button"
                 onClick={onBack}
-                className="px-5 py-2.5 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                className="px-6 py-3 rounded-full border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 hover:text-ink transition-all duration-300"
               >
                 ← {backLabel}
               </button>
@@ -75,7 +78,7 @@ export default function WizardShell({
                 type="button"
                 onClick={onNext}
                 disabled={nextDisabled || isLoading}
-                className="px-6 py-2.5 rounded-full bg-brand-900 text-white text-sm font-semibold hover:bg-brand-900/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-8 py-3 rounded-full bg-brand-900 text-white text-sm font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 transition-all duration-300 shadow-lg shadow-brand-900/20"
               >
                 {isLoading ? 'Procesando...' : `${nextLabel} →`}
               </button>

@@ -52,50 +52,52 @@ export default function Step1Registro({ onNext }: Step1Props) {
 
   const inputClass = (error?: { message?: string }) =>
     clsx(
-      'w-full px-3 py-2.5 text-sm border rounded-xl bg-white focus:outline-none focus:border-brand-900 transition-all duration-300',
-      error ? 'border-red-400' : 'border-gray-200'
+      'w-full px-4 py-3.5 text-sm rounded-2xl bg-gray-50 border-none shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:bg-white focus:shadow-md transition-all duration-300',
+      error ? 'ring-2 ring-red-400/20 bg-red-50/30' : ''
     );
 
+  const labelClass = "text-[11px] font-black text-brand-900/50 uppercase tracking-[0.2em] ml-1 mb-1";
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
       {/* Nombre */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-ink">Nombre completo *</label>
+      <div className="flex flex-col">
+        <label className={labelClass}>Nombre completo *</label>
         <input
           {...register('nombre')}
           className={inputClass(errors.nombre)}
           placeholder="Tu nombre"
         />
-        {errors.nombre && <p className="text-xs text-red-500">{errors.nombre.message}</p>}
+        {errors.nombre && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.nombre.message}</p>}
       </div>
 
       {/* Empresa */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-ink">Empresa *</label>
+      <div className="flex flex-col">
+        <label className={labelClass}>Empresa *</label>
         <input
           {...register('empresa')}
           className={inputClass(errors.empresa)}
           placeholder="Nombre de tu empresa"
         />
-        {errors.empresa && <p className="text-xs text-red-500">{errors.empresa.message}</p>}
+        {errors.empresa && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.empresa.message}</p>}
       </div>
 
       {/* Email */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-ink">Email corporativo *</label>
+      <div className="flex flex-col">
+        <label className={labelClass}>Email corporativo *</label>
         <input
           {...register('email')}
           type="email"
           className={inputClass(errors.email)}
           placeholder="tu@empresa.com"
         />
-        {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
+        {errors.email && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.email.message}</p>}
       </div>
 
       {/* WhatsApp */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col">
+        <label className={labelClass}>WhatsApp *</label>
         <PhoneInput
-          label="WhatsApp *"
           placeholder="999 999 999"
           value={whatsapp}
           onChange={(e) => setValue('whatsapp', e.target.value)}
@@ -104,9 +106,9 @@ export default function Step1Registro({ onNext }: Step1Props) {
       </div>
 
       {/* RUC */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-ink">
-          RUC <span className="text-gray-400 font-normal">(opcional)</span>
+      <div className="flex flex-col">
+        <label className={labelClass}>
+          RUC <span className="opacity-50 font-normal">(opcional)</span>
         </label>
         <input
           {...register('ruc')}
@@ -114,36 +116,36 @@ export default function Step1Registro({ onNext }: Step1Props) {
           placeholder="20123456789"
           maxLength={11}
         />
-        {errors.ruc && <p className="text-xs text-red-500">{errors.ruc.message}</p>}
+        {errors.ruc && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.ruc.message}</p>}
       </div>
 
       {/* Cargo */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-ink">Cargo *</label>
+      <div className="flex flex-col">
+        <label className={labelClass}>Cargo *</label>
         <select {...register('cargo')} className={inputClass(errors.cargo)}>
           <option value="">Selecciona tu cargo</option>
           {CARGOS.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
-        {errors.cargo && <p className="text-xs text-red-500">{errors.cargo.message}</p>}
+        {errors.cargo && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.cargo.message}</p>}
       </div>
 
       {/* País */}
-      <div className="flex flex-col gap-1.5 sm:col-span-2">
-        <label className="text-sm font-medium text-ink">País *</label>
+      <div className="flex flex-col sm:col-span-2">
+        <label className={labelClass}>País *</label>
         <select {...register('pais')} className={inputClass(errors.pais)}>
           {PAISES.map((p) => (
             <option key={p} value={p}>{p}</option>
           ))}
         </select>
-        {errors.pais && <p className="text-xs text-red-500">{errors.pais.message}</p>}
+        {errors.pais && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.pais.message}</p>}
       </div>
 
-      <div className="sm:col-span-2">
+      <div className="sm:col-span-2 mt-4">
         <button
           type="submit"
-          className="w-full py-3 rounded-full bg-brand-900 text-white font-semibold text-sm hover:bg-brand-900/90 transition-all duration-300"
+          className="w-full py-4 rounded-full bg-brand-900 text-white font-bold text-base hover:bg-brand-900/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 shadow-lg shadow-brand-900/20"
         >
           Continuar →
         </button>

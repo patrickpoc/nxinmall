@@ -17,33 +17,19 @@ interface WizardProgressProps {
 export default function WizardProgress({ currentStep }: WizardProgressProps) {
   return (
     <div className="w-full">
-      <div className="flex items-center gap-0">
-        {STEPS.map((step, idx) => (
-          <div key={step.number} className="flex items-center flex-1 last:flex-none">
-            {/* Segment */}
-            <div className="flex flex-col items-center flex-1">
-              <div
-                className={clsx(
-                  'h-1.5 w-full rounded-full transition-all duration-700 ease-in-out',
-                  step.number < currentStep
-                    ? 'bg-brand-900'
-                    : step.number === currentStep
-                    ? 'bg-brand-500'
-                    : 'bg-gray-200'
-                )}
-              />
-              <div className="flex items-center gap-1 mt-1.5">
-                <span
-                  className={clsx(
-                    'text-xs font-medium transition-colors duration-500',
-                    step.number <= currentStep ? 'text-brand-900' : 'text-gray-400'
-                  )}
-                >
-                  {step.label}
-                </span>
-              </div>
-            </div>
-          </div>
+      <div className="flex items-center gap-1.5">
+        {STEPS.map((step) => (
+          <div 
+            key={step.number} 
+            className={clsx(
+              'h-1.5 flex-1 rounded-full transition-all duration-700 ease-in-out',
+              step.number < currentStep
+                ? 'bg-brand-900'
+                : step.number === currentStep
+                ? 'bg-brand-500 shadow-[0_0_10px_rgba(25,115,250,0.3)]'
+                : 'bg-gray-100'
+            )}
+          />
         ))}
       </div>
     </div>

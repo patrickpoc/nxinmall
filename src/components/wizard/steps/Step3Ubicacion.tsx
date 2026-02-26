@@ -112,23 +112,29 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
     if (validate()) onNext();
   };
 
+  const labelClass = "text-[11px] font-black text-brand-900/50 uppercase tracking-[0.2em] ml-1 mb-1";
+  
   const selectClass = (error?: string) =>
-    `w-full px-3 py-2.5 text-sm border rounded-xl focus:outline-none focus:border-brand-900 bg-white transition-colors ${
-      error ? 'border-red-400' : 'border-gray-200'
-    }`;
+    clsx(
+      'w-full px-4 py-3.5 text-sm rounded-2xl bg-gray-50 border-none shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:bg-white focus:shadow-md transition-all duration-300',
+      error ? 'ring-2 ring-red-400/20 bg-red-50/30' : ''
+    );
 
   const inputClass = (error?: string) =>
-    `w-full px-3 py-2.5 text-sm border rounded-xl focus:outline-none focus:border-brand-900 transition-colors ${
-      error ? 'border-red-400' : 'border-gray-200'
-    }`;
+    clsx(
+      'w-full px-4 py-3.5 text-sm rounded-2xl bg-gray-50 border-none shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:bg-white focus:shadow-md transition-all duration-300',
+      error ? 'ring-2 ring-red-400/20 bg-red-50/30' : ''
+    );
 
   return (
-    <div className="flex flex-col gap-5">
-      <p className="text-sm text-gray-500">{t('paso3Titulo', idioma)}</p>
+    <div className="flex flex-col gap-6">
+      <div className="text-center sm:text-left">
+        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">{t('paso3Titulo', idioma)}</p>
+      </div>
 
       {/* País */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-ink">{t('paisLabel', idioma)}</label>
+      <div className="flex flex-col">
+        <label className={labelClass}>{t('paisLabel', idioma)}</label>
         <select
           value={pais}
           onChange={(e) => handlePaisChange(e.target.value)}
@@ -139,12 +145,12 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
             <option key={p} value={p}>{p}</option>
           ))}
         </select>
-        {errors.pais && <p className="text-xs text-red-500">{errors.pais}</p>}
+        {errors.pais && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.pais}</p>}
       </div>
 
       {/* Nivel 1: Departamento / Estado / Provincia */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-ink">{nivel1Label}</label>
+      <div className="flex flex-col">
+        <label className={labelClass}>{nivel1Label}</label>
         <select
           value={ubicacion.departamento}
           onChange={(e) => handleNivel1Change(e.target.value)}
@@ -155,12 +161,12 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
             <option key={d} value={d}>{d}</option>
           ))}
         </select>
-        {errors.departamento && <p className="text-xs text-red-500">{errors.departamento}</p>}
+        {errors.departamento && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.departamento}</p>}
       </div>
 
       {/* Nivel 2: Provincia / Município / Municipio / Cantón */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-ink">{nivel2Label}</label>
+      <div className="flex flex-col">
+        <label className={labelClass}>{nivel2Label}</label>
         <select
           value={ubicacion.provincia}
           onChange={(e) => handleNivel2Change(e.target.value)}
@@ -172,13 +178,13 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
             <option key={p} value={p}>{p}</option>
           ))}
         </select>
-        {errors.provincia && <p className="text-xs text-red-500">{errors.provincia}</p>}
+        {errors.provincia && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.provincia}</p>}
       </div>
 
       {/* Nivel 3: Distrito (Peru only) */}
       {pais === 'Peru' && (
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-ink">{t('nivel3LabelPeru', idioma)}</label>
+        <div className="flex flex-col">
+          <label className={labelClass}>{t('nivel3LabelPeru', idioma)}</label>
           <select
             value={ubicacion.distrito}
             onChange={(e) => setUbicacion({ distrito: e.target.value })}
@@ -197,32 +203,34 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
             ))}
           </select>
           {errors.distrito && (
-            <div>
-              <p className="text-xs text-red-500">{errors.distrito}</p>
+            <div className="mt-2">
+              <p className="ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider mb-2">{errors.distrito}</p>
               <input
                 type="text"
                 placeholder={t('nivel3EscribePeru', idioma)}
                 value={ubicacion.distrito}
                 onChange={(e) => setUbicacion({ distrito: e.target.value })}
-                className={`mt-1.5 ${inputClass(errors.distrito)}`}
+                className={inputClass(errors.distrito)}
               />
             </div>
           )}
           {!errors.distrito && nivel3Options.length === 0 && ubicacion.provincia && (
-            <input
-              type="text"
-              placeholder={t('nivel3EscribePeru', idioma)}
-              value={ubicacion.distrito}
-              onChange={(e) => setUbicacion({ distrito: e.target.value })}
-              className={inputClass(undefined)}
-            />
+            <div className="mt-2">
+              <input
+                type="text"
+                placeholder={t('nivel3EscribePeru', idioma)}
+                value={ubicacion.distrito}
+                onChange={(e) => setUbicacion({ distrito: e.target.value })}
+                className={inputClass(undefined)}
+              />
+            </div>
           )}
         </div>
       )}
 
       {/* Dirección */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-ink">{t('direccionLabel', idioma)}</label>
+      <div className="flex flex-col">
+        <label className={labelClass}>{t('direccionLabel', idioma)}</label>
         <input
           type="text"
           value={ubicacion.direccion}
@@ -230,13 +238,13 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
           className={inputClass(errors.direccion)}
           placeholder={t('direccionPlaceholder', idioma)}
         />
-        {errors.direccion && <p className="text-xs text-red-500">{errors.direccion}</p>}
+        {errors.direccion && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.direccion}</p>}
       </div>
 
       {/* Referencia */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-ink">
-          {t('referenciaLabel', idioma)} <span className="text-gray-400 font-normal">{t('referenciaOpcional', idioma)}</span>
+      <div className="flex flex-col">
+        <label className={labelClass}>
+          {t('referenciaLabel', idioma)} <span className="opacity-50 font-normal lowercase tracking-normal">({t('referenciaOpcional', idioma)})</span>
         </label>
         <input
           type="text"
@@ -248,9 +256,9 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
       </div>
 
       {/* Código postal */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-ink">
-          {t('codigoPostalLabel', idioma)} <span className="text-gray-400 font-normal">{t('referenciaOpcional', idioma)}</span>
+      <div className="flex flex-col">
+        <label className={labelClass}>
+          {t('codigoPostalLabel', idioma)} <span className="opacity-50 font-normal lowercase tracking-normal">({t('referenciaOpcional', idioma)})</span>
         </label>
         <input
           type="text"
@@ -262,20 +270,20 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
       </div>
 
       {/* Nav */}
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex items-center justify-between pt-6">
         <button
           type="button"
           onClick={onBack}
-          className="px-5 py-2.5 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+          className="px-6 py-3 rounded-full border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 hover:text-ink transition-all duration-300"
         >
-          {t('btnAtras', idioma)}
+          ← {t('btnAtras', idioma)}
         </button>
         <button
           type="button"
           onClick={handleNext}
-          className="px-6 py-2.5 rounded-full bg-brand-900 text-white text-sm font-semibold hover:bg-brand-900/90 transition-colors"
+          className="px-8 py-3 rounded-full bg-brand-900 text-white text-sm font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-brand-900/20"
         >
-          {t('btnSiguiente', idioma)}
+          {t('btnSiguiente', idioma)} →
         </button>
       </div>
     </div>

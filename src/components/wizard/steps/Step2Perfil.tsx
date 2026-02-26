@@ -57,12 +57,15 @@ export default function Step2Perfil({ onNext, onBack }: Step2Props) {
     if (validate()) onNext();
   };
 
+  const labelClass = "text-[11px] font-black text-brand-900/50 uppercase tracking-[0.2em] ml-1 mb-1";
+  const inputClass = "w-full px-4 py-3.5 text-sm rounded-2xl bg-gray-50 border-none shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:bg-white focus:shadow-md transition-all duration-300";
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       {/* Categoría */}
       <div>
-        <p className="text-sm font-semibold text-ink mb-3">{t('paso2Titulo', idioma)} *</p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <p className={labelClass}>{t('paso2Titulo', idioma)} *</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {CATEGORIAS_LIST.map((cat) => (
             <CategoryCard
               key={cat.id}
@@ -72,60 +75,59 @@ export default function Step2Perfil({ onNext, onBack }: Step2Props) {
             />
           ))}
         </div>
-        {errors.categoria && <p className="text-xs text-red-500 mt-1.5">{errors.categoria}</p>}
+        {errors.categoria && <p className="mt-2 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.categoria}</p>}
       </div>
 
       {/* Tagline */}
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-ink">{t('taglineLabel', idioma)}</label>
-          <span className="text-xs text-gray-400">{perfil.tagline.length}/120</span>
+      <div className="flex flex-col">
+        <div className="flex items-center justify-between px-1">
+          <label className={labelClass}>{t('taglineLabel', idioma)}</label>
+          <span className="text-[10px] font-bold text-gray-300 uppercase tracking-tighter">{perfil.tagline.length}/120</span>
         </div>
         <input
           type="text"
           value={perfil.tagline}
           onChange={(e) => setPerfil({ tagline: e.target.value.slice(0, 120) })}
-          className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-brand-900"
+          className={inputClass}
           placeholder={t('taglinePlaceholder', idioma)}
         />
-        <p className="text-xs text-gray-400">{t('taglineHint', idioma)}</p>
-        {errors.tagline && <p className="text-xs text-red-500">{errors.tagline}</p>}
+        <p className="mt-1.5 ml-1 text-[10px] text-gray-400 font-medium">{t('taglineHint', idioma)}</p>
+        {errors.tagline && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.tagline}</p>}
       </div>
 
       {/* Descripción (opcional) */}
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-ink">{t('descripcionLabel', idioma)}</label>
-          <span className="text-xs text-gray-400">{perfil.descripcion.length}/400</span>
+      <div className="flex flex-col">
+        <div className="flex items-center justify-between px-1">
+          <label className={labelClass}>{t('descripcionLabel', idioma)}</label>
+          <span className="text-[10px] font-bold text-gray-300 uppercase tracking-tighter">{perfil.descripcion.length}/400</span>
         </div>
         <textarea
           value={perfil.descripcion}
           onChange={(e) => setPerfil({ descripcion: e.target.value.slice(0, 400) })}
-          className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-brand-900 resize-none"
-          rows={4}
+          className={clsx(inputClass, "resize-none h-32")}
           placeholder={t('descripcionPlaceholder', idioma)}
         />
       </div>
 
       {/* Años y capacidad (opcionales) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-ink">{t('anosFundacionLabel', idioma)}</label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="flex flex-col">
+          <label className={labelClass}>{t('anosFundacionLabel', idioma)}</label>
           <input
             type="text"
             value={perfil.anosFundacion}
             onChange={(e) => setPerfil({ anosFundacion: e.target.value })}
-            className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-brand-900"
+            className={inputClass}
             placeholder={t('anosFundacionPlaceholder', idioma)}
           />
         </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-ink">{t('capacidadMensualLabel', idioma)}</label>
+        <div className="flex flex-col">
+          <label className={labelClass}>{t('capacidadMensualLabel', idioma)}</label>
           <input
             type="text"
             value={perfil.capacidadMensual}
             onChange={(e) => setPerfil({ capacidadMensual: e.target.value })}
-            className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-brand-900"
+            className={inputClass}
             placeholder={t('capacidadMensualPlaceholder', idioma)}
           />
         </div>
@@ -133,18 +135,19 @@ export default function Step2Perfil({ onNext, onBack }: Step2Props) {
 
       {/* Certificaciones */}
       <div>
-        <p className="text-sm font-medium text-ink mb-2">{t('certificacionesLabel', idioma)}</p>
-        <div className="flex flex-wrap gap-2">
+        <p className={labelClass}>{t('certificacionesLabel', idioma)}</p>
+        <div className="flex flex-wrap gap-2.5 mt-1">
           {CERTIFICACIONES.map((cert) => (
             <button
               key={cert}
               type="button"
               onClick={() => handleCertificacion(cert)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+              className={clsx(
+                "px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 border",
                 perfil.certificaciones.includes(cert)
-                  ? 'bg-brand-900 text-white border-brand-900'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-brand-500'
-              }`}
+                  ? 'bg-brand-900 text-white border-brand-900 shadow-md shadow-brand-900/20'
+                  : 'bg-white text-gray-500 border-gray-100 hover:border-brand-500/30 hover:bg-brand-50/50'
+              )}
             >
               {cert}
             </button>
@@ -154,30 +157,32 @@ export default function Step2Perfil({ onNext, onBack }: Step2Props) {
 
       {/* Logo only (banner removed) */}
       <div className="max-w-xs">
-        <ImageUploadBox
-          label={t('logoLabel', idioma)}
-          hint={t('logoHint', idioma)}
-          value={perfil.logo}
-          onChange={(val) => setPerfil({ logo: val })}
-          previewVariant="circle"
-        />
+        <label className={labelClass}>{t('logoLabel', idioma)}</label>
+        <div className="mt-1">
+          <ImageUploadBox
+            hint={t('logoHint', idioma)}
+            value={perfil.logo}
+            onChange={(val) => setPerfil({ logo: val })}
+            previewVariant="circle"
+          />
+        </div>
       </div>
 
       {/* Nav buttons */}
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex items-center justify-between pt-4">
         <button
           type="button"
           onClick={onBack}
-          className="px-5 py-2.5 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+          className="px-6 py-3 rounded-full border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 hover:text-ink transition-all duration-300"
         >
-          {t('btnAtras', idioma)}
+          ← {t('btnAtras', idioma)}
         </button>
         <button
           type="button"
           onClick={handleNext}
-          className="px-6 py-2.5 rounded-full bg-brand-900 text-white text-sm font-semibold hover:bg-brand-900/90 transition-colors"
+          className="px-8 py-3 rounded-full bg-brand-900 text-white text-sm font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-brand-900/20"
         >
-          {t('btnSiguiente', idioma)}
+          {t('btnSiguiente', idioma)} →
         </button>
       </div>
     </div>
