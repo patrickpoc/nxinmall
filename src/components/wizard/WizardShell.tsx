@@ -52,7 +52,7 @@ export default function WizardShell({
               <button
                 type="button"
                 onClick={() => setLangOpen((prev) => !prev)}
-                className="text-brand-900 hover:text-brand-700 transition-colors flex items-center justify-center p-1"
+                className="text-brand-900 hover:text-brand-700 hover:bg-brand-50 rounded-full p-2 transition-all flex items-center justify-center"
                 aria-label="Cambiar idioma"
                 aria-expanded={langOpen}
               >
@@ -81,7 +81,7 @@ export default function WizardShell({
 
             <div className="flex flex-col items-end">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-900/40 leading-none mb-1">Onboarding</span>
-              <span className="text-xs font-bold text-gray-400 text-right">Paso {currentStep} de 5</span>
+              <span className="text-xs font-bold text-gray-400 text-right">Paso {currentStep} de {idioma === 'es' ? '5' : '5'}</span>
             </div>
           </div>
         </div>

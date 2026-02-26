@@ -106,11 +106,11 @@ function HomeContent() {
               <button
                 type="button"
                 onClick={() => setLangOpen((prev) => !prev)}
-                className="text-brand-900 hover:text-brand-700 transition-colors flex items-center justify-center"
+                className="text-brand-900 hover:text-brand-700 hover:bg-brand-50 rounded-full p-2 transition-all flex items-center justify-center"
                 aria-label="Cambiar idioma"
                 aria-expanded={langOpen}
               >
-                <Globe className="w-7 h-7" />
+                <Globe className="w-6 h-6" />
               </button>
               {langOpen && (
                 <div className="absolute right-0 mt-2 w-36 rounded-2xl border border-brand-100 bg-white shadow-lg text-sm overflow-hidden z-10">
@@ -134,9 +134,11 @@ function HomeContent() {
             <a
               href="#solicitud"
               onClick={scrollToId('solicitud')}
-              className="whitespace-nowrap px-4 sm:px-5 py-1.5 sm:py-2 rounded-full border-2 border-brand-900 text-brand-900 text-[13px] sm:text-[15px] font-black hover:bg-brand-900 hover:text-white transition-all duration-300"
+              className="btn-cta-premium group whitespace-nowrap px-4 sm:px-6 py-1 sm:py-1.5 transition-all duration-300"
             >
-              {content.nav.cta}
+              <span className="text-brand-900 group-hover:text-white text-[13px] sm:text-[15px] font-black transition-colors duration-300">
+                {content.nav.cta}
+              </span>
             </a>
           </div>
         </div>

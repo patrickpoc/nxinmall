@@ -94,6 +94,45 @@ body {
   animation: softZoom 2.2s cubic-bezier(0.1, 0.7, 0.1, 1) both;
 }
 
+/* Premium Gradient Border Utility */
+.btn-cta-premium {
+  position: relative;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.btn-cta-premium::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #1973FA 0%, #B990FF 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+.btn-cta-premium:hover {
+  background-color: #1973fa;
+  border-color: #1973fa;
+  box-shadow: 0 10px 20px -5px rgba(25, 115, 250, 0.3);
+}
+
+.btn-cta-premium:hover::before {
+  opacity: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-fade-in,
