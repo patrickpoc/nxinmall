@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Download, Send, Building2, MapPin, Package, Award } from 'lucide-react';
 import { useOnboardingStore } from '@/lib/store';
-import { generateStoreJson, downloadStoreJson } from '@/lib/generate-json';
+import { downloadStoreJson } from '@/lib/generate-json';
 import { CATEGORIAS } from '@/data/catalog';
 import { Categoria } from '@/types/onboarding';
+import { t } from '@/lib/i18n';
 
 interface Step5Props {
   onBack: () => void;
@@ -18,7 +19,7 @@ export default function Step5Resumen({ onBack }: Step5Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const { registro, perfil, ubicacion, catalogo, setActivacion } = store;
+  const { registro, perfil, ubicacion, catalogo, setActivacion, idioma } = store;
   const catData = perfil.categoria ? CATEGORIAS[perfil.categoria as Categoria] : null;
 
   const handleDownload = () => {
@@ -41,7 +42,7 @@ export default function Step5Resumen({ onBack }: Step5Props) {
       setActivacion({ enviado: true });
       router.push('/gracias');
     } catch (err) {
-      setError('Error al enviar. Por favor intenta de nuevo.');
+      setError(t('errDireccion', idioma) === 'La dirección es requerida' ? 'Error al enviar. Por favor intenta de nuevo.' : 'Erro ao enviar. Por favor tente novamente.');
     } finally {
       setIsLoading(false);
     }
@@ -98,7 +99,7 @@ export default function Step5Resumen({ onBack }: Step5Props) {
             <MapPin className="w-5 h-5 text-brand-900" />
           </div>
           <div>
-            <p className={labelClass}>Ubicación</p>
+            <p className={labelClass}>{t('resumenUbicacionLabel', idioma)}</p>
             <p className="text-sm font-bold text-ink leading-tight">
               {[ubicacion.distrito, ubicacion.provincia, ubicacion.departamento].filter(Boolean).join(', ')}
             </p>
@@ -114,7 +115,7 @@ export default function Step5Resumen({ onBack }: Step5Props) {
             <Building2 className="w-5 h-5 text-brand-900" />
           </div>
           <div>
-            <p className={labelClass}>Contacto</p>
+            <p className={labelClass}>{t('resumenContactoLabel', idioma)}</p>
             <p className="text-sm font-bold text-ink leading-tight">{registro.nombre}</p>
             <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mt-1">{registro.cargo}</p>
             <p className="text-xs text-gray-400 font-medium">{registro.email}</p>
@@ -127,13 +128,13 @@ export default function Step5Resumen({ onBack }: Step5Props) {
             <Package className="w-5 h-5 text-brand-900" />
           </div>
           <div>
-            <p className={labelClass}>Catálogo</p>
+            <p className={labelClass}>{t('resumenCatalogoLabel', idioma)}</p>
             <p className="text-sm font-bold text-ink leading-tight">
-              {catalogo.productosSeleccionados.length} producto{catalogo.productosSeleccionados.length !== 1 ? 's' : ''}
+              {catalogo.productosSeleccionados.length} {catalogo.productosSeleccionados.length !== 1 ? t('paso4SeleccionadosBadge', idioma) : t('paso4SeleccionadoBadge', idioma)}
             </p>
             <p className="text-xs text-gray-500 mt-1 font-medium italic">
               {catalogo.productosSeleccionados.slice(0, 3).map((p) => p.nombre).join(', ')}
-              {catalogo.productosSeleccionados.length > 3 && ` +${catalogo.productosSeleccionados.length - 3} más`}
+              {catalogo.productosSeleccionados.length > 3 && ` +${catalogo.productosSeleccionados.length - 3} ${idioma === 'es' ? 'más' : 'mais'}`}
             </p>
           </div>
         </div>
@@ -144,7 +145,7 @@ export default function Step5Resumen({ onBack }: Step5Props) {
             <Award className="w-5 h-5 text-brand-900" />
           </div>
           <div>
-            <p className={labelClass}>Certificaciones</p>
+            <p className={labelClass}>{t('resumenCertificacionesLabel', idioma)}</p>
             <div className="flex flex-wrap gap-1.5 mt-1">
               {perfil.certificaciones.length > 0 ? (
                 perfil.certificaciones.map((c) => (
@@ -153,7 +154,7 @@ export default function Step5Resumen({ onBack }: Step5Props) {
                   </span>
                 ))
               ) : (
-                <span className="text-xs text-gray-400 font-medium">Sin certificaciones registradas</span>
+                <span className="text-xs text-gray-400 font-medium">{t('resumenSinCertificaciones', idioma)}</span>
               )}
             </div>
           </div>
@@ -162,7 +163,7 @@ export default function Step5Resumen({ onBack }: Step5Props) {
 
       {/* Products list detail */}
       <div className="bg-gray-50/50 rounded-3xl p-6 border border-gray-100/50">
-        <h3 className="text-xs font-black text-brand-900/40 uppercase tracking-[0.2em] mb-4 ml-1">Detalle de Productos</h3>
+        <h3 className="text-xs font-black text-brand-900/40 uppercase tracking-[0.2em] mb-4 ml-1">{t('resumenProductosTitulo', idioma)}</h3>
         <div className="flex flex-col gap-3">
           {catalogo.productosSeleccionados.map((p) => (
             <div key={p.id} className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-gray-100/50 group hover:border-brand-500/20 transition-all">
@@ -193,9 +194,9 @@ export default function Step5Resumen({ onBack }: Step5Props) {
           disabled={isLoading}
           className="flex items-center justify-center gap-3 py-4 rounded-full bg-brand-900 text-white font-black text-lg uppercase tracking-tight hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl shadow-brand-900/25"
         >
-          {isLoading ? 'Procesando...' : (
+          {isLoading ? t('procesando', idioma) : (
             <>
-              Enviar al equipo NxinMall
+              {t('btnEnviar', idioma)}
               <Send className="w-5 h-5 stroke-[2.5]" />
             </>
           )}
@@ -207,11 +208,11 @@ export default function Step5Resumen({ onBack }: Step5Props) {
           className="flex items-center justify-center gap-2 py-3.5 rounded-full border-2 border-brand-900 text-brand-900 font-bold text-sm hover:bg-brand-50 transition-all duration-300"
         >
           <Download className="w-4 h-4 stroke-[2.5]" />
-          Descargar copia de mi perfil (.json)
+          {t('btnDescargar', idioma)}
         </button>
 
         <p className="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest px-8 leading-relaxed">
-          Al enviar, confirmas que la información es veraz y autorizas el contacto comercial.
+          {t('resumenFooterLeyenda', idioma)}
         </p>
       </div>
 
@@ -222,7 +223,7 @@ export default function Step5Resumen({ onBack }: Step5Props) {
           onClick={onBack}
           className="flex items-center gap-2 px-6 py-2.5 text-xs font-black text-gray-400 uppercase tracking-widest hover:text-ink transition-colors"
         >
-          ← Regresar
+          {t('btnRegresar', idioma)}
         </button>
       </div>
     </div>

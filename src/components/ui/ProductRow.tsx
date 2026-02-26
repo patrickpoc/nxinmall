@@ -29,6 +29,14 @@ export default function ProductRow({
   onToggle,
   onUpdate,
 }: ProductRowProps) {
+  const [expanded, setExpanded] = useState(false);
+
+  const handleToggle = () => {
+    onToggle();
+    if (!selected) setExpanded(true);
+    else setExpanded(false);
+  };
+
   const labelClass = "text-[10px] font-black text-brand-900/50 uppercase tracking-[0.2em] mb-1";
   const inputClass = "w-full px-3 py-2 text-sm rounded-xl bg-gray-50 border-none shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:bg-white focus:shadow-md transition-all duration-300";
 

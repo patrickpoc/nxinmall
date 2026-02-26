@@ -1,8 +1,11 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import Link from 'next/link';
+import { Globe } from 'lucide-react';
 import WizardProgress from './WizardProgress';
+import { useOnboardingStore } from '@/lib/store';
+import { LANG_OPTIONS } from '@/data/landing-content';
 
 interface WizardShellProps {
   currentStep: number;
@@ -31,6 +34,9 @@ export default function WizardShell({
   isLoading = false,
   hideNav = false,
 }: WizardShellProps) {
+  const { idioma, setIdioma } = useOnboardingStore();
+  const [langOpen, setLangOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-brand-50 flex flex-col">
       {/* Header */}
@@ -39,9 +45,44 @@ export default function WizardShell({
           <Link href="/" className="transition-opacity hover:opacity-80">
             <img src="/visuals/logo.png" alt="NxinMall" className="h-9 w-auto" />
           </Link>
-          <div className="flex flex-col items-end">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-900/40 leading-none mb-1">Onboarding</span>
-            <span className="text-xs font-bold text-gray-400">Paso {currentStep} de 5</span>
+          
+          <div className="flex items-center gap-4">
+            {/* Language Switcher */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setLangOpen((prev) => !prev)}
+                className="text-brand-900 hover:text-brand-700 transition-colors flex items-center justify-center p-1"
+                aria-label="Cambiar idioma"
+                aria-expanded={langOpen}
+              >
+                <Globe className="w-6 h-6" />
+              </button>
+              {langOpen && (
+                <div className="absolute right-0 mt-2 w-32 rounded-2xl border border-brand-100 bg-white shadow-xl text-xs font-bold uppercase tracking-widest overflow-hidden z-[60] animate-fade-in">
+                  {LANG_OPTIONS.filter((option) => option.code !== 'en' && option.code !== idioma).map((option) => (
+                    <button
+                      key={option.code}
+                      type="button"
+                      className="w-full text-left px-4 py-3 hover:bg-brand-50 text-gray-500 hover:text-brand-900 transition-colors"
+                      onClick={() => {
+                        setIdioma(option.code as 'es' | 'pt');
+                        setLangOpen(false);
+                      }}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="h-8 w-px bg-gray-100 mx-1" />
+
+            <div className="flex flex-col items-end">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-900/40 leading-none mb-1">Onboarding</span>
+              <span className="text-xs font-bold text-gray-400 text-right">Paso {currentStep} de 5</span>
+            </div>
           </div>
         </div>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-2">

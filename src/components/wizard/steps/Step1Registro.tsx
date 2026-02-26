@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { step1Schema, Step1Data } from '@/lib/schemas';
 import { useOnboardingStore } from '@/lib/store';
 import PhoneInput from '@/components/ui/PhoneInput';
+import { t } from '@/lib/i18n';
 import clsx from 'clsx';
 
 const CARGOS = [
@@ -22,7 +23,7 @@ interface Step1Props {
 }
 
 export default function Step1Registro({ onNext }: Step1Props) {
-  const { registro, setRegistro } = useOnboardingStore();
+  const { registro, idioma, setRegistro } = useOnboardingStore();
 
   const {
     register,
@@ -62,41 +63,41 @@ export default function Step1Registro({ onNext }: Step1Props) {
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
       {/* Nombre */}
       <div className="flex flex-col">
-        <label className={labelClass}>Nombre completo *</label>
+        <label className={labelClass}>{t('nombreLabel', idioma)}</label>
         <input
           {...register('nombre')}
           className={inputClass(errors.nombre)}
-          placeholder="Tu nombre"
+          placeholder={t('nombrePlaceholder', idioma)}
         />
         {errors.nombre && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.nombre.message}</p>}
       </div>
 
       {/* Empresa */}
       <div className="flex flex-col">
-        <label className={labelClass}>Empresa *</label>
+        <label className={labelClass}>{t('empresaLabel', idioma)}</label>
         <input
           {...register('empresa')}
           className={inputClass(errors.empresa)}
-          placeholder="Nombre de tu empresa"
+          placeholder={t('empresaPlaceholder', idioma)}
         />
         {errors.empresa && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.empresa.message}</p>}
       </div>
 
       {/* Email */}
       <div className="flex flex-col">
-        <label className={labelClass}>Email corporativo *</label>
+        <label className={labelClass}>{t('emailLabel', idioma)}</label>
         <input
           {...register('email')}
           type="email"
           className={inputClass(errors.email)}
-          placeholder="tu@empresa.com"
+          placeholder={t('emailPlaceholder', idioma)}
         />
         {errors.email && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.email.message}</p>}
       </div>
 
       {/* WhatsApp */}
       <div className="flex flex-col">
-        <label className={labelClass}>WhatsApp *</label>
+        <label className={labelClass}>{t('whatsappLabel', idioma)}</label>
         <PhoneInput
           placeholder="999 999 999"
           value={whatsapp}
@@ -108,12 +109,12 @@ export default function Step1Registro({ onNext }: Step1Props) {
       {/* RUC */}
       <div className="flex flex-col">
         <label className={labelClass}>
-          RUC <span className="opacity-50 font-normal">(opcional)</span>
+          {t('rucLabel', idioma)} <span className="opacity-50 font-normal lowercase tracking-normal">{t('opcional', idioma)}</span>
         </label>
         <input
           {...register('ruc')}
           className={inputClass(errors.ruc)}
-          placeholder="20123456789"
+          placeholder={t('rucPlaceholder', idioma)}
           maxLength={11}
         />
         {errors.ruc && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.ruc.message}</p>}
@@ -121,9 +122,9 @@ export default function Step1Registro({ onNext }: Step1Props) {
 
       {/* Cargo */}
       <div className="flex flex-col">
-        <label className={labelClass}>Cargo *</label>
+        <label className={labelClass}>{t('cargoLabel', idioma)}</label>
         <select {...register('cargo')} className={inputClass(errors.cargo)}>
-          <option value="">Selecciona tu cargo</option>
+          <option value="">{t('cargoPlaceholder', idioma)}</option>
           {CARGOS.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
@@ -133,7 +134,7 @@ export default function Step1Registro({ onNext }: Step1Props) {
 
       {/* País */}
       <div className="flex flex-col sm:col-span-2">
-        <label className={labelClass}>País *</label>
+        <label className={labelClass}>{t('paisPaso1Label', idioma)}</label>
         <select {...register('pais')} className={inputClass(errors.pais)}>
           {PAISES.map((p) => (
             <option key={p} value={p}>{p}</option>
@@ -147,7 +148,7 @@ export default function Step1Registro({ onNext }: Step1Props) {
           type="submit"
           className="w-full py-4 rounded-full bg-brand-900 text-white font-bold text-base hover:bg-brand-900/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 shadow-lg shadow-brand-900/20"
         >
-          Continuar →
+          {t('btnContinuar', idioma)}
         </button>
       </div>
     </form>

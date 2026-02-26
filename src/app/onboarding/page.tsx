@@ -10,18 +10,11 @@ import Step2Perfil from '@/components/wizard/steps/Step2Perfil';
 import Step3Ubicacion from '@/components/wizard/steps/Step3Ubicacion';
 import Step4Catalogo from '@/components/wizard/steps/Step4Catalogo';
 import Step5Resumen from '@/components/wizard/steps/Step5Resumen';
-
-const STEP_META = [
-  { title: 'Datos básicos', subtitle: 'Cuéntanos quién eres y cómo contactarte.' },
-  { title: 'Perfil de tu empresa', subtitle: 'Qué ofreces y cómo te quieres presentar.' },
-  { title: 'Ubicación', subtitle: 'Indica desde dónde operas.' },
-  { title: 'Tu catálogo de productos', subtitle: 'Selecciona los productos que exportas u ofreces.' },
-  { title: 'Resumen y envío', subtitle: 'Revisa todo y envía tu perfil al equipo NxinMall.' },
-];
+import { t } from '@/lib/i18n';
 
 function OnboardingContent() {
   const searchParams = useSearchParams();
-  const { meta, setCurrentStep, setRegistro } = useOnboardingStore();
+  const { meta, idioma, setCurrentStep, setRegistro } = useOnboardingStore();
 
   useEffect(() => {
     const nombre = searchParams.get('nombre');
@@ -37,7 +30,14 @@ function OnboardingContent() {
   }, []);
 
   const currentStep = meta.currentStep;
-  const stepMeta = STEP_META[currentStep - 1];
+  
+  const stepMeta = [
+    { title: t('step1Title', idioma), subtitle: t('step1Subtitle', idioma) },
+    { title: t('step2Title', idioma), subtitle: t('step2Subtitle', idioma) },
+    { title: t('step3Title', idioma), subtitle: t('step3Subtitle', idioma) },
+    { title: t('step4Title', idioma), subtitle: t('step4Subtitle', idioma) },
+    { title: t('step5Title', idioma), subtitle: t('step5Subtitle', idioma) },
+  ][currentStep - 1];
 
   const goNext = () => setCurrentStep(Math.min(currentStep + 1, 5));
   const goBack = () => setCurrentStep(Math.max(currentStep - 1, 1));

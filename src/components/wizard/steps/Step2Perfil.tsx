@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import clsx from 'clsx';
 import { useOnboardingStore } from '@/lib/store';
 import { CATEGORIAS_LIST } from '@/data/catalog';
 import { Categoria } from '@/types/onboarding';
