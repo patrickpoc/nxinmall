@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import clsx from 'clsx';
 import { ProductoCatalogo } from '@/data/catalog';
 import { ProductoSeleccionado, Categoria } from '@/types/onboarding';
+import { Idioma, t } from '@/lib/i18n';
 import ImageUploadBox from './ImageUploadBox';
 
 interface ProductRowProps {
@@ -12,6 +13,7 @@ interface ProductRowProps {
   categoria: Categoria;
   selected: boolean;
   selectedData?: ProductoSeleccionado;
+  idioma: Idioma;
   onToggle: () => void;
   onUpdate: (data: Partial<ProductoSeleccionado>) => void;
 }
@@ -23,6 +25,7 @@ export default function ProductRow({
   categoria,
   selected,
   selectedData,
+  idioma,
   onToggle,
   onUpdate,
 }: ProductRowProps) {
@@ -57,7 +60,7 @@ export default function ProductRow({
         </label>
         {selected && (
           <span className="text-xs text-brand-900 font-medium bg-brand-100 px-2 py-0.5 rounded-full">
-            Seleccionado
+            {t('seleccionadoBadge', idioma)}
           </span>
         )}
         {selected && (
@@ -76,7 +79,7 @@ export default function ProductRow({
         <div className="px-4 pb-4 border-t border-gray-100 pt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* MOQ */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-gray-600">MOQ (cantidad mínima de pedido)</label>
+            <label className="text-xs font-medium text-gray-600">{t('moqLabel', idioma)}</label>
             <div className="flex gap-2">
               <input
                 type="number"
@@ -103,7 +106,7 @@ export default function ProductRow({
 
           {/* Precio */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-gray-600">Precio (USD)</label>
+            <label className="text-xs font-medium text-gray-600">{t('precioLabel', idioma)}</label>
             <div className="flex gap-2 items-center">
               <input
                 type="number"
@@ -144,11 +147,25 @@ export default function ProductRow({
             </div>
           </div>
 
+          {/* Descripción EN editable */}
+          <div className="sm:col-span-2 flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-gray-600">
+              📋 {t('paso4DescripcionEnLabel', idioma)}
+            </label>
+            <textarea
+              value={selectedData?.descripcion_en ?? producto.descripcion_en}
+              onChange={(e) => onUpdate({ descripcion_en: e.target.value })}
+              className="w-full px-2 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-brand-900 resize-none"
+              rows={3}
+              placeholder={producto.descripcion_en}
+            />
+          </div>
+
           {/* Imagen */}
           <div className="sm:col-span-2">
             <ImageUploadBox
-              label="Foto de tu producto (opcional)"
-              hint="JPG, PNG hasta 5MB"
+              label={t('fotoProductoLabel', idioma)}
+              hint={t('fotoProductoHint', idioma)}
               value={selectedData?.imagen ? { dataUrl: selectedData.imagen.dataUrl, name: 'producto' } : null}
               onChange={(val) =>
                 onUpdate({
@@ -167,7 +184,7 @@ export default function ProductRow({
                 }
                 className="mt-2 text-xs text-brand-900 underline hover:no-underline"
               >
-                Usar imagen de referencia
+                {t('usarImagenStock', idioma)}
               </button>
             )}
           </div>

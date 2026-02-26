@@ -40,7 +40,7 @@ export default function CategoryCard({ categoria, selected, onClick }: CategoryC
         {categoria.nombre}
       </p>
       <p className="text-xs text-gray-500 leading-snug">
-        {categoria.ejemplos.join(' · ')}
+        {categoria.subtitulo}
       </p>
     </button>
   );

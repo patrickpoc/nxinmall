@@ -13,6 +13,7 @@ export function generateStoreJson(state: OnboardingState): StoreConfig {
       sessionId: state.meta.sessionId,
       status: 'PENDING_UPLOAD',
       fuente: 'Wizard Onboarding NxinMall Peru',
+      idioma: state.idioma,
     },
     proveedor: {
       nombre: state.registro.nombre,
@@ -47,6 +48,8 @@ export function generateStoreJson(state: OnboardingState): StoreConfig {
       productos: state.catalogo.productosSeleccionados.map(p => ({
         id: p.id,
         nombre: p.nombre,
+        nombre_en: p.nombre_en,
+        descripcion_en: p.descripcion_en,
         esPersonalizado: p.esPersonalizado,
         moq: p.moq,
         precio: p.precio,

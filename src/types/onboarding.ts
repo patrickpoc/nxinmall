@@ -3,14 +3,17 @@ export type Categoria = 'frutas' | 'flores' | 'viveros' | 'empacadoras' | 'plast
 export interface ProductoSeleccionado {
   id: string;
   nombre: string;
+  nombre_en: string;
   categoria: Categoria;
   esPersonalizado: boolean;
   moq: { valor: number; unidad: string };
   precio: { min: number; max: number; moneda: 'USD' | 'PEN' };
   imagen: { dataUrl: string; fuente: 'upload' | 'stock' } | null;
+  descripcion_en: string;
 }
 
 export interface OnboardingState {
+  idioma: 'es' | 'pt';
   meta: {
     sessionId: string;
     startedAt: string;
@@ -60,6 +63,7 @@ export interface StoreConfig {
     sessionId: string;
     status: string;
     fuente: string;
+    idioma: 'es' | 'pt';
   };
   proveedor: {
     nombre: string;
@@ -94,6 +98,8 @@ export interface StoreConfig {
     productos: Array<{
       id: string;
       nombre: string;
+      nombre_en: string;
+      descripcion_en: string;
       esPersonalizado: boolean;
       moq: { valor: number; unidad: string };
       precio: { min: number; max: number; moneda: 'USD' | 'PEN' };

@@ -14,10 +14,12 @@ interface OnboardingStore extends OnboardingState {
   removeProducto: (id: string) => void;
   updateProducto: (id: string, data: Partial<ProductoSeleccionado>) => void;
   setActivacion: (data: Partial<OnboardingState['activacion']>) => void;
+  setIdioma: (idioma: 'es' | 'pt') => void;
   clearState: () => void;
 }
 
 const initialState: OnboardingState = {
+  idioma: 'es',
   meta: {
     sessionId: generateId(),
     startedAt: new Date().toISOString(),
@@ -69,7 +71,11 @@ export const useOnboardingStore = create<OnboardingStore>()(
         set((state) => ({ meta: { ...state.meta, currentStep: step } })),
 
       setRegistro: (data) =>
-        set((state) => ({ registro: { ...state.registro, ...data } })),
+        set((state) => {
+          const newRegistro = { ...state.registro, ...data };
+          const newIdioma = newRegistro.pais === 'Brasil' ? 'pt' : 'es';
+          return { registro: newRegistro, idioma: newIdioma };
+        }),
 
       setPerfil: (data) =>
         set((state) => ({ perfil: { ...state.perfil, ...data } })),
@@ -106,6 +112,8 @@ export const useOnboardingStore = create<OnboardingStore>()(
       setActivacion: (data) =>
         set((state) => ({ activacion: { ...state.activacion, ...data } })),
 
+      setIdioma: (idioma) => set({ idioma }),
+
       clearState: () =>
         set({
           ...initialState,
@@ -119,6 +127,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
     {
       name: 'nxin_onboarding',
       partialize: (state) => ({
+        idioma: state.idioma,
         meta: state.meta,
         registro: state.registro,
         perfil: state.perfil,
