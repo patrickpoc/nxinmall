@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { ArrowUpRight, FileCheck2, Globe, Globe2, ShieldCheck, Truck } from 'lucide-react';
+import { ArrowUpRight, Globe } from 'lucide-react';
 
 type Lang = 'es' | 'en' | 'pt';
 
@@ -252,7 +252,85 @@ const COPY: Record<Lang, {
   },
 };
 
-const BENEFIT_ICONS = [Globe2, ShieldCheck, FileCheck2, Truck];
+type IconNode = [keyof JSX.IntrinsicElements, Record<string, string>][];
+
+const ICON_NODES: IconNode[] = [
+  [
+    ['path', { d: 'M21.54 15H17a2 2 0 0 0-2 2v4.54', key: '1djwo0' }],
+    [
+      'path',
+      {
+        d: 'M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17',
+        key: '1tzkfa',
+      },
+    ],
+    [
+      'path',
+      {
+        d: 'M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05',
+        key: '14pb5j',
+      },
+    ],
+    ['circle', { cx: '12', cy: '12', r: '10', key: '1mglay' }],
+  ],
+  [
+    [
+      'path',
+      {
+        d: 'M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z',
+        key: 'oel41y',
+      },
+    ],
+    ['path', { d: 'm9 12 2 2 4-4', key: 'dzmm74' }],
+  ],
+  [
+    [
+      'path',
+      {
+        d: 'M10.5 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v6',
+        key: 'g5mvt7',
+      },
+    ],
+    ['path', { d: 'M14 2v5a1 1 0 0 0 1 1h5', key: 'wfsgrz' }],
+    ['path', { d: 'm14 20 2 2 4-4', key: '15kota' }],
+  ],
+  [
+    [
+      'path',
+      {
+        d: 'M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2',
+        key: 'wrbu53',
+      },
+    ],
+    ['path', { d: 'M15 18H9', key: '1lyqi6' }],
+    [
+      'path',
+      {
+        d: 'M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14',
+        key: 'lysw3i',
+      },
+    ],
+    ['circle', { cx: '17', cy: '18', r: '2', key: '332jqn' }],
+    ['circle', { cx: '7', cy: '18', r: '2', key: '19iecd' }],
+  ],
+];
+
+function GradientIcon({ node, id }: { node: IconNode; id: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className="w-12 h-12" fill="none" stroke={`url(#${id})`} strokeWidth="1.8">
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#1973FA" />
+          <stop offset="100%" stopColor="#B990FF" />
+        </linearGradient>
+      </defs>
+      {node.map(([tag, attrs], index) => {
+        const Tag = tag;
+        return <Tag key={`${id}-${index}`} {...attrs} />;
+      })}
+    </svg>
+  );
+}
 
 const LANG_OPTIONS: { code: Lang; label: string }[] = [
   { code: 'es', label: 'Español' },
@@ -283,6 +361,7 @@ export default function HomePage() {
   const initialLang: Lang = ['es', 'en', 'pt'].includes(langParam) ? langParam : 'es';
   const [lang, setLang] = useState<Lang>(initialLang);
   const [langOpen, setLangOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const content = COPY[lang];
 
   useEffect(() => {
@@ -297,6 +376,48 @@ export default function HomePage() {
       setLang(stored);
     }
   }, [langParam]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-animate]'));
+    let ticking = false;
+
+    const update = () => {
+      const trigger = window.innerHeight * 0.85;
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const inView = rect.top < trigger && rect.bottom > 0;
+        if (inView) {
+          el.classList.add('is-visible');
+        } else {
+          el.classList.remove('is-visible');
+        }
+      });
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -321,11 +442,13 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen text-ink bg-white">
-      <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur border-b border-brand-100 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
-          <img src="/visuals/logo.png" alt="NxinMall" className="h-10 w-auto" />
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+    <div className="min-h-screen text-ink bg-white landing">
+      <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur z-50">
+        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center">
+          <div className="flex-1">
+            <img src="/visuals/logo.png" alt="NxinMall" className="h-10 w-auto" />
+          </div>
+          <nav className="hidden md:flex items-center gap-6 text-[16px] font-bold text-gray-600 justify-center">
             <Link href="#beneficios" className="hover:text-brand-900 transition-colors">
               {content.nav.suppliers}
             </Link>
@@ -336,7 +459,7 @@ export default function HomePage() {
               {content.nav.faq}
             </Link>
           </nav>
-          <div className="flex items-center gap-3">
+          <div className="flex-1 flex items-center justify-end gap-3">
             <div className="relative">
               <button
                 type="button"
@@ -368,18 +491,19 @@ export default function HomePage() {
             </div>
             <Link
               href="#solicitud"
-              className="px-4 py-2 rounded-full bg-brand-900 text-white text-sm font-semibold hover:bg-brand-900/90 transition-colors"
+              className="px-5 py-2.5 rounded-full bg-brand-900 text-white text-[16px] font-semibold hover:bg-brand-900/90 transition-colors"
             >
               {content.nav.cta}
             </Link>
           </div>
         </div>
+        {!scrolled && <div className="h-px w-full bg-transparent" />}
       </header>
 
       <main>
-        <section className="pt-24" id="inicio">
+        <section className="pt-28" id="inicio">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center max-w-3xl mx-auto animate-fade-up">
+            <div className="text-center max-w-3xl mx-auto reveal" data-animate="fade-up">
               <p className="text-xs uppercase tracking-[0.3em] text-brand-700 font-semibold mb-4">
                 {content.hero.badge}
               </p>
@@ -390,13 +514,13 @@ export default function HomePage() {
               <div className="flex flex-wrap justify-center gap-3">
                 <Link
                   href="#solicitud"
-                  className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-brand-900 text-white font-semibold text-sm hover:bg-brand-900/90 transition-colors"
+                  className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-brand-900 text-white font-semibold text-[16px] hover:bg-brand-900/90 transition-colors"
                 >
                   {content.hero.primary} <ArrowUpRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="#beneficios"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-brand-100 text-ink font-semibold text-sm hover:bg-white/70 transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-brand-100 text-ink font-semibold text-[16px] hover:bg-white/70 transition-colors"
                 >
                   {content.hero.secondary}
                 </Link>
@@ -405,7 +529,10 @@ export default function HomePage() {
           </div>
           <div className="mt-10">
             <div className="mx-auto max-w-6xl px-6">
-              <div className="relative overflow-hidden rounded-[28px] border border-brand-100 bg-white aspect-[16/7] animate-soft-zoom">
+              <div
+                className="relative overflow-hidden rounded-[28px] border border-brand-100 bg-white aspect-[16/7] reveal-zoom"
+                data-animate="soft-zoom"
+              >
                 <img
                   src="/visuals/hero.jpg"
                   alt="Cadena de suministro agricola"
@@ -419,22 +546,23 @@ export default function HomePage() {
 
         <section className="py-20 bg-brand-50" id="beneficios">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center max-w-2xl mx-auto mb-10 animate-fade-up">
+            <div className="text-center max-w-2xl mx-auto mb-10 reveal" data-animate="fade-up">
               <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05]">
                 {content.benefitsTitle}
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {content.benefits.map((benefit, index) => {
-                const Icon = BENEFIT_ICONS[index];
+                const iconNode = ICON_NODES[index];
                 return (
                   <div
                     key={benefit.title}
-                    className="p-5 rounded-2xl bg-white border border-brand-100 animate-fade-up"
+                    className="p-5 rounded-2xl bg-white border border-brand-100 reveal"
+                    data-animate="fade-up"
                     style={{ animationDelay: `${index * 80}ms` }}
                   >
-                    <div className="w-11 h-11 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-700 mb-3">
-                      <Icon className="w-5 h-5" strokeWidth={1.5} />
+                    <div className="mb-3">
+                      <GradientIcon node={iconNode} id={`benefit-grad-${index}`} />
                     </div>
                     <h3 className="font-medium text-base text-ink mb-2">{benefit.title}</h3>
                     <p className="text-sm text-gray-600 leading-relaxed">{benefit.desc}</p>
@@ -447,15 +575,18 @@ export default function HomePage() {
 
         <section className="py-20">
           <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 items-center">
-            <div className="animate-fade-up">
+            <div className="reveal" data-animate="fade-up">
               <p className="text-sm font-semibold text-brand-700 mb-3">{content.logistics.kicker}</p>
               <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05] mb-3">
                 {content.logistics.title}
               </h2>
               <p className="text-gray-600 leading-relaxed">{content.logistics.body}</p>
             </div>
-            <div className="animate-fade-up">
-              <div className="rounded-[26px] border border-brand-100 overflow-hidden bg-white shadow-[0_24px_60px_-40px_rgba(10,99,214,0.35)] animate-soft-zoom">
+            <div className="reveal" data-animate="fade-up">
+              <div
+                className="rounded-[26px] border border-brand-100 overflow-hidden bg-white shadow-[0_24px_60px_-40px_rgba(10,99,214,0.35)] reveal-zoom"
+                data-animate="soft-zoom"
+              >
                 <img src="/visuals/logistics.jpg" alt="Logistica y exportacion" className="w-full h-full object-cover" />
               </div>
             </div>
@@ -464,7 +595,7 @@ export default function HomePage() {
 
         <section className="py-20 bg-white" id="proceso">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center max-w-2xl mx-auto mb-10 animate-fade-up">
+            <div className="text-center max-w-2xl mx-auto mb-10 reveal" data-animate="fade-up">
               <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05]">
                 {content.process.title}
               </h2>
@@ -474,7 +605,8 @@ export default function HomePage() {
               {content.process.steps.map((step, index) => (
                 <div
                   key={step.title}
-                  className="bg-white rounded-2xl border border-brand-100 p-4 animate-fade-up"
+                  className="bg-white rounded-2xl border border-brand-100 p-4 reveal"
+                  data-animate="fade-up"
                   style={{ animationDelay: `${index * 90}ms` }}
                 >
                   <div className="flex items-center gap-3">
@@ -494,12 +626,15 @@ export default function HomePage() {
 
         <section className="py-20">
           <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-10 items-center">
-            <div className="order-2 lg:order-1 animate-fade-up">
-              <div className="rounded-[26px] border border-brand-100 overflow-hidden bg-white shadow-[0_24px_60px_-40px_rgba(10,99,214,0.35)] animate-soft-zoom">
+            <div className="order-2 lg:order-1 reveal" data-animate="fade-up">
+              <div
+                className="rounded-[26px] border border-brand-100 overflow-hidden bg-white shadow-[0_24px_60px_-40px_rgba(10,99,214,0.35)] reveal-zoom"
+                data-animate="soft-zoom"
+              >
                 <img src="/visuals/buyers.jpg" alt="Compradores globales" className="w-full h-full object-cover" />
               </div>
             </div>
-            <div className="order-1 lg:order-2 animate-fade-up">
+            <div className="order-1 lg:order-2 reveal" data-animate="fade-up">
               <p className="text-sm font-semibold text-brand-700 mb-3">{content.buyers.kicker}</p>
               <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05] mb-3">
                 {content.buyers.title}
@@ -511,7 +646,7 @@ export default function HomePage() {
 
         <section className="py-20" id="solicitud">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="max-w-2xl mx-auto text-center animate-fade-up">
+            <div className="max-w-2xl mx-auto text-center reveal" data-animate="fade-up">
               <p className="text-sm font-semibold text-brand-700 mb-3">{content.form.kicker}</p>
               <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05] mb-3">
                 {content.form.title}
@@ -600,7 +735,7 @@ export default function HomePage() {
 
         <section className="py-20 bg-brand-50" id="faq">
           <div className="max-w-3xl mx-auto px-6">
-            <div className="text-center mb-8 animate-fade-up">
+            <div className="text-center mb-8 reveal" data-animate="fade-up">
               <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05] mb-2">
                 {content.faq.title}
               </h2>
