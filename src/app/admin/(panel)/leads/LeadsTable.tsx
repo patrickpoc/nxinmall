@@ -187,7 +187,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
 
         <select
           value={paisFilter}
-          onChange={(e) => setPaisFilter(e.target.value)}
+          onChange={(e) => setPaisFilter(e.target.value as typeof paisFilter)}
           className="rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
         >
           <option value="">{t.countries.all}</option>
