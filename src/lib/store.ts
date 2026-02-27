@@ -6,6 +6,7 @@ import { OnboardingState, ProductoSeleccionado } from '@/types/onboarding';
 import { generateId } from './utils';
 
 interface OnboardingStore extends OnboardingState {
+  inviteToken: string | null;
   setCurrentStep: (step: number) => void;
   setRegistro: (data: Partial<OnboardingState['registro']>) => void;
   setPerfil: (data: Partial<OnboardingState['perfil']>) => void;
@@ -16,6 +17,7 @@ interface OnboardingStore extends OnboardingState {
   setActivacion: (data: Partial<OnboardingState['activacion']>) => void;
   setIdioma: (idioma: 'es' | 'pt') => void;
   clearState: () => void;
+  initSession: (token: string, leadData: Partial<OnboardingState['registro']>) => void;
 }
 
 const initialState: OnboardingState = {
@@ -64,8 +66,9 @@ const initialState: OnboardingState = {
 
 export const useOnboardingStore = create<OnboardingStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
+      inviteToken: null,
 
       setCurrentStep: (step) =>
         set((state) => ({ meta: { ...state.meta, currentStep: step } })),
@@ -117,16 +120,36 @@ export const useOnboardingStore = create<OnboardingStore>()(
       clearState: () =>
         set({
           ...initialState,
+          inviteToken: null,
           meta: {
             sessionId: generateId(),
             startedAt: new Date().toISOString(),
             currentStep: 1,
           },
         }),
+
+      initSession: (token, leadData) => {
+        const stored = get().inviteToken;
+        if (stored === token) return; // mismo token → retomar progreso
+        // token distinto o nuevo → reset completo + cargar datos del lead
+        const newRegistro = { ...initialState.registro, ...leadData };
+        set({
+          ...initialState,
+          inviteToken: token,
+          meta: {
+            sessionId: generateId(),
+            startedAt: new Date().toISOString(),
+            currentStep: 1,
+          },
+          registro: newRegistro,
+          idioma: newRegistro.pais === 'Brasil' ? 'pt' : 'es',
+        });
+      },
     }),
     {
       name: 'nxin_onboarding',
       partialize: (state) => ({
+        inviteToken: state.inviteToken,
         idioma: state.idioma,
         meta: state.meta,
         registro: state.registro,

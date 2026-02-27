@@ -14,7 +14,7 @@ import { t } from '@/lib/i18n';
 function OnboardingContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { meta, idioma, setCurrentStep, setRegistro } = useOnboardingStore();
+  const { meta, idioma, setCurrentStep, initSession } = useOnboardingStore();
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -31,13 +31,7 @@ function OnboardingContent() {
         return res.json();
       })
       .then((data) => {
-        setRegistro({
-          ...(data.nombre   ? { nombre: data.nombre }   : {}),
-          ...(data.empresa  ? { empresa: data.empresa }  : {}),
-          ...(data.email    ? { email: data.email }    : {}),
-          ...(data.whatsapp ? { whatsapp: data.whatsapp } : {}),
-          ...(data.pais     ? { pais: data.pais }     : {}),
-        });
+        initSession(token, data);
         setReady(true);
       })
       .catch(() => {
