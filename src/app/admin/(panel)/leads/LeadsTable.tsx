@@ -12,6 +12,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 }
 import clsx from 'clsx';
 import { useAdminLang } from '@/lib/admin-lang-context';
+import { UBIGEO_COUNTRIES } from '@/data/countries';
 
 export type Lead = {
   id: string;
@@ -25,17 +26,18 @@ export type Lead = {
   invite_token: string | null;
 };
 
-const ESTADOS = ['nuevo', 'contactado', 'onboarding', 'descartado'] as const;
+const ESTADOS = ['nuevo', 'contactado', 'onboarding', 'completado', 'descartado'] as const;
 type Estado = typeof ESTADOS[number];
 
 const ESTADO_STYLES: Record<Estado, string> = {
   nuevo:       'bg-blue-50 text-blue-700 border-blue-200',
   contactado:  'bg-amber-50 text-amber-700 border-amber-200',
   onboarding:  'bg-emerald-50 text-emerald-700 border-emerald-200',
+  completado:  'bg-teal-50 text-teal-700 border-teal-200',
   descartado:  'bg-gray-100 text-gray-500 border-gray-200',
 };
 
-const PAISES_PRINCIPALES = ['Peru', 'Brasil', 'Colombia', 'Ecuador'] as const;
+const PAISES_PRINCIPALES = UBIGEO_COUNTRIES;
 
 function EstadoSelect({ lead }: { lead: Lead }) {
   const { t } = useAdminLang();

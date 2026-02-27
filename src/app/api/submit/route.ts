@@ -46,8 +46,8 @@ export async function POST(req: NextRequest) {
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!
       );
-      // Actualizar estado del lead a 'onboarding'
-      const leadQuery = supabase.from('leads').update({ estado: 'onboarding' });
+      // Marcar lead como completado (wizard enviado)
+      const leadQuery = supabase.from('leads').update({ estado: 'completado' });
       if (inviteToken) {
         await leadQuery.eq('invite_token', inviteToken);
       } else {

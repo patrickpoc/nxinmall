@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { ChevronUp, ChevronDown, ChevronsUpDown, MessageCircle, Download } from 'lucide-react';
 import clsx from 'clsx';
 import { useAdminLang } from '@/lib/admin-lang-context';
+import { UBIGEO_COUNTRIES } from '@/data/countries';
 
 export type Onboarding = {
   id: string;
@@ -88,6 +89,7 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
   const { t } = useAdminLang();
   const [query, setQuery] = useState('');
   const [estadoFilter, setEstadoFilter] = useState<Estado | 'todos'>('todos');
+  const [paisFilter, setPaisFilter] = useState<'' | typeof UBIGEO_COUNTRIES[number] | 'otros'>('');
   const [sortKey, setSortKey] = useState<SortKey>('created_at');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
 
@@ -102,7 +104,11 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
       .filter((o) => {
         const matchQ = !q || [o.empresa, o.nombre, o.email, o.ruc, o.categoria].some((v) => v?.toLowerCase().includes(q));
         const matchE = estadoFilter === 'todos' || o.estado === estadoFilter;
-        return matchQ && matchE;
+        const matchP = !paisFilter
+          || (paisFilter === 'otros'
+            ? !(UBIGEO_COUNTRIES as readonly string[]).includes(o.pais ?? '')
+            : o.pais === paisFilter);
+        return matchQ && matchE && matchP;
       })
       .sort((a, b) => {
         const va = String(a[sortKey] ?? '');
@@ -171,6 +177,16 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
             </button>
           ))}
         </div>
+
+        <select
+          value={paisFilter}
+          onChange={(e) => setPaisFilter(e.target.value as typeof paisFilter)}
+          className="rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+        >
+          <option value="">{t.countries.all}</option>
+          {UBIGEO_COUNTRIES.map((p) => <option key={p} value={p}>{p}</option>)}
+          <option value="otros">{t.countries.others}</option>
+        </select>
       </div>
 
       {/* Tabla */}
@@ -210,7 +226,8 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
                     <tr key={o.id} className="hover:bg-gray-50/60 transition-colors">
                       <td className={tdClass}>
                         <span className="font-semibold text-gray-900">{o.empresa}</span>
-                        {o.ruc && <p className="text-[11px] text-gray-400 mt-0.5">RUC: {o.ruc}</p>}
+                        {o.pais && <p className="text-[11px] text-gray-400 mt-0.5">{o.pais}</p>}
+                        {o.ruc && <p className="text-[11px] text-gray-400">RUC: {o.ruc}</p>}
                       </td>
                       <td className={tdClass}>
                         <p className="text-xs font-medium text-gray-800">{o.nombre}</p>
