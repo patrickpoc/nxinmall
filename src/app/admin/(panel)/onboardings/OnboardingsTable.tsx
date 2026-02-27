@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { ChevronUp, ChevronDown, ChevronsUpDown, MessageCircle } from 'lucide-react';
 import clsx from 'clsx';
+import { useAdminLang } from '@/lib/admin-lang-context';
 
 export type Onboarding = {
   id: string;
@@ -30,14 +31,8 @@ const ESTADO_STYLES: Record<Estado, string> = {
   rechazado:     'bg-gray-100 text-gray-500 border-gray-200',
 };
 
-const ESTADO_LABELS: Record<Estado, string> = {
-  kyb_pendiente: 'KYB Pendiente',
-  en_revision:   'En revisión',
-  aprobado:      'Aprobado',
-  rechazado:     'Rechazado',
-};
-
 function EstadoSelect({ onboarding }: { onboarding: Onboarding }) {
+  const { t } = useAdminLang();
   const [value, setValue] = useState(onboarding.estado as Estado);
   const [saving, setSaving] = useState(false);
 
@@ -67,7 +62,7 @@ function EstadoSelect({ onboarding }: { onboarding: Onboarding }) {
       style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\")", backgroundPosition: 'right 4px center', backgroundSize: '12px' }}
     >
       {ESTADOS.map((s) => (
-        <option key={s} value={s}>{ESTADO_LABELS[s]}</option>
+        <option key={s} value={s}>{t.onboardingStatuses[s] ?? s}</option>
       ))}
     </select>
   );
@@ -90,6 +85,7 @@ function duracionLabel(seg: number | null) {
 }
 
 export default function OnboardingsTable({ onboardings }: { onboardings: Onboarding[] }) {
+  const { t } = useAdminLang();
   const [query, setQuery] = useState('');
   const [estadoFilter, setEstadoFilter] = useState<Estado | 'todos'>('todos');
   const [sortKey, setSortKey] = useState<SortKey>('created_at');
@@ -121,11 +117,30 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
     return c;
   }, [onboardings]);
 
+  const total = onboardings.length;
+  const pendientes = counts['kyb_pendiente'] ?? 0;
+  const aprobados = counts['aprobado'] ?? 0;
+
   const thClass = 'px-4 py-2.5 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap select-none cursor-pointer hover:text-gray-800 transition-colors';
   const tdClass = 'px-4 py-3 text-sm text-gray-700 align-top';
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">{t.onboardings.section}</p>
+          <h1 className="text-xl font-bold text-gray-900">{t.onboardings.title}</h1>
+        </div>
+        <div className="flex items-center gap-4 text-xs text-gray-500">
+          <span><span className="font-bold text-gray-800">{total}</span> {t.onboardings.stats.total}</span>
+          <span className="w-px h-3 bg-gray-200" />
+          <span><span className="font-bold text-amber-700">{pendientes}</span> {t.onboardings.stats.pending}</span>
+          <span className="w-px h-3 bg-gray-200" />
+          <span><span className="font-bold text-emerald-700">{aprobados}</span> {t.onboardings.stats.approved}</span>
+        </div>
+      </div>
+
       {/* Filtros */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="relative flex-1 max-w-xs">
@@ -133,7 +148,7 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar empresa, RUC, email..."
+            placeholder={t.onboardings.search}
             className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
           />
         </div>
@@ -149,7 +164,7 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
                 estadoFilter === s ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
               )}
             >
-              {s === 'todos' ? 'Todos' : ESTADO_LABELS[s as Estado]}
+              {s === 'todos' ? t.onboardings.all : (t.onboardingStatuses[s] ?? s)}
               <span className={clsx('ml-1.5 text-[10px] font-bold', estadoFilter === s ? 'text-brand-500' : 'text-gray-400')}>
                 {counts[s]}
               </span>
@@ -161,29 +176,29 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
       {/* Tabla */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
         {filtered.length === 0 ? (
-          <div className="py-16 text-center text-sm text-gray-400">Sin resultados para los filtros actuales.</div>
+          <div className="py-16 text-center text-sm text-gray-400">{t.onboardings.empty}</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className={thClass} onClick={() => toggleSort('empresa')}>
-                    Empresa <SortIcon field="empresa" sortKey={sortKey} sortDir={sortDir} />
+                    {t.onboardings.cols.company} <SortIcon field="empresa" sortKey={sortKey} sortDir={sortDir} />
                   </th>
-                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>Contacto</th>
+                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>{t.onboardings.cols.contact}</th>
                   <th className={thClass} onClick={() => toggleSort('categoria')}>
-                    Categoría <SortIcon field="categoria" sortKey={sortKey} sortDir={sortDir} />
+                    {t.onboardings.cols.category} <SortIcon field="categoria" sortKey={sortKey} sortDir={sortDir} />
                   </th>
                   <th className={thClass} onClick={() => toggleSort('num_productos')}>
-                    Productos <SortIcon field="num_productos" sortKey={sortKey} sortDir={sortDir} />
+                    {t.onboardings.cols.products} <SortIcon field="num_productos" sortKey={sortKey} sortDir={sortDir} />
                   </th>
                   <th className={thClass} onClick={() => toggleSort('estado')}>
-                    Estado <SortIcon field="estado" sortKey={sortKey} sortDir={sortDir} />
+                    {t.onboardings.cols.status} <SortIcon field="estado" sortKey={sortKey} sortDir={sortDir} />
                   </th>
                   <th className={thClass} onClick={() => toggleSort('created_at')}>
-                    Fecha <SortIcon field="created_at" sortKey={sortKey} sortDir={sortDir} />
+                    {t.onboardings.cols.date} <SortIcon field="created_at" sortKey={sortKey} sortDir={sortDir} />
                   </th>
-                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>Acciones</th>
+                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>{t.onboardings.cols.actions}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -245,7 +260,7 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
 
         {filtered.length > 0 && (
           <div className="px-4 py-2.5 bg-gray-50 border-t border-gray-100 text-[11px] text-gray-400 font-medium">
-            {filtered.length} de {onboardings.length} onboardings
+            {filtered.length} {t.onboardings.footer} {onboardings.length} onboardings
           </div>
         )}
       </div>

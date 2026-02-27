@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { MessageCircle, Copy, Check, ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react';
 import clsx from 'clsx';
+import { useAdminLang } from '@/lib/admin-lang-context';
 
 export type Lead = {
   id: string;
@@ -26,9 +27,10 @@ const ESTADO_STYLES: Record<Estado, string> = {
   descartado:  'bg-gray-100 text-gray-500 border-gray-200',
 };
 
-const PAISES = ['Todos', 'Perú', 'Brasil', 'Colombia', 'Ecuador', 'Chile', 'Argentina'];
+const PAISES = ['Perú', 'Brasil', 'Colombia', 'Ecuador', 'Chile', 'Argentina'];
 
 function EstadoSelect({ lead }: { lead: Lead }) {
+  const { t } = useAdminLang();
   const [value, setValue] = useState(lead.estado as Estado);
   const [saving, setSaving] = useState(false);
 
@@ -58,13 +60,14 @@ function EstadoSelect({ lead }: { lead: Lead }) {
       style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\")", backgroundPosition: 'right 4px center', backgroundSize: '12px' }}
     >
       {ESTADOS.map((s) => (
-        <option key={s} value={s}>{s}</option>
+        <option key={s} value={s}>{t.leadStatuses[s] ?? s}</option>
       ))}
     </select>
   );
 }
 
 function CopyButton({ url }: { url: string | null }) {
+  const { t } = useAdminLang();
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -88,7 +91,7 @@ function CopyButton({ url }: { url: string | null }) {
         !url && 'opacity-30 cursor-not-allowed'
       )}
     >
-      {copied ? <><Check className="w-3 h-3" /> Copiado</> : <><Copy className="w-3 h-3" /> URL</>}
+      {copied ? <><Check className="w-3 h-3" /> {t.leads.copied}</> : <><Copy className="w-3 h-3" /> URL</>}
     </button>
   );
 }
@@ -104,9 +107,10 @@ function SortIcon({ field, sortKey, sortDir }: { field: SortKey; sortKey: SortKe
 }
 
 export default function LeadsTable({ leads }: { leads: Lead[] }) {
+  const { t } = useAdminLang();
   const [query, setQuery] = useState('');
   const [estadoFilter, setEstadoFilter] = useState<Estado | 'todos'>('todos');
-  const [paisFilter, setPaisFilter] = useState('Todos');
+  const [paisFilter, setPaisFilter] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('created_at');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
 
@@ -121,7 +125,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
       .filter((l) => {
         const matchQ = !q || [l.empresa, l.nombre, l.email, l.whatsapp].some((v) => v?.toLowerCase().includes(q));
         const matchE = estadoFilter === 'todos' || l.estado === estadoFilter;
-        const matchP = paisFilter === 'Todos' || l.pais === paisFilter;
+        const matchP = !paisFilter || l.pais === paisFilter;
         return matchQ && matchE && matchP;
       })
       .sort((a, b) => {
@@ -131,32 +135,48 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
       });
   }, [leads, query, estadoFilter, paisFilter, sortKey, sortDir]);
 
-  // contadores por estado
   const counts = useMemo(() => {
     const c: Record<string, number> = { todos: leads.length };
     ESTADOS.forEach((s) => { c[s] = leads.filter((l) => l.estado === s).length; });
     return c;
   }, [leads]);
 
+  const total = leads.length;
+  const nuevos = counts['nuevo'] ?? 0;
+  const onboarding = counts['onboarding'] ?? 0;
+
   const thClass = 'px-4 py-2.5 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap select-none cursor-pointer hover:text-gray-800 transition-colors';
   const tdClass = 'px-4 py-3 text-sm text-gray-700 align-top';
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">{t.leads.section}</p>
+          <h1 className="text-xl font-bold text-gray-900">{t.leads.title}</h1>
+        </div>
+        <div className="flex items-center gap-4 text-xs text-gray-500">
+          <span><span className="font-bold text-gray-800">{total}</span> {t.leads.stats.total}</span>
+          <span className="w-px h-3 bg-gray-200" />
+          <span><span className="font-bold text-blue-700">{nuevos}</span> {t.leads.stats.new}</span>
+          <span className="w-px h-3 bg-gray-200" />
+          <span><span className="font-bold text-emerald-700">{onboarding}</span> {t.leads.stats.onboarding}</span>
+        </div>
+      </div>
+
       {/* Filtros */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        {/* Búsqueda */}
         <div className="relative flex-1 max-w-xs">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar empresa, nombre, email..."
+            placeholder={t.leads.search}
             className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
           />
         </div>
 
-        {/* Tabs estado */}
         <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
           {(['todos', ...ESTADOS] as const).map((s) => (
             <button
@@ -165,12 +185,10 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
               onClick={() => setEstadoFilter(s)}
               className={clsx(
                 'px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all whitespace-nowrap',
-                estadoFilter === s
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
+                estadoFilter === s ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
               )}
             >
-              {s === 'todos' ? 'Todos' : s}
+              {s === 'todos' ? t.leads.all : (t.leadStatuses[s] ?? s)}
               <span className={clsx('ml-1.5 text-[10px] font-bold', estadoFilter === s ? 'text-brand-500' : 'text-gray-400')}>
                 {counts[s]}
               </span>
@@ -178,12 +196,12 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
           ))}
         </div>
 
-        {/* País */}
         <select
           value={paisFilter}
           onChange={(e) => setPaisFilter(e.target.value)}
           className="rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
         >
+          <option value="">{t.countries.all}</option>
           {PAISES.map((p) => <option key={p}>{p}</option>)}
         </select>
       </div>
@@ -191,26 +209,26 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
       {/* Tabla */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
         {filtered.length === 0 ? (
-          <div className="py-16 text-center text-sm text-gray-400">Sin resultados para los filtros actuales.</div>
+          <div className="py-16 text-center text-sm text-gray-400">{t.leads.empty}</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className={thClass} onClick={() => toggleSort('empresa')}>
-                    Empresa <SortIcon field="empresa" sortKey={sortKey} sortDir={sortDir} />
+                    {t.leads.cols.company} <SortIcon field="empresa" sortKey={sortKey} sortDir={sortDir} />
                   </th>
-                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>Contacto</th>
+                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>{t.leads.cols.contact}</th>
                   <th className={thClass} onClick={() => toggleSort('pais')}>
-                    País <SortIcon field="pais" sortKey={sortKey} sortDir={sortDir} />
+                    {t.leads.cols.country} <SortIcon field="pais" sortKey={sortKey} sortDir={sortDir} />
                   </th>
                   <th className={thClass} onClick={() => toggleSort('estado')}>
-                    Estado <SortIcon field="estado" sortKey={sortKey} sortDir={sortDir} />
+                    {t.leads.cols.status} <SortIcon field="estado" sortKey={sortKey} sortDir={sortDir} />
                   </th>
                   <th className={thClass} onClick={() => toggleSort('created_at')}>
-                    Fecha <SortIcon field="created_at" sortKey={sortKey} sortDir={sortDir} />
+                    {t.leads.cols.date} <SortIcon field="created_at" sortKey={sortKey} sortDir={sortDir} />
                   </th>
-                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>Acciones</th>
+                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>{t.leads.cols.actions}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -264,10 +282,9 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
           </div>
         )}
 
-        {/* Footer con conteo */}
         {filtered.length > 0 && (
           <div className="px-4 py-2.5 bg-gray-50 border-t border-gray-100 text-[11px] text-gray-400 font-medium">
-            {filtered.length} de {leads.length} leads
+            {filtered.length} {t.leads.footer} {leads.length} leads
           </div>
         )}
       </div>
