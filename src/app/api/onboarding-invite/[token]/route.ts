@@ -9,7 +9,7 @@ export async function GET(
 
   const { data, error } = await getSupabaseAdmin()
     .from('leads')
-    .select('nombre, empresa, email, whatsapp, pais')
+    .select('nombre, empresa, email, whatsapp, pais, categoria')
     .eq('invite_token', token)
     .single();
 

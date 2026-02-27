@@ -72,6 +72,8 @@ export const COPY: Record<Lang, {
         whatsapp: 'WhatsApp',
         country: 'Pais',
         countryPlaceholder: 'Selecciona un pais',
+        categoria: '¿Qué tipo de productos ofreces?',
+        categoriaPlaceholder: 'Selecciona una categoría',
       },
       submit: 'Solicitar acceso',
       success: {
@@ -151,6 +153,8 @@ export const COPY: Record<Lang, {
         whatsapp: 'WhatsApp',
         country: 'Country',
         countryPlaceholder: 'Select a country',
+        categoria: 'What type of products do you offer?',
+        categoriaPlaceholder: 'Select a category',
       },
       submit: 'Request access',
       success: {
@@ -230,6 +234,8 @@ export const COPY: Record<Lang, {
         whatsapp: 'WhatsApp',
         country: 'Pais',
         countryPlaceholder: 'Selecione um pais',
+        categoria: 'Que tipo de produtos você oferece?',
+        categoriaPlaceholder: 'Selecione uma categoria',
       },
       submit: 'Solicitar acesso',
       success: {

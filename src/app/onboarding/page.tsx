@@ -30,8 +30,8 @@ function OnboardingContent() {
         if (!res.ok) throw new Error('invalid');
         return res.json();
       })
-      .then((data) => {
-        initSession(token, data);
+      .then(({ categoria, ...rest }) => {
+        initSession(token, { ...rest, categoriaInteres: categoria ?? undefined });
         setReady(true);
       })
       .catch(() => {

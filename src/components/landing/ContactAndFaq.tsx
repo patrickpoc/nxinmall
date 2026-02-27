@@ -5,6 +5,7 @@ import { FaqItem } from './LandingComponents';
 import type { Lang } from '@/data/landing-content';
 import { getCountryPrefix } from '@/data/countries';
 import CountryCombobox from '@/components/ui/CountryCombobox';
+import { CATEGORIAS_FORM } from '@/data/categories';
 
 const PLACEHOLDERS: Record<Lang, { name: string; company: string; email: string; phone: string }> = {
   es: { name: 'Tu nombre completo', company: 'Tu empresa', email: 'tu@empresa.com', phone: '999 000 000' },
@@ -90,6 +91,23 @@ export function ContactForm({ content, lang, handleSubmit, submitted }: SectionP
                   placeholder={content.form.fields.countryPlaceholder}
                   inputClassName={inputClasses}
                 />
+              </div>
+              {/* Categoría de producto */}
+              <div className="flex flex-col sm:col-span-2">
+                <label className={labelClasses}>{content.form.fields.categoria}</label>
+                <select
+                  name="categoria"
+                  required
+                  defaultValue=""
+                  className={inputClasses + ' cursor-pointer'}
+                >
+                  <option value="" disabled>{content.form.fields.categoriaPlaceholder}</option>
+                  {CATEGORIAS_FORM.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat[lang]}
+                    </option>
+                  ))}
+                </select>
               </div>
               {/* Email + WhatsApp — prefijo ya fijado por país */}
               <div className="flex flex-col">

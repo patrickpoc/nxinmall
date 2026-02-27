@@ -4,14 +4,14 @@ import { submitToGoogleSheets } from '@/lib/sheets';
 
 export async function POST(req: NextRequest) {
   try {
-    const { nombre, empresa, email, whatsapp, pais } = await req.json();
+    const { nombre, empresa, email, whatsapp, pais, categoria } = await req.json();
 
     const invite_token = crypto.randomUUID();
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${req.nextUrl.protocol}//${req.nextUrl.host}`;
     const onboarding_url = `${baseUrl}/onboarding?token=${invite_token}`;
 
     const { error: dbError } = await getSupabaseAdmin().from('leads').upsert(
-      { nombre, empresa, email, whatsapp, pais, onboarding_url, invite_token },
+      { nombre, empresa, email, whatsapp, pais, categoria, onboarding_url, invite_token },
       { onConflict: 'email' }
     );
     if (dbError) console.error('[leads] Supabase error:', dbError.message, dbError.details);
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       departamento: '',
       provincia: '',
       distrito: '',
-      categoria: '',
+      categoria: categoria || '',
       tagline: '',
       certificaciones: '',
       capacidadMensual: '',

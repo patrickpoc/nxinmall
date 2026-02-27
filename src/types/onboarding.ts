@@ -33,6 +33,8 @@ export interface OnboardingState {
     whatsapp: string;
     cargo: string;
     pais: string;
+    /** Categoría seleccionada en el formulario de la landing (raw, antes del mapping) */
+    categoriaInteres?: string;
   };
   perfil: {
     categoria: Categoria | '';

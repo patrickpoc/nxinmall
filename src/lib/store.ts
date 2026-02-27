@@ -2,7 +2,8 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { OnboardingState, ProductoSeleccionado } from '@/types/onboarding';
+import { OnboardingState, ProductoSeleccionado, Categoria } from '@/types/onboarding';
+import { CATEGORIA_FORM_MAP } from '@/data/categories';
 import { generateId } from './utils';
 
 interface OnboardingStore extends OnboardingState {
@@ -139,6 +140,10 @@ export const useOnboardingStore = create<OnboardingStore>()(
         if (stored === token) return; // mismo token → retomar progreso
         // token distinto o nuevo → reset completo + cargar datos del lead
         const newRegistro = { ...initialState.registro, ...leadData };
+        // Pre-rellenar categoría si el lead eligió una en el formulario
+        const categoriaInterna = newRegistro.categoriaInteres
+          ? (CATEGORIA_FORM_MAP[newRegistro.categoriaInteres] ?? '')
+          : '';
         set({
           ...initialState,
           inviteToken: token,
@@ -148,6 +153,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
             currentStep: 1,
           },
           registro: newRegistro,
+          perfil: { ...initialState.perfil, categoria: categoriaInterna as Categoria | '' },
           idioma: newRegistro.pais === 'Brasil' ? 'pt' : 'es',
         });
       },
