@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Download, Send, Building2, MapPin, Package, Award } from 'lucide-react';
+import { Send, Building2, MapPin, Package, Award } from 'lucide-react';
 import { useOnboardingStore } from '@/lib/store';
-import { downloadStoreJson } from '@/lib/generate-json';
 import { CATEGORIAS } from '@/data/catalog';
 import { Categoria } from '@/types/onboarding';
 import { t } from '@/lib/i18n';
@@ -21,11 +20,6 @@ export default function Step5Resumen({ onBack }: Step5Props) {
 
   const { registro, perfil, ubicacion, catalogo, setActivacion, idioma } = store;
   const catData = perfil.categoria ? CATEGORIAS[perfil.categoria as Categoria] : null;
-
-  const handleDownload = () => {
-    downloadStoreJson(store);
-    setActivacion({ jsonGenerado: true });
-  };
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -200,15 +194,6 @@ export default function Step5Resumen({ onBack }: Step5Props) {
               <Send className="w-5 h-5 stroke-[2.5]" />
             </>
           )}
-        </button>
-
-        <button
-          type="button"
-          onClick={handleDownload}
-          className="flex items-center justify-center gap-2 py-3.5 rounded-full border-2 border-brand-900 text-brand-900 font-bold text-sm hover:bg-brand-50 transition-all duration-300"
-        >
-          <Download className="w-4 h-4 stroke-[2.5]" />
-          {t('btnDescargar', idioma)}
         </button>
 
         <p className="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest px-8 leading-relaxed">
