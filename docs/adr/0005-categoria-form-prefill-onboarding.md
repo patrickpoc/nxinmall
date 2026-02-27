@@ -1,6 +1,6 @@
 # ADR-0005: Categoría de Producto en el Formulario + Pre-fill del Onboarding
 
-- **Estado:** En progreso
+- **Estado:** Implementado (pendiente SQL en Supabase)
 - **Fecha:** 2026-02-27
 - **Autores:** Diego + Claude Sonnet 4.6
 
@@ -79,7 +79,7 @@ Se convirtió a `'use client'` para leer el idioma del store. Ahora muestra:
 
 ### DB — Supabase
 
-- [ ] **Agregar columna `categoria`** a la tabla `leads`
+- [ ] **Agregar columna `categoria`** a la tabla `leads` ← **pendiente ejecutar en Supabase**
 
 ```sql
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS categoria text;
@@ -89,10 +89,7 @@ Sin esta columna el valor se pierde silenciosamente (el código ya la envía per
 
 ### Admin Panel
 
-- [ ] **Mostrar `categoria` en `LeadsTable`** — actualmente la tabla de leads en `/admin` no tiene columna para categoría. Es información valiosa para operaciones al ver quién envió solicitud.
-
-  - Archivo: `src/app/admin/(panel)/leads/LeadsTable.tsx`
-  - Agregar columna entre "País" y "Estado"
+- [x] **Mostrar `categoria` en `LeadsTable`** — columna badge entre "País" y "Estado". Traducción en `admin-content.ts` (es/en/pt). Select query actualizada en `page.tsx`.
 
 ### Catálogo — Categorías sin cobertura
 
@@ -103,15 +100,11 @@ Las 5 categorías NXIN que no tienen match interno (`cosecha`, `accesorios`, `ex
 
 ### Google Sheets — Webhook
 
-- [ ] **Verificar que el Apps Script** tiene columna `Categoria` mapeada en la hoja "Leads Landing". El campo ya se envía desde `/api/leads/route.ts` pero el script puede ignorarlo si no tiene la columna definida.
-
-  - Archivo: `/Users/diego/Desktop/DataSet/NXIN_Mall_Peru_Launch/google-sheets-webhook.js`
+- [x] **Apps Script** actualizado — `CATEGORIA` agregada como columna 6 en `handleLandingLead` (headers + appendRow). Redeploy necesario en Google Apps Script.
 
 ### UX — Step 2 con categoría sin match
 
-- [ ] Cuando el proveedor eligió `cosecha`, `accesorios`, `exhibicion`, `dispositivo` u `otros` en el form, llega al Step 2 sin ninguna tarjeta pre-seleccionada. No hay feedback visual de que "tu categoría del form no está acá todavía". Considerar:
-  - Mostrar un banner suave: *"Elegiste [X] — por ahora elige la categoría más cercana"*
-  - O agregar las tarjetas faltantes (requiere catálogo completo)
+- [x] **Banner suave en Step 2** — si `categoriaInteres` no tiene match en `CATEGORIA_FORM_MAP`, se muestra un aviso amber antes de la grilla: *"Seleccionaste "[X]" — por ahora elige la categoría más cercana"* (es/pt). Archivo: `Step2Perfil.tsx`.
 
 ---
 

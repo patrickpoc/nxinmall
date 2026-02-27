@@ -22,6 +22,7 @@ export type Lead = {
   email: string;
   whatsapp: string;
   pais: string;
+  categoria?: string;
   estado: string;
   invite_token: string | null;
 };
@@ -212,6 +213,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                   <th className={thClass} onClick={() => toggleSort('pais')}>
                     {t.leads.cols.country} <SortIcon field="pais" sortKey={sortKey} sortDir={sortDir} />
                   </th>
+                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>{t.leads.cols.category}</th>
                   <th className={thClass} onClick={() => toggleSort('estado')}>
                     {t.leads.cols.status} <SortIcon field="estado" sortKey={sortKey} sortDir={sortDir} />
                   </th>
@@ -241,6 +243,12 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                       </td>
                       <td className={tdClass}>
                         <span className="text-xs text-gray-600">{lead.pais}</span>
+                      </td>
+                      <td className={tdClass}>
+                        {lead.categoria
+                          ? <span className="inline-block px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 border border-brand-200 text-[11px] font-semibold capitalize">{lead.categoria}</span>
+                          : <span className="text-[11px] text-gray-300">—</span>
+                        }
                       </td>
                       <td className={tdClass}>
                         <EstadoSelect lead={lead} />

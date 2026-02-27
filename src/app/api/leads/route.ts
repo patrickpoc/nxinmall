@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { submitToGoogleSheets } from '@/lib/sheets';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,33 +14,6 @@ export async function POST(req: NextRequest) {
       { onConflict: 'email' }
     );
     if (dbError) console.error('[leads] Supabase error:', dbError.message, dbError.details);
-
-    await submitToGoogleSheets({
-      timestamp: new Date().toISOString(),
-      sessionId: '',
-      nombre,
-      empresa,
-      ruc: '',
-      email,
-      whatsapp,
-      cargo: '',
-      pais,
-      departamento: '',
-      provincia: '',
-      distrito: '',
-      categoria: categoria || '',
-      tagline: '',
-      certificaciones: '',
-      capacidadMensual: '',
-      tieneLogo: false,
-      tieneBanner: false,
-      numProductos: 0,
-      productosNombres: '',
-      numImagenesSubidas: 0,
-      duracionSeg: 0,
-      fuente: 'Landing Lead',
-      etapa: 'LEAD',
-    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

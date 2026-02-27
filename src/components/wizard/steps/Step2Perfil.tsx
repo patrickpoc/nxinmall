@@ -4,6 +4,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import { useOnboardingStore } from '@/lib/store';
 import { CATEGORIAS_LIST } from '@/data/catalog';
+import { CATEGORIAS_FORM, CATEGORIA_FORM_MAP } from '@/data/categories';
 import { Categoria } from '@/types/onboarding';
 import { t } from '@/lib/i18n';
 import CategoryCard from '@/components/ui/CategoryCard';
@@ -17,8 +18,14 @@ interface Step2Props {
 }
 
 export default function Step2Perfil({ onNext, onBack }: Step2Props) {
-  const { perfil, idioma, setPerfil } = useOnboardingStore();
+  const { perfil, registro, idioma, setPerfil } = useOnboardingStore();
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const catInteres = registro.categoriaInteres;
+  const sinMatch = !!(catInteres && CATEGORIA_FORM_MAP[catInteres] === '');
+  const catInteresLabel = sinMatch
+    ? (CATEGORIAS_FORM.find((c) => c.id === catInteres)?.[idioma] ?? catInteres)
+    : '';
 
   const handleCategoriaSelect = (cat: Categoria) => {
     const catData = CATEGORIAS_LIST.find((c) => c.id === cat);
@@ -66,6 +73,13 @@ export default function Step2Perfil({ onNext, onBack }: Step2Props) {
       {/* Categoría */}
       <div>
         <p className={labelClass}>{t('paso2Titulo', idioma)} *</p>
+        {sinMatch && (
+          <div className="mb-4 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-[13px] text-amber-800 font-medium">
+            {idioma === 'pt'
+              ? `Você selecionou "${catInteresLabel}" — escolha a categoria mais próxima por enquanto`
+              : `Seleccionaste "${catInteresLabel}" — por ahora elige la categoría más cercana`}
+          </div>
+        )}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {CATEGORIAS_LIST.map((cat) => (
             <CategoryCard
