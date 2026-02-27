@@ -12,6 +12,7 @@ export const ADMIN_COPY: Record<AdminLang, {
     section: string; title: string;
     stats: { total: string; new: string; onboarding: string };
     search: string; all: string; empty: string; copied: string;
+    waMessage: string;
     cols: { company: string; contact: string; country: string; status: string; date: string; actions: string };
     footer: string;
   };
@@ -33,6 +34,7 @@ export const ADMIN_COPY: Record<AdminLang, {
       stats: { total: 'total', new: 'nuevos', onboarding: 'en onboarding' },
       search: 'Buscar empresa, nombre, email...',
       all: 'Todos', empty: 'Sin resultados para los filtros actuales.', copied: 'Copiado',
+      waMessage: 'Hola {nombre}, te compartimos tu enlace de onboarding en NxinMall:',
       cols: { company: 'Empresa', contact: 'Contacto', country: 'País', status: 'Estado', date: 'Fecha', actions: 'Acciones' },
       footer: 'de',
     },
@@ -55,6 +57,7 @@ export const ADMIN_COPY: Record<AdminLang, {
       stats: { total: 'total', new: 'new', onboarding: 'in onboarding' },
       search: 'Search company, name, email...',
       all: 'All', empty: 'No results for the current filters.', copied: 'Copied',
+      waMessage: 'Hi {nombre}, here is your onboarding link for NxinMall:',
       cols: { company: 'Company', contact: 'Contact', country: 'Country', status: 'Status', date: 'Date', actions: 'Actions' },
       footer: 'of',
     },
@@ -77,6 +80,7 @@ export const ADMIN_COPY: Record<AdminLang, {
       stats: { total: 'total', new: 'novos', onboarding: 'em onboarding' },
       search: 'Buscar empresa, nome, email...',
       all: 'Todos', empty: 'Sem resultados para os filtros atuais.', copied: 'Copiado',
+      waMessage: 'Olá {nombre}, compartilhamos seu link de onboarding na NxinMall:',
       cols: { company: 'Empresa', contact: 'Contato', country: 'País', status: 'Status', date: 'Data', actions: 'Ações' },
       footer: 'de',
     },
