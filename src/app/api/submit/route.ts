@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
         num_productos: state.catalogo.productosSeleccionados.length,
         productos:    state.catalogo.productosSeleccionados.map((p) => p.nombre).join(' | '),
         duracion_seg: duracionSeg,
-        estado:       'kyb_pendiente',
+        estado:       'en_revision',
         raw_data:     storeJson,
       }, { onConflict: 'session_id' });
     } catch (dbErr) {

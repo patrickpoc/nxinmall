@@ -22,14 +22,13 @@ export type Onboarding = {
   duracion_seg: number | null;
 };
 
-const ESTADOS = ['kyb_pendiente', 'en_revision', 'aprobado', 'rechazado'] as const;
+const ESTADOS = ['en_revision', 'aprobado', 'rechazado'] as const;
 type Estado = typeof ESTADOS[number];
 
 const ESTADO_STYLES: Record<Estado, string> = {
-  kyb_pendiente: 'bg-amber-50 text-amber-700 border-amber-200',
-  en_revision:   'bg-blue-50 text-blue-700 border-blue-200',
-  aprobado:      'bg-emerald-50 text-emerald-700 border-emerald-200',
-  rechazado:     'bg-gray-100 text-gray-500 border-gray-200',
+  en_revision: 'bg-amber-50 text-amber-700 border-amber-200',
+  aprobado:    'bg-emerald-50 text-emerald-700 border-emerald-200',
+  rechazado:   'bg-gray-100 text-gray-500 border-gray-200',
 };
 
 function EstadoSelect({ onboarding }: { onboarding: Onboarding }) {
@@ -58,7 +57,7 @@ function EstadoSelect({ onboarding }: { onboarding: Onboarding }) {
         'text-[11px] font-semibold border rounded-md px-2 py-1 pr-5 cursor-pointer',
         'focus:outline-none focus:ring-2 focus:ring-brand-500/20 transition-colors',
         'disabled:opacity-60 appearance-none bg-no-repeat',
-        ESTADO_STYLES[value as Estado] ?? ESTADO_STYLES.kyb_pendiente
+        ESTADO_STYLES[value as Estado] ?? ESTADO_STYLES.en_revision
       )}
       style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\")", backgroundPosition: 'right 4px center', backgroundSize: '12px' }}
     >
@@ -124,7 +123,7 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
   }, [onboardings]);
 
   const total = onboardings.length;
-  const pendientes = counts['kyb_pendiente'] ?? 0;
+  const pendientes = counts['en_revision'] ?? 0;
   const aprobados = counts['aprobado'] ?? 0;
 
   const thClass = 'px-4 py-2.5 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap select-none cursor-pointer hover:text-gray-800 transition-colors';
