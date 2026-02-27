@@ -6,7 +6,9 @@ import { OnboardingState } from '@/types/onboarding';
 
 export async function POST(req: NextRequest) {
   try {
-    const state: OnboardingState = await req.json();
+    const body = await req.json();
+    const state: OnboardingState = body;
+    const inviteToken: string | null = body.inviteToken ?? null;
     const storeJson = generateStoreJson(state);
 
     const duracionSeg = Math.round((Date.now() - new Date(state.meta.startedAt).getTime()) / 1000);
@@ -44,6 +46,14 @@ export async function POST(req: NextRequest) {
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!
       );
+      // Actualizar estado del lead a 'onboarding'
+      const leadQuery = supabase.from('leads').update({ estado: 'onboarding' });
+      if (inviteToken) {
+        await leadQuery.eq('invite_token', inviteToken);
+      } else {
+        await leadQuery.eq('email', state.registro.email);
+      }
+
       await supabase.from('onboardings').upsert({
         session_id:   state.meta.sessionId,
         nombre:       state.registro.nombre,
