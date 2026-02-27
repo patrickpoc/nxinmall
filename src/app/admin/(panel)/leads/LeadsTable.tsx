@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { MessageCircle, Copy, Check, ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react';
+import { MessageCircle, ExternalLink, ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react';
 import clsx from 'clsx';
 import { useAdminLang } from '@/lib/admin-lang-context';
 
@@ -66,34 +66,10 @@ function EstadoSelect({ lead }: { lead: Lead }) {
   );
 }
 
-function CopyButton({ url }: { url: string | null }) {
-  const { t } = useAdminLang();
-  const [copied, setCopied] = useState(false);
-
-  async function handleCopy() {
-    if (!url) return;
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={handleCopy}
-      disabled={!url}
-      title={url ? 'Copiar URL de onboarding' : 'Sin URL generada'}
-      className={clsx(
-        'flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium border transition-all',
-        copied
-          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-          : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:text-gray-700',
-        !url && 'opacity-30 cursor-not-allowed'
-      )}
-    >
-      {copied ? <><Check className="w-3 h-3" /> {t.leads.copied}</> : <><Copy className="w-3 h-3" /> URL</>}
-    </button>
-  );
+function getFullUrl(url: string | null): string | null {
+  if (!url) return null;
+  if (url.startsWith('http')) return url;
+  return `${window.location.origin}${url}`;
 }
 
 type SortKey = 'empresa' | 'pais' | 'estado' | 'created_at';
@@ -234,8 +210,9 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
               <tbody className="divide-y divide-gray-100">
                 {filtered.map((lead) => {
                   const phoneClean = lead.whatsapp?.replace(/[^0-9]/g, '') ?? '';
+                  const fullOnboardingUrl = getFullUrl(lead.onboarding_url);
                   const msg = encodeURIComponent(
-                    `Hola ${lead.nombre}, te compartimos tu enlace de onboarding en NxinMall:\n${lead.onboarding_url ?? ''}`
+                    `Hola ${lead.nombre}, te compartimos tu enlace de onboarding en NxinMall:\n${fullOnboardingUrl ?? ''}`
                   );
                   const waUrl = `https://wa.me/${phoneClean}?text=${msg}`;
 
@@ -266,12 +243,23 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                             href={waUrl}
                             target="_blank"
                             rel="noopener noreferrer"
+                            title="Enviar link de onboarding por WhatsApp"
                             className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors"
                           >
                             <MessageCircle className="w-3 h-3" />
-                            WA
+                            Onboarding
                           </a>
-                          <CopyButton url={lead.onboarding_url} />
+                          {lead.onboarding_url && (
+                            <a
+                              href={getFullUrl(lead.onboarding_url)!}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Abrir link de onboarding"
+                              className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 hover:text-gray-700 transition-colors"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
                         </div>
                       </td>
                     </tr>

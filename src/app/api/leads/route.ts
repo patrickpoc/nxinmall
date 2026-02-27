@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
     const { nombre, empresa, email, whatsapp, pais } = await req.json();
 
     const params = new URLSearchParams({ nombre, empresa, email, whatsapp, pais });
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${req.nextUrl.protocol}//${req.nextUrl.host}`;
     const onboarding_url = `${baseUrl}/onboarding?${params.toString()}`;
 
     const { error: dbError } = await getSupabaseAdmin().from('leads').upsert(
