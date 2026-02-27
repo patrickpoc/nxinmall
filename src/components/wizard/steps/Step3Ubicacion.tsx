@@ -8,7 +8,8 @@ import { DEPARTAMENTOS, PROVINCIAS, DISTRITOS } from '@/data/peru-ubigeo';
 import { ESTADOS_BRASIL, MUNICIPIOS_BRASIL } from '@/data/ubigeo-brasil';
 import { DEPARTAMENTOS_COLOMBIA, MUNICIPIOS_COLOMBIA } from '@/data/ubigeo-colombia';
 import { PROVINCIAS_ECUADOR, CANTONES_ECUADOR } from '@/data/ubigeo-ecuador';
-import { COUNTRIES, REGIONS, REGION_LABELS, hasUbigeo } from '@/data/countries';
+import { hasUbigeo } from '@/data/countries';
+import CountryCombobox from '@/components/ui/CountryCombobox';
 
 interface Step3Props {
   onNext: () => void;
@@ -135,20 +136,12 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
       {/* País */}
       <div className="flex flex-col">
         <label className={labelClass}>{t('paisLabel', idioma)}</label>
-        <select
+        <CountryCombobox
           value={pais}
-          onChange={(e) => handlePaisChange(e.target.value)}
-          className={selectClass(errors.pais)}
-        >
-          <option value="">{t('paisPlaceholder', idioma)}</option>
-          {REGIONS.map((region) => (
-            <optgroup key={region} label={REGION_LABELS[region]}>
-              {COUNTRIES.filter((c) => c.region === region).map((c) => (
-                <option key={c.name} value={c.name}>{c.name}</option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
+          onChange={handlePaisChange}
+          placeholder={t('paisPlaceholder', idioma)}
+          error={!!errors.pais}
+        />
         {errors.pais && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.pais}</p>}
       </div>
 

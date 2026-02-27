@@ -7,7 +7,8 @@ import { step1Schema, Step1Data } from '@/lib/schemas';
 import { useOnboardingStore } from '@/lib/store';
 import PhoneInput from '@/components/ui/PhoneInput';
 import { t } from '@/lib/i18n';
-import { COUNTRIES, REGIONS, REGION_LABELS, getCountryPrefix } from '@/data/countries';
+import { getCountryPrefix } from '@/data/countries';
+import CountryCombobox from '@/components/ui/CountryCombobox';
 import clsx from 'clsx';
 
 const CARGOS = [
@@ -70,15 +71,12 @@ export default function Step1Registro({ onNext }: Step1Props) {
       {/* País (MOVIDO AL INICIO) */}
       <div className="flex flex-col sm:col-span-2">
         <label className={labelClass}>{t('paisPaso1Label', idioma)}</label>
-        <select {...register('pais')} className={inputClass(errors.pais)}>
-          {REGIONS.map((region) => (
-            <optgroup key={region} label={REGION_LABELS[region]}>
-              {COUNTRIES.filter((c) => c.region === region).map((c) => (
-                <option key={c.name} value={c.name}>{c.name}</option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
+        <CountryCombobox
+          value={paisSeleccionado}
+          onChange={(country) => setValue('pais', country)}
+          placeholder={t('paisPaso1Label', idioma)}
+          error={!!errors.pais}
+        />
         {errors.pais && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.pais.message}</p>}
       </div>
 

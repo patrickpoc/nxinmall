@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { FaqItem } from './LandingComponents';
 import type { Lang } from '@/data/landing-content';
-import { COUNTRIES, REGIONS, REGION_LABELS, getCountryPrefix } from '@/data/countries';
+import { getCountryPrefix } from '@/data/countries';
+import CountryCombobox from '@/components/ui/CountryCombobox';
 
 const PLACEHOLDERS: Record<Lang, { name: string; company: string; email: string; phone: string }> = {
   es: { name: 'Tu nombre completo', company: 'Tu empresa', email: 'tu@empresa.com', phone: '999 000 000' },
@@ -81,24 +82,14 @@ export function ContactForm({ content, lang, handleSubmit, submitted }: SectionP
               {/* País — antes de contacto para fijar el prefijo */}
               <div className="flex flex-col sm:col-span-2">
                 <label className={labelClasses}>{content.form.fields.country}</label>
-                <select
+                <CountryCombobox
                   name="pais"
                   required
                   value={selectedCountry}
-                  onChange={(e) => setSelectedCountry(e.target.value)}
-                  className={inputClasses}
-                >
-                  <option value="" disabled>
-                    {content.form.fields.countryPlaceholder}
-                  </option>
-                  {REGIONS.map((region) => (
-                    <optgroup key={region} label={REGION_LABELS[region]}>
-                      {COUNTRIES.filter((c) => c.region === region).map((c) => (
-                        <option key={c.name} value={c.name}>{c.name}</option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
+                  onChange={setSelectedCountry}
+                  placeholder={content.form.fields.countryPlaceholder}
+                  inputClassName={inputClasses}
+                />
               </div>
               {/* Email + WhatsApp — prefijo ya fijado por país */}
               <div className="flex flex-col">
