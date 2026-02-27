@@ -18,11 +18,13 @@ export function useScrollReveal(deps: DependencyList = []) {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
+          } else {
+            // Remove the class when it leaves the viewport to allow re-triggering
+            entry.target.classList.remove('is-visible');
           }
         });
       }, {
-        threshold: 0.01,
+        threshold: 0.05, // Slightly higher threshold for better UX
         rootMargin: '0px'
       });
 
