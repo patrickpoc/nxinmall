@@ -10,10 +10,11 @@ export async function POST(req: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
     const onboarding_url = `${baseUrl}/onboarding?${params.toString()}`;
 
-    await getSupabaseAdmin().from('leads').upsert(
+    const { error: dbError } = await getSupabaseAdmin().from('leads').upsert(
       { nombre, empresa, email, whatsapp, pais, onboarding_url },
       { onConflict: 'email' }
     );
+    if (dbError) console.error('[leads] Supabase error:', dbError.message, dbError.details);
 
     await submitToGoogleSheets({
       timestamp: new Date().toISOString(),

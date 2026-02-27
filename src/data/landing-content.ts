@@ -10,7 +10,7 @@ export const COPY: Record<Lang, {
   logistics: { kicker: string; title: string; body: string };
   process: { title: string; subtitle: string; steps: { title: string; desc: string }[] };
   buyers: { kicker: string; title: string; body: string };
-  form: { kicker: string; title: string; subtitle: string; fields: Record<string, string>; submit: string };
+  form: { kicker: string; title: string; subtitle: string; fields: Record<string, string>; submit: string; success: { title: string; desc: string } };
   faq: { title: string; subtitle: string; items: { q: string; a: string }[] };
   footer: { tagline: string; cta: string };
 }> = {
@@ -74,6 +74,10 @@ export const COPY: Record<Lang, {
         countryPlaceholder: 'Selecciona un pais',
       },
       submit: 'Solicitar acceso',
+      success: {
+        title: '¡Solicitud enviada!',
+        desc: 'Un ejecutivo te contactará en las próximas 24–48 horas.',
+      },
     },
     faq: {
       title: 'Preguntas frecuentes',
@@ -149,6 +153,10 @@ export const COPY: Record<Lang, {
         countryPlaceholder: 'Select a country',
       },
       submit: 'Request access',
+      success: {
+        title: 'Request submitted!',
+        desc: 'An executive will contact you within 24–48 business hours.',
+      },
     },
     faq: {
       title: 'Frequently asked questions',
@@ -224,6 +232,10 @@ export const COPY: Record<Lang, {
         countryPlaceholder: 'Selecione um pais',
       },
       submit: 'Solicitar acesso',
+      success: {
+        title: 'Solicitação enviada!',
+        desc: 'Um executivo entrará em contato nas próximas 24–48 horas.',
+      },
     },
     faq: {
       title: 'Perguntas frequentes',

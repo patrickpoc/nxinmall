@@ -30,8 +30,8 @@ export function ContactForm({ content, handleSubmit, submitted }: SectionProps) 
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="text-2xl font-black text-ink font-display mb-3">¡Solicitud enviada!</h3>
-            <p className="text-gray-600 text-lg">Un ejecutivo te contactará en las próximas 24–48 horas.</p>
+            <h3 className="text-2xl font-black text-ink font-display mb-3">{content.form.success.title}</h3>
+            <p className="text-gray-600 text-lg">{content.form.success.desc}</p>
           </div>
         ) : (
           <form
