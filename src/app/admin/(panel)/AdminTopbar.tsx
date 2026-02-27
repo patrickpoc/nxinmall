@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Globe, LogOut } from 'lucide-react';
+import { Globe, LogOut, Settings, UserCircle } from 'lucide-react';
 import { useState } from 'react';
 import { getSupabaseBrowser } from '@/lib/supabase-browser';
 import { useAdminLang } from '@/lib/admin-lang-context';
@@ -81,6 +81,34 @@ export default function AdminTopbar() {
               </div>
             )}
           </div>
+
+          {/* Mi cuenta */}
+          <Link
+            href="/admin/account"
+            className={clsx(
+              'flex items-center justify-center w-8 h-8 rounded-lg transition-colors',
+              pathname.startsWith('/admin/account')
+                ? 'bg-gray-100 text-gray-900'
+                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+            )}
+            aria-label="Mi cuenta"
+          >
+            <UserCircle className="w-4 h-4" />
+          </Link>
+
+          {/* Gestores */}
+          <Link
+            href="/admin/settings"
+            className={clsx(
+              'flex items-center justify-center w-8 h-8 rounded-lg transition-colors',
+              pathname.startsWith('/admin/settings')
+                ? 'bg-gray-100 text-gray-900'
+                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+            )}
+            aria-label="Gestores"
+          >
+            <Settings className="w-4 h-4" />
+          </Link>
 
           {/* Logout */}
           <button
