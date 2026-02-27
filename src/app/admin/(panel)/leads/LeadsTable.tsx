@@ -27,7 +27,7 @@ const ESTADO_STYLES: Record<Estado, string> = {
   descartado:  'bg-gray-100 text-gray-500 border-gray-200',
 };
 
-const PAISES = ['Perú', 'Brasil', 'Colombia', 'Ecuador', 'Chile', 'Argentina'];
+const PAISES = ['Peru', 'Brasil', 'Colombia', 'Ecuador', 'Chile', 'Argentina'];
 
 function EstadoSelect({ lead }: { lead: Lead }) {
   const { t } = useAdminLang();
