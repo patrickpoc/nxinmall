@@ -127,6 +127,11 @@ const T = {
     errNivel3: 'Selecciona esta opción',
     errDireccion: 'La dirección es requerida',
     errProductos: 'Selecciona al menos un producto',
+    // Gracias
+    graciasTitle: '¡Perfil enviado!',
+    graciasSubtitle: 'El equipo de NxinMall revisará tu información y configurará tu tienda. Te contactaremos por WhatsApp en las próximas',
+    graciasHoras: '24 horas',
+    graciasVolver: 'Volver al inicio',
     // Categories
     cat_frutas: 'Frutas y Verduras',
     cat_frutas_sub: 'Frutas premium para el mundo',
@@ -267,6 +272,11 @@ const T = {
     errNivel3: 'Selecione esta opção',
     errDireccion: 'O endereço é obrigatório',
     errProductos: 'Selecione pelo menos um produto',
+    // Gracias
+    graciasTitle: 'Perfil enviado!',
+    graciasSubtitle: 'A equipe da NxinMall revisará suas informações e configurará sua loja. Entraremos em contato pelo WhatsApp nas próximas',
+    graciasHoras: '24 horas',
+    graciasVolver: 'Voltar ao início',
     // Categories
     cat_frutas: 'Frutas e Verduras',
     cat_frutas_sub: 'Frutas premium para o mundo',

@@ -1,14 +1,27 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { CheckCircle, Mail } from 'lucide-react';
+import { useOnboardingStore } from '@/lib/store';
+import { t } from '@/lib/i18n';
 
 export default function GraciasPage() {
+  const { idioma, registro } = useOnboardingStore();
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
-      <div className="absolute top-0 left-0 right-0 py-4 px-6 bg-white border-b border-gray-200">
-        <Link href="/" className="text-lg font-bold text-ink">
-          Nxin<span className="text-brand-900">Mall</span>
+      {/* Header con logo real */}
+      <div className="absolute top-0 left-0 right-0 py-3 px-6 bg-white border-b border-gray-200 flex items-center">
+        <Link href="/">
+          <Image
+            src="/visuals/logo.png"
+            alt="NxinMall"
+            width={120}
+            height={36}
+            className="h-9 w-auto object-contain"
+            priority
+          />
         </Link>
       </div>
 
@@ -20,21 +33,36 @@ export default function GraciasPage() {
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-3">
-          ¡Perfil enviado!
+          {t('graciasTitle', idioma)}
         </h1>
 
+        {registro.nombre && (
+          <p className="text-base font-semibold text-brand-900 mb-2">
+            {registro.nombre}
+          </p>
+        )}
+
         <p className="text-gray-500 text-sm leading-relaxed mb-8">
-          El equipo de NxinMall revisará tu información y configurará tu tienda.
-          Te contactaremos por WhatsApp en las próximas <strong className="text-gray-700">24 horas</strong>.
+          {t('graciasSubtitle', idioma)}{' '}
+          <strong className="text-gray-700">{t('graciasHoras', idioma)}</strong>.
         </p>
 
         <a
           href="mailto:peru@nxinmall.com"
-          className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-brand-900 transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-brand-900 transition-colors mb-6"
         >
           <Mail className="w-4 h-4" />
           peru@nxinmall.com
         </a>
+
+        <div className="mt-2">
+          <Link
+            href="/"
+            className="text-xs font-bold text-gray-300 hover:text-gray-500 uppercase tracking-widest transition-colors"
+          >
+            {t('graciasVolver', idioma)}
+          </Link>
+        </div>
       </div>
     </div>
   );
