@@ -68,7 +68,8 @@ function EstadoSelect({ lead }: { lead: Lead }) {
 
 function getOnboardingUrl(token: string | null): string | null {
   if (!token) return null;
-  return `${window.location.origin}/onboarding?token=${token}`;
+  const base = process.env.NEXT_PUBLIC_APP_URL ?? (typeof window !== 'undefined' ? window.location.origin : '');
+  return `${base}/onboarding?token=${token}`;
 }
 
 type SortKey = 'empresa' | 'pais' | 'estado' | 'created_at';
