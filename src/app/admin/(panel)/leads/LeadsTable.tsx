@@ -14,7 +14,7 @@ export type Lead = {
   whatsapp: string;
   pais: string;
   estado: string;
-  onboarding_url: string | null;
+  invite_token: string | null;
 };
 
 const ESTADOS = ['nuevo', 'contactado', 'onboarding', 'descartado'] as const;
@@ -66,10 +66,9 @@ function EstadoSelect({ lead }: { lead: Lead }) {
   );
 }
 
-function getFullUrl(url: string | null): string | null {
-  if (!url) return null;
-  if (url.startsWith('http')) return url;
-  return `${window.location.origin}${url}`;
+function getOnboardingUrl(token: string | null): string | null {
+  if (!token) return null;
+  return `${window.location.origin}/onboarding?token=${token}`;
 }
 
 type SortKey = 'empresa' | 'pais' | 'estado' | 'created_at';
@@ -210,9 +209,9 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
               <tbody className="divide-y divide-gray-100">
                 {filtered.map((lead) => {
                   const phoneClean = lead.whatsapp?.replace(/[^0-9]/g, '') ?? '';
-                  const fullOnboardingUrl = getFullUrl(lead.onboarding_url);
+                  const onboardingUrl = getOnboardingUrl(lead.invite_token);
                   const msg = encodeURIComponent(
-                    `Hola ${lead.nombre}, te compartimos tu enlace de onboarding en NxinMall:\n${fullOnboardingUrl ?? ''}`
+                    `Hola ${lead.nombre}, te compartimos tu enlace de onboarding en NxinMall:\n${onboardingUrl ?? ''}`
                   );
                   const waUrl = `https://wa.me/${phoneClean}?text=${msg}`;
 
@@ -249,9 +248,9 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                             <MessageCircle className="w-3 h-3" />
                             Onboarding
                           </a>
-                          {lead.onboarding_url && (
+                          {onboardingUrl && (
                             <a
-                              href={getFullUrl(lead.onboarding_url)!}
+                              href={onboardingUrl}
                               target="_blank"
                               rel="noopener noreferrer"
                               title="Abrir link de onboarding"

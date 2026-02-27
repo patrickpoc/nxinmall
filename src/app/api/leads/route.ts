@@ -6,12 +6,12 @@ export async function POST(req: NextRequest) {
   try {
     const { nombre, empresa, email, whatsapp, pais } = await req.json();
 
-    const params = new URLSearchParams({ nombre, empresa, email, whatsapp, pais });
+    const invite_token = crypto.randomUUID();
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${req.nextUrl.protocol}//${req.nextUrl.host}`;
-    const onboarding_url = `${baseUrl}/onboarding?${params.toString()}`;
+    const onboarding_url = `${baseUrl}/onboarding?token=${invite_token}`;
 
     const { error: dbError } = await getSupabaseAdmin().from('leads').upsert(
-      { nombre, empresa, email, whatsapp, pais, onboarding_url },
+      { nombre, empresa, email, whatsapp, pais, onboarding_url, invite_token },
       { onConflict: 'email' }
     );
     if (dbError) console.error('[leads] Supabase error:', dbError.message, dbError.details);

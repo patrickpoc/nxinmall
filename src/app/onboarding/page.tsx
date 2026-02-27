@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useOnboardingStore } from '@/lib/store';
 import WizardShell from '@/components/wizard/WizardShell';
 import Step1Registro from '@/components/wizard/steps/Step1Registro';
@@ -14,27 +13,40 @@ import { t } from '@/lib/i18n';
 
 function OnboardingContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { meta, idioma, setCurrentStep, setRegistro } = useOnboardingStore();
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const nombre = searchParams.get('nombre');
-    const empresa = searchParams.get('empresa');
-    const email = searchParams.get('email');
-    const whatsapp = searchParams.get('whatsapp');
-    const pais = searchParams.get('pais');
-    if (nombre || empresa || email || whatsapp || pais) {
-      setRegistro({
-        ...(nombre   ? { nombre }   : {}),
-        ...(empresa  ? { empresa }  : {}),
-        ...(email    ? { email }    : {}),
-        ...(whatsapp ? { whatsapp } : {}),
-        ...(pais     ? { pais }     : {}),
-      });
+    const token = searchParams.get('token');
+
+    if (!token) {
+      router.replace('/');
+      return;
     }
+
+    fetch(`/api/onboarding-invite/${token}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('invalid');
+        return res.json();
+      })
+      .then((data) => {
+        setRegistro({
+          ...(data.nombre   ? { nombre: data.nombre }   : {}),
+          ...(data.empresa  ? { empresa: data.empresa }  : {}),
+          ...(data.email    ? { email: data.email }    : {}),
+          ...(data.whatsapp ? { whatsapp: data.whatsapp } : {}),
+          ...(data.pais     ? { pais: data.pais }     : {}),
+        });
+        setReady(true);
+      })
+      .catch(() => {
+        router.replace('/');
+      });
   }, []);
 
   const currentStep = meta.currentStep;
-  
+
   const stepMeta = [
     { title: t('step1Title', idioma), subtitle: t('step1Subtitle', idioma) },
     { title: t('step2Title', idioma), subtitle: t('step2Subtitle', idioma) },
@@ -45,6 +57,14 @@ function OnboardingContent() {
 
   const goNext = () => setCurrentStep(Math.min(currentStep + 1, 5));
   const goBack = () => setCurrentStep(Math.max(currentStep - 1, 1));
+
+  if (!ready) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-6 h-6 border-2 border-brand-900 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <WizardShell

@@ -5,7 +5,7 @@ export default async function LeadsPage() {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('leads')
-    .select('id, created_at, nombre, empresa, email, whatsapp, pais, estado, onboarding_url')
+    .select('id, created_at, nombre, empresa, email, whatsapp, pais, estado, invite_token')
     .order('created_at', { ascending: false });
 
   const leads: Lead[] = data ?? [];
