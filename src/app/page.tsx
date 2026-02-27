@@ -156,7 +156,7 @@ function HomeContent() {
         <Logistics content={content} />
         <Process content={content} />
         <Buyers content={content} />
-        <ContactForm content={content} handleSubmit={handleSubmit} submitted={submitted} />
+        <ContactForm content={content} lang={lang} handleSubmit={handleSubmit} submitted={submitted} />
         <FaqSection content={content} />
       </main>
 

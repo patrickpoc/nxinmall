@@ -1,14 +1,33 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { FaqItem } from './LandingComponents';
+import type { Lang } from '@/data/landing-content';
+import { COUNTRIES, REGIONS, REGION_LABELS, getCountryPrefix } from '@/data/countries';
+
+const PLACEHOLDERS: Record<Lang, { name: string; company: string; email: string; phone: string }> = {
+  es: { name: 'Tu nombre completo', company: 'Tu empresa', email: 'tu@empresa.com', phone: '999 000 000' },
+  en: { name: 'Your full name', company: 'Your company', email: 'you@company.com', phone: '555 000 000' },
+  pt: { name: 'Seu nome completo', company: 'Sua empresa', email: 'voce@empresa.com', phone: '11 99000 0000' },
+};
 
 interface SectionProps {
   content: any;
+  lang: Lang;
   handleSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
   submitted?: boolean;
 }
 
-export function ContactForm({ content, handleSubmit, submitted }: SectionProps) {
+export function ContactForm({ content, lang, handleSubmit, submitted }: SectionProps) {
+  const [selectedCountry, setSelectedCountry] = useState(() => lang === 'pt' ? 'Brasil' : '');
+
+  // When language changes externally, auto-select country
+  useEffect(() => {
+    if (lang === 'pt') setSelectedCountry('Brasil');
+  }, [lang]);
+
+  const prefix = selectedCountry ? getCountryPrefix(selectedCountry) : '';
+  const ph = PLACEHOLDERS[lang];
   const inputClasses = "mt-2 w-full rounded-2xl border-none bg-white px-4 py-4 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:shadow-md transition-all duration-300 placeholder:text-gray-400";
   const labelClasses = "text-[11px] font-black text-brand-900/50 uppercase tracking-[0.2em] ml-1 mb-1";
 
@@ -40,13 +59,14 @@ export function ContactForm({ content, handleSubmit, submitted }: SectionProps) 
             data-animate="fade-up"
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+              {/* Nombre + Empresa */}
               <div className="flex flex-col">
                 <label className={labelClasses}>{content.form.fields.name}</label>
                 <input
                   name="nombre"
                   required
                   className={inputClasses}
-                  placeholder="Maria Perez"
+                  placeholder={ph.name}
                 />
               </div>
               <div className="flex flex-col">
@@ -55,9 +75,32 @@ export function ContactForm({ content, handleSubmit, submitted }: SectionProps) 
                   name="empresa"
                   required
                   className={inputClasses}
-                  placeholder="Agroexportadora Andina"
+                  placeholder={ph.company}
                 />
               </div>
+              {/* País — antes de contacto para fijar el prefijo */}
+              <div className="flex flex-col sm:col-span-2">
+                <label className={labelClasses}>{content.form.fields.country}</label>
+                <select
+                  name="pais"
+                  required
+                  value={selectedCountry}
+                  onChange={(e) => setSelectedCountry(e.target.value)}
+                  className={inputClasses}
+                >
+                  <option value="" disabled>
+                    {content.form.fields.countryPlaceholder}
+                  </option>
+                  {REGIONS.map((region) => (
+                    <optgroup key={region} label={REGION_LABELS[region]}>
+                      {COUNTRIES.filter((c) => c.region === region).map((c) => (
+                        <option key={c.name} value={c.name}>{c.name}</option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </div>
+              {/* Email + WhatsApp — prefijo ya fijado por país */}
               <div className="flex flex-col">
                 <label className={labelClasses}>{content.form.fields.email}</label>
                 <input
@@ -65,34 +108,23 @@ export function ContactForm({ content, handleSubmit, submitted }: SectionProps) 
                   type="email"
                   required
                   className={inputClasses}
-                  placeholder="maria@empresa.com"
+                  placeholder={ph.email}
                 />
               </div>
               <div className="flex flex-col">
                 <label className={labelClasses}>{content.form.fields.whatsapp}</label>
-                <input
-                  name="whatsapp"
-                  required
-                  className={inputClasses}
-                  placeholder="+51 999 000 000"
-                />
-              </div>
-              <div className="flex flex-col sm:col-span-2">
-                <label className={labelClasses}>{content.form.fields.country}</label>
-                <select
-                  name="pais"
-                  required
-                  className={inputClasses}
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    {content.form.fields.countryPlaceholder}
-                  </option>
-                  <option value="Peru">Peru</option>
-                  <option value="Brasil">Brasil</option>
-                  <option value="Colombia">Colombia</option>
-                  <option value="Ecuador">Ecuador</option>
-                </select>
+                <div className="mt-2 flex rounded-2xl overflow-hidden shadow-sm">
+                  <span className="inline-flex items-center px-4 bg-gray-100 text-sm text-gray-500 font-black tracking-tight min-w-[52px] justify-center">
+                    {prefix || '+'}
+                  </span>
+                  <input
+                    name="whatsapp"
+                    type="tel"
+                    required
+                    className="flex-1 px-4 py-4 text-sm bg-white border-none focus:outline-none focus:ring-2 focus:ring-brand-500/20 transition-all duration-300 placeholder:text-gray-400"
+                    placeholder={ph.phone}
+                  />
+                </div>
               </div>
             </div>
 

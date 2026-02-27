@@ -1,11 +1,13 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { step1Schema, Step1Data } from '@/lib/schemas';
 import { useOnboardingStore } from '@/lib/store';
 import PhoneInput from '@/components/ui/PhoneInput';
 import { t } from '@/lib/i18n';
+import { COUNTRIES, REGIONS, REGION_LABELS, getCountryPrefix } from '@/data/countries';
 import clsx from 'clsx';
 
 const CARGOS = [
@@ -15,20 +17,6 @@ const CARGOS = [
   'Dueño',
   'Otro',
 ];
-
-const PAISES = ['Peru', 'Colombia', 'Ecuador', 'Chile', 'Bolivia', 'Brasil', 'Argentina', 'México', 'Otro'];
-
-const PREFIJOS: Record<string, string> = {
-  Peru: '+51',
-  Colombia: '+57',
-  Ecuador: '+593',
-  Chile: '+56',
-  Bolivia: '+591',
-  Brasil: '+55',
-  Argentina: '+54',
-  México: '+52',
-  Otro: '+',
-};
 
 interface Step1Props {
   onNext: () => void;
@@ -59,6 +47,11 @@ export default function Step1Registro({ onNext }: Step1Props) {
   const whatsapp = watch('whatsapp');
   const paisSeleccionado = watch('pais');
 
+  // Sync pais field when store changes (e.g. language toggle in header sets Brasil)
+  useEffect(() => {
+    setValue('pais', registro.pais || 'Peru');
+  }, [registro.pais, setValue]);
+
   const onSubmit = (data: Step1Data) => {
     setRegistro(data);
     onNext();
@@ -78,8 +71,12 @@ export default function Step1Registro({ onNext }: Step1Props) {
       <div className="flex flex-col sm:col-span-2">
         <label className={labelClass}>{t('paisPaso1Label', idioma)}</label>
         <select {...register('pais')} className={inputClass(errors.pais)}>
-          {PAISES.map((p) => (
-            <option key={p} value={p}>{p}</option>
+          {REGIONS.map((region) => (
+            <optgroup key={region} label={REGION_LABELS[region]}>
+              {COUNTRIES.filter((c) => c.region === region).map((c) => (
+                <option key={c.name} value={c.name}>{c.name}</option>
+              ))}
+            </optgroup>
           ))}
         </select>
         {errors.pais && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.pais.message}</p>}
@@ -127,7 +124,7 @@ export default function Step1Registro({ onNext }: Step1Props) {
           value={whatsapp}
           onChange={(e) => setValue('whatsapp', e.target.value)}
           error={errors.whatsapp?.message}
-          defaultCountryCode={PREFIJOS[paisSeleccionado] || '+51'}
+          defaultCountryCode={getCountryPrefix(paisSeleccionado)}
         />
       </div>
 

@@ -115,7 +115,13 @@ export const useOnboardingStore = create<OnboardingStore>()(
       setActivacion: (data) =>
         set((state) => ({ activacion: { ...state.activacion, ...data } })),
 
-      setIdioma: (idioma) => set({ idioma }),
+      setIdioma: (idioma) =>
+        set((state) => ({
+          idioma,
+          registro: idioma === 'pt'
+            ? { ...state.registro, pais: 'Brasil' }
+            : state.registro,
+        })),
 
       clearState: () =>
         set({

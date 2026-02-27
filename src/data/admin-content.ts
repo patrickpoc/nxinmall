@@ -25,7 +25,7 @@ export const ADMIN_COPY: Record<AdminLang, {
   };
   leadStatuses: Record<string, string>;
   onboardingStatuses: Record<string, string>;
-  countries: { all: string };
+  countries: { all: string; others: string };
 }> = {
   es: {
     nav: { leads: 'Leads', onboardings: 'Onboardings', logout: 'Salir' },
@@ -48,7 +48,7 @@ export const ADMIN_COPY: Record<AdminLang, {
     },
     leadStatuses: { nuevo: 'nuevo', contactado: 'contactado', onboarding: 'onboarding', descartado: 'descartado' },
     onboardingStatuses: { kyb_pendiente: 'KYB Pendiente', en_revision: 'En revisión', aprobado: 'Aprobado', rechazado: 'Rechazado' },
-    countries: { all: 'Todos' },
+    countries: { all: 'Todos', others: 'Otros' },
   },
   en: {
     nav: { leads: 'Leads', onboardings: 'Onboardings', logout: 'Sign out' },
@@ -71,7 +71,7 @@ export const ADMIN_COPY: Record<AdminLang, {
     },
     leadStatuses: { nuevo: 'new', contactado: 'contacted', onboarding: 'onboarding', descartado: 'discarded' },
     onboardingStatuses: { kyb_pendiente: 'KYB Pending', en_revision: 'Under review', aprobado: 'Approved', rechazado: 'Rejected' },
-    countries: { all: 'All' },
+    countries: { all: 'All', others: 'Others' },
   },
   pt: {
     nav: { leads: 'Leads', onboardings: 'Onboardings', logout: 'Sair' },
@@ -94,6 +94,6 @@ export const ADMIN_COPY: Record<AdminLang, {
     },
     leadStatuses: { nuevo: 'novo', contactado: 'contactado', onboarding: 'onboarding', descartado: 'descartado' },
     onboardingStatuses: { kyb_pendiente: 'KYB Pendente', en_revision: 'Em revisão', aprobado: 'Aprovado', rechazado: 'Rejeitado' },
-    countries: { all: 'Todos' },
+    countries: { all: 'Todos', others: 'Outros' },
   },
 };

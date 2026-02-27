@@ -35,7 +35,7 @@ const ESTADO_STYLES: Record<Estado, string> = {
   descartado:  'bg-gray-100 text-gray-500 border-gray-200',
 };
 
-const PAISES = ['Peru', 'Brasil', 'Colombia', 'Ecuador', 'Chile', 'Argentina'];
+const PAISES_PRINCIPALES = ['Peru', 'Brasil', 'Colombia', 'Ecuador'] as const;
 
 function EstadoSelect({ lead }: { lead: Lead }) {
   const { t } = useAdminLang();
@@ -94,7 +94,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
   const { t } = useAdminLang();
   const [query, setQuery] = useState('');
   const [estadoFilter, setEstadoFilter] = useState<Estado | 'todos'>('todos');
-  const [paisFilter, setPaisFilter] = useState('');
+  const [paisFilter, setPaisFilter] = useState<'' | typeof PAISES_PRINCIPALES[number] | 'otros'>('');
   const [sortKey, setSortKey] = useState<SortKey>('created_at');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
 
@@ -109,7 +109,10 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
       .filter((l) => {
         const matchQ = !q || [l.empresa, l.nombre, l.email, l.whatsapp].some((v) => v?.toLowerCase().includes(q));
         const matchE = estadoFilter === 'todos' || l.estado === estadoFilter;
-        const matchP = !paisFilter || l.pais === paisFilter;
+        const matchP = !paisFilter
+          || (paisFilter === 'otros'
+            ? !(PAISES_PRINCIPALES as readonly string[]).includes(l.pais)
+            : l.pais === paisFilter);
         return matchQ && matchE && matchP;
       })
       .sort((a, b) => {
@@ -186,7 +189,8 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
           className="rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
         >
           <option value="">{t.countries.all}</option>
-          {PAISES.map((p) => <option key={p}>{p}</option>)}
+          {PAISES_PRINCIPALES.map((p) => <option key={p} value={p}>{p}</option>)}
+          <option value="otros">{t.countries.others}</option>
         </select>
       </div>
 
