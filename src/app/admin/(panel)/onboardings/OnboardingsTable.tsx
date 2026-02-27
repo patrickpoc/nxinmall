@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ChevronUp, ChevronDown, ChevronsUpDown, MessageCircle } from 'lucide-react';
+import { ChevronUp, ChevronDown, ChevronsUpDown, MessageCircle, Download } from 'lucide-react';
 import clsx from 'clsx';
 import { useAdminLang } from '@/lib/admin-lang-context';
 
@@ -238,17 +238,27 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
                         <p className="text-[10px] text-gray-300 mt-0.5">{duracionLabel(o.duracion_seg)}</p>
                       </td>
                       <td className={tdClass}>
-                        {o.whatsapp && (
+                        <div className="flex items-center gap-1.5">
+                          {o.whatsapp && (
+                            <a
+                              href={waUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors"
+                            >
+                              <MessageCircle className="w-3 h-3" />
+                              WA
+                            </a>
+                          )}
                           <a
-                            href={waUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors w-fit"
+                            href={`/api/admin/onboardings/${o.id}/download`}
+                            title="Descargar JSON"
+                            className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 hover:text-brand-900 transition-colors"
                           >
-                            <MessageCircle className="w-3 h-3" />
-                            WA
+                            <Download className="w-3 h-3" />
+                            JSON
                           </a>
-                        )}
+                        </div>
                       </td>
                     </tr>
                   );

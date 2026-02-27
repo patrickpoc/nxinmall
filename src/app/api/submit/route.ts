@@ -62,6 +62,7 @@ export async function POST(req: NextRequest) {
         productos:    state.catalogo.productosSeleccionados.map((p) => p.nombre).join(' | '),
         duracion_seg: duracionSeg,
         estado:       'kyb_pendiente',
+        raw_data:     storeJson,
       }, { onConflict: 'session_id' });
     } catch (dbErr) {
       console.error('Supabase insert error (no crítico):', dbErr);
