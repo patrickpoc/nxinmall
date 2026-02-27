@@ -3,7 +3,7 @@ import { CategoriaCatalogo, N } from './types';
 export const PLASTICOS: CategoriaCatalogo = {
   id: 'plasticos',
   nombre: 'Plásticos Agrícolas',
-  emoji: '🎞️',
+  emoji: '♻️',
   colorPrimario: '#1a6b8a',
   ejemplos: ['Manga polietileno', 'Mallas Raschel', 'Agrofilm'],
   subtitulo: 'Plásticos de alta resistencia UV para campo',

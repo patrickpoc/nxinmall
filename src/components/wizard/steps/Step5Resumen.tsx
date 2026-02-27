@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Send, Building2, MapPin, Package, Award } from 'lucide-react';
+import { Building2, MapPin, Package, Award } from 'lucide-react';
 import { useOnboardingStore } from '@/lib/store';
 import { CATEGORIAS } from '@/data/catalog';
 import { Categoria } from '@/types/onboarding';
@@ -186,14 +186,9 @@ export default function Step5Resumen({ onBack }: Step5Props) {
           type="button"
           onClick={handleSubmit}
           disabled={isLoading}
-          className="flex items-center justify-center gap-3 py-4 rounded-full bg-brand-900 text-white font-black text-lg uppercase tracking-tight hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl shadow-brand-900/25"
+          className="flex items-center justify-center py-4 rounded-full bg-brand-900 text-white font-semibold text-base hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl shadow-brand-900/25"
         >
-          {isLoading ? t('procesando', idioma) : (
-            <>
-              {t('btnEnviar', idioma)}
-              <Send className="w-5 h-5 stroke-[2.5]" />
-            </>
-          )}
+          {isLoading ? t('procesando', idioma) : t('btnEnviar', idioma)}
         </button>
 
         <p className="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest px-8 leading-relaxed">
