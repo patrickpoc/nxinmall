@@ -322,8 +322,8 @@ export const ICON_NODES: IconNode[] = [
   ],
 ];
 
-export const LANG_OPTIONS: { code: Lang; label: string }[] = [
-  { code: 'es', label: 'Español' },
-  { code: 'en', label: 'English' },
-  { code: 'pt', label: 'Português' },
+export const LANG_OPTIONS: { code: Lang; label: string; flag: string }[] = [
+  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'en', label: 'English', flag: '🇺🇸' },
+  { code: 'pt', label: 'Português', flag: '🇧🇷' },
 ];

@@ -72,11 +72,21 @@ export default function AdminTopbar() {
               <Globe className="w-4 h-4" />
             </button>
             {langOpen && (
-              <div className="absolute right-0 mt-1.5 w-32 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden z-10">
-                {ADMIN_LANG_OPTIONS.filter((o) => o.code !== lang).map((o) => (
-                  <button key={o.code} type="button" onClick={() => handleLang(o.code)}
-                    className="w-full text-left px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                    {o.label}
+              <div className="absolute right-0 mt-1.5 w-40 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden z-10">
+                {ADMIN_LANG_OPTIONS.map((o) => (
+                  <button
+                    key={o.code}
+                    type="button"
+                    onClick={() => handleLang(o.code)}
+                    className={clsx(
+                      'w-full flex items-center gap-2 px-3 py-2 text-xs font-medium transition-colors',
+                      lang === o.code
+                        ? 'bg-gray-100 text-gray-900'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    )}
+                  >
+                    <span className="text-base">{o.flag}</span>
+                    <span>{o.label}</span>
                   </button>
                 ))}
               </div>
@@ -137,10 +147,17 @@ export default function AdminTopbar() {
             <Globe className="w-4 h-4 text-gray-400 shrink-0" />
             <div className="flex gap-2">
               {ADMIN_LANG_OPTIONS.map((o) => (
-                <button key={o.code} type="button" onClick={() => handleLang(o.code)}
-                  className={clsx('text-xs font-semibold px-2 py-1 rounded-md transition-colors',
-                    lang === o.code ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-900')}>
-                  {o.label}
+                <button
+                  key={o.code}
+                  type="button"
+                  onClick={() => handleLang(o.code)}
+                  className={clsx(
+                    'flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-md transition-colors',
+                    lang === o.code ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-900'
+                  )}
+                >
+                  <span className="text-base">{o.flag}</span>
+                  <span>{o.label}</span>
                 </button>
               ))}
             </div>

@@ -59,18 +59,23 @@ export default function WizardShell({
                 <Globe className="w-6 h-6" />
               </button>
               {langOpen && (
-                <div className="absolute right-0 mt-2 w-32 rounded-2xl border border-brand-100 bg-white shadow-xl text-xs font-bold uppercase tracking-widest overflow-hidden z-[60] animate-fade-in">
-                  {LANG_OPTIONS.filter((option) => option.code !== 'en' && option.code !== idioma).map((option) => (
+                <div className="absolute right-0 mt-2 w-40 rounded-2xl border border-brand-100 bg-white shadow-xl text-xs font-bold uppercase tracking-widest overflow-hidden z-[60] animate-fade-in">
+                  {LANG_OPTIONS.filter((option) => option.code !== 'en').map((option) => (
                     <button
                       key={option.code}
                       type="button"
-                      className="w-full text-left px-4 py-3 hover:bg-brand-50 text-gray-500 hover:text-brand-900 transition-colors"
+                      className={`w-full flex items-center gap-2 px-4 py-3 ${
+                        option.code === idioma
+                          ? 'bg-brand-50 text-brand-900'
+                          : 'text-gray-500 hover:bg-brand-50 hover:text-brand-900'
+                      } transition-colors`}
                       onClick={() => {
                         setIdioma(option.code as 'es' | 'pt');
                         setLangOpen(false);
                       }}
                     >
-                      {option.label}
+                      <span className="text-base">{option.flag}</span>
+                      <span>{option.label}</span>
                     </button>
                   ))}
                 </div>

@@ -1,9 +1,9 @@
 export type AdminLang = 'es' | 'en' | 'pt';
 
-export const ADMIN_LANG_OPTIONS = [
-  { code: 'es' as AdminLang, label: 'Español' },
-  { code: 'en' as AdminLang, label: 'English' },
-  { code: 'pt' as AdminLang, label: 'Português' },
+export const ADMIN_LANG_OPTIONS: { code: AdminLang; label: string; flag: string }[] = [
+  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'en', label: 'English', flag: '🇺🇸' },
+  { code: 'pt', label: 'Português', flag: '🇧🇷' },
 ];
 
 export const ADMIN_COPY: Record<AdminLang, {

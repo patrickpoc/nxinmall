@@ -118,19 +118,22 @@ function HomeContent() {
                 <Globe className="w-6 h-6" />
               </button>
               {langOpen && (
-                <div className="absolute right-0 mt-2 w-36 rounded-2xl border border-brand-100 bg-white shadow-lg text-sm overflow-hidden z-10">
-                  {LANG_OPTIONS.filter((option) => option.code !== lang).map((option) => (
+                <div className="absolute right-0 mt-2 w-40 rounded-2xl border border-brand-100 bg-white shadow-lg text-sm overflow-hidden z-10">
+                  {LANG_OPTIONS.map((option) => (
                     <Link
                       key={option.code}
                       href={`/?lang=${option.code}`}
-                      className="block px-4 py-2 hover:bg-brand-50 text-gray-700"
+                      className={`flex items-center gap-2 px-4 py-2 ${
+                        option.code === lang ? 'bg-brand-50 text-brand-900 font-semibold' : 'hover:bg-brand-50 text-gray-700'
+                      }`}
                       onClick={() => {
                         localStorage.setItem('nxin-lang', option.code);
                         setLang(option.code);
                         setLangOpen(false);
                       }}
                     >
-                      {option.label}
+                      <span className="text-base">{option.flag}</span>
+                      <span>{option.label}</span>
                     </Link>
                   ))}
                 </div>
