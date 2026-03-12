@@ -72,7 +72,7 @@ export default function AdminTopbar() {
               <Globe className="w-4 h-4" />
             </button>
             {langOpen && (
-              <div className="absolute right-0 mt-1.5 w-40 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden z-10">
+              <div className="absolute right-0 mt-1.5 w-40 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden z-10 animate-fade-in">
                 {ADMIN_LANG_OPTIONS.map((o) => (
                   <button
                     key={o.code}

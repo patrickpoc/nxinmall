@@ -118,7 +118,7 @@ function HomeContent() {
                 <Globe className="w-6 h-6" />
               </button>
               {langOpen && (
-                <div className="absolute right-0 mt-2 w-40 rounded-2xl border border-brand-100 bg-white shadow-lg text-sm overflow-hidden z-10">
+                <div className="absolute right-0 mt-2 w-40 rounded-2xl border border-brand-100 bg-white shadow-lg text-sm overflow-hidden z-10 animate-fade-in">
                   {LANG_OPTIONS.map((option) => (
                     <Link
                       key={option.code}
