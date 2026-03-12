@@ -150,7 +150,10 @@ function HomeContent() {
             </a>
           </nav>
           <div className="flex-1 flex items-center justify-end gap-3">
-            <div className="relative">
+            <div className="relative flex items-center gap-2">
+              <span className="hidden sm:inline text-[11px] text-gray-400 uppercase tracking-wider">
+                {content.nav.languagesHint} {visibleLangOptions.map((o) => o.label).join(', ')}
+              </span>
               <button
                 type="button"
                 onClick={() => setLangOpen((prev) => !prev)}
@@ -161,7 +164,7 @@ function HomeContent() {
                 <Globe className="w-6 h-6" />
               </button>
               {langOpen && (
-                <div className="absolute right-0 mt-2 w-40 rounded-2xl border border-brand-100 bg-white shadow-lg text-sm overflow-hidden z-10 animate-fade-in">
+                <div className="absolute right-0 top-full mt-2 w-40 rounded-2xl border border-brand-100 bg-white shadow-lg text-sm overflow-hidden z-10 animate-fade-in">
                   {visibleLangOptions.map((option) => (
                     <Link
                       key={option.code}
@@ -217,16 +220,22 @@ function HomeContent() {
               />
               <p className="text-white/70 text-sm">{content.footer.tagline}</p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start sm:items-center">
               <Link href="#solicitud" className="text-white/80 text-sm hover:text-white transition-colors">
                 {content.footer.cta}
               </Link>
               <a href="mailto:peru@nxinmall.com" className="text-white/80 text-sm hover:text-white transition-colors">
                 peru@nxinmall.com
               </a>
+              <Link
+                href="/admin/login"
+                className="text-white/50 text-xs hover:text-white/80 transition-colors"
+              >
+                {content.footer.adminLogin}
+              </Link>
             </div>
           </div>
-          <p className="text-center text-white/60 text-xs">&copy; 2026 NxinMall. Todos los derechos reservados.</p>
+          <p className="text-center text-white/60 text-xs">&copy; 2026 NxinMall.</p>
         </div>
       </footer>
     </div>

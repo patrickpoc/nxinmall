@@ -3,75 +3,71 @@ import { JSX } from 'react';
 export type Lang = 'es' | 'en' | 'pt';
 
 export const COPY: Record<Lang, {
-  nav: { suppliers: string; process: string; faq: string; cta: string };
-  hero: { badge: string; title: string; subtitle: string; primary: string; secondary: string };
+  nav: { suppliers: string; process: string; faq: string; cta: string; languagesHint: string; adminLogin: string };
+  hero: { badge: string; title: string; subtitle: string; cta: string };
   benefitsTitle: string;
-  benefits: { title: string; desc: string }[];
+  benefitsSubtitle: string;
+  benefits: { pillar: string; title: string; desc: string }[];
   logistics: { kicker: string; title: string; body: string };
-  process: { title: string; subtitle: string; steps: { title: string; desc: string }[] };
+  process: { title: string; subtitle: string; averageTime: string; steps: { youDo: string; weDo: string }[] };
   buyers: { kicker: string; title: string; body: string };
   form: { kicker: string; title: string; subtitle: string; fields: Record<string, string>; submit: string; success: { title: string; desc: string } };
   faq: { title: string; subtitle: string; items: { q: string; a: string }[] };
-  footer: { tagline: string; cta: string };
+  footer: { tagline: string; cta: string; adminLogin: string };
 }> = {
   es: {
-    nav: { suppliers: '¿Por qué?', process: 'Proceso', faq: 'Preguntas', cta: 'Solicitar acceso' },
+    nav: {
+      suppliers: '¿Por qué NxinMall?',
+      process: 'Cómo funciona',
+      faq: 'Preguntas',
+      cta: 'Solicitar acceso',
+      languagesHint: 'Disponible en',
+      adminLogin: 'Acceso admin',
+    },
     hero: {
       badge: 'Proveedores exportadores',
-      title: 'Tu produccion lista para compradores internacionales.',
-      subtitle: 'NxinMall conecta oferta agricola con demanda global mediante un flujo comercial simple y acompanado.',
-      primary: 'Quiero ser proveedor',
-      secondary: 'Ver beneficios',
+      title: 'Tu producción frente a compradores internacionales.',
+      subtitle: 'Calificamos tu operación y publicamos un catálogo listo para vender en NxinMall.',
+      cta: 'Solicitar acceso',
     },
-    benefitsTitle: '¿Por qué con NxinMall?',
+    benefitsTitle: '¿Por qué NxinMall?',
+    benefitsSubtitle: 'Acceso, confianza y operación en una sola plataforma.',
     benefits: [
-      {
-        title: 'Acceso a nuevos mercados',
-        desc: 'Conecta con compradores internacionales que buscan oferta confiable y continua.',
-      },
-      {
-        title: 'Transacciones seguras',
-        desc: 'Contratos claros, trazabilidad y soporte en cada etapa comercial.',
-      },
-      {
-        title: 'Documentos y pagos en linea',
-        desc: 'Gestiona documentos y estados de pago desde una sola plataforma.',
-      },
-      {
-        title: 'Seguimiento de carga',
-        desc: 'Monitorea el avance logistico y mejora tu cumplimiento.',
-      },
+      { pillar: 'Acceso', title: 'Nuevos mercados', desc: 'Conecta con compradores internacionales que buscan oferta confiable y continua.' },
+      { pillar: 'Confianza', title: 'Transacciones seguras', desc: 'Contratos claros, trazabilidad y soporte en cada etapa comercial.' },
+      { pillar: 'Operación', title: 'Documentos y pagos', desc: 'Gestiona documentos, pagos y seguimiento de carga desde una sola plataforma.' },
     ],
     logistics: {
-      kicker: 'Logistica y cumplimiento',
+      kicker: 'Logística y cumplimiento',
       title: 'Control sobre cada etapa del embarque.',
       body: 'Coordinamos documentos, pagos y trazabilidad para que tu carga viaje con visibilidad total.',
     },
     process: {
       title: 'Un flujo simple para empezar',
-      subtitle: 'Priorizamos velocidad y claridad comercial para que llegues a compradores internacionales sin friccion.',
+      subtitle: 'Velocidad y claridad comercial para llegar a compradores sin fricción.',
+      averageTime: 'Tiempo habitual: 24–48 h.',
       steps: [
-        { title: 'Envias tu solicitud', desc: 'Completa el formulario con tus datos comerciales.' },
-        { title: 'Te contacta un ejecutivo', desc: 'Confirmamos capacidad, categorias y paises objetivo.' },
-        { title: 'Recibes tu enlace', desc: 'Inicias el onboarding con un link unico para tu empresa.' },
+        { youDo: 'Envías tu solicitud', weDo: 'Completa el formulario con tus datos comerciales.' },
+        { youDo: 'Revisión del ejecutivo', weDo: 'Confirmamos capacidad, categorías y países objetivo.' },
+        { youDo: 'Recibes tu enlace', weDo: 'Inicias el onboarding con un link único para tu empresa.' },
       ],
     },
     buyers: {
       kicker: 'Compradores globales',
-      title: 'Tu catalogo frente a demanda activa.',
+      title: 'Tu catálogo frente a demanda activa.',
       body: 'Te ayudamos a posicionar tu oferta con compradores recurrentes y acuerdos claros.',
     },
     form: {
       kicker: 'Solicitud de proveedor',
-      title: 'Hablemos de tu operacion.',
-      subtitle: 'Completa tus datos y un ejecutivo te contactara para activar el siguiente paso.',
+      title: 'Hablemos de tu operación.',
+      subtitle: 'Completa tus datos y un ejecutivo te contactará para activar el siguiente paso.',
       fields: {
         name: 'Nombre completo',
         company: 'Empresa',
         email: 'Email',
         whatsapp: 'WhatsApp',
-        country: 'Pais',
-        countryPlaceholder: 'Selecciona un pais',
+        country: 'País',
+        countryPlaceholder: 'Selecciona un país',
         categoria: '¿Qué tipo de productos ofreces?',
         categoriaPlaceholder: 'Selecciona una categoría',
       },
@@ -85,43 +81,38 @@ export const COPY: Record<Lang, {
       title: 'Preguntas frecuentes',
       subtitle: 'Todo lo que debes saber antes de postular.',
       items: [
-        { q: 'Cuanto tarda la respuesta?', a: 'Nuestro equipo responde en 24 a 48 horas habiles.' },
-        { q: 'Con que paises trabajan?', a: 'Peru, Brasil, Colombia y Ecuador. Evaluamos otros mercados.' },
-        { q: 'Que productos aceptan?', a: 'Frutas, verduras, flores y agroindustria con volumen de exportacion.' },
+        { q: '¿Cuánto tarda la respuesta?', a: 'Nuestro equipo responde en 24 a 48 horas hábiles.' },
+        { q: '¿Con qué países trabajan?', a: 'Perú, Brasil, Colombia y Ecuador. Evaluamos otros mercados.' },
+        { q: '¿Qué productos aceptan?', a: 'Frutas, verduras, flores y agroindustria con volumen de exportación.' },
       ],
     },
     footer: {
       tagline: 'Plataforma global B2B para exportadores.',
       cta: 'Solicitar acceso',
+      adminLogin: 'Acceso admin',
     },
   },
   en: {
-    nav: { suppliers: 'Why?', process: 'Process', faq: 'FAQ', cta: 'Request access' },
+    nav: {
+      suppliers: 'Why NxinMall',
+      process: 'How it works',
+      faq: 'Questions',
+      cta: 'Request access',
+      languagesHint: 'Available in',
+      adminLogin: 'Admin login',
+    },
     hero: {
       badge: 'Export suppliers',
-      title: 'Your production ready for international buyers.',
-      subtitle: 'NxinMall connects agricultural supply with global demand through a simple, guided flow.',
-      primary: 'Become a supplier',
-      secondary: 'See benefits',
+      title: 'Get your agricultural products in front of global buyers.',
+      subtitle: 'We qualify your operation and publish a ready-to-sell catalog on NxinMall.',
+      cta: 'Request access',
     },
     benefitsTitle: 'Why NxinMall?',
+    benefitsSubtitle: 'Access, trust, and operations in one platform.',
     benefits: [
-      {
-        title: 'Access to new markets',
-        desc: 'Connect with international buyers looking for reliable, consistent supply.',
-      },
-      {
-        title: 'Secure transactions',
-        desc: 'Clear contracts, traceability, and support at every commercial stage.',
-      },
-      {
-        title: 'Documents and payments',
-        desc: 'Manage documents and payment status from one platform.',
-      },
-      {
-        title: 'Cargo tracking',
-        desc: 'Monitor logistics progress and improve fulfillment.',
-      },
+      { pillar: 'Access', title: 'New markets', desc: 'Connect with international buyers looking for reliable, consistent supply.' },
+      { pillar: 'Trust', title: 'Secure transactions', desc: 'Clear contracts, traceability, and support at every commercial stage.' },
+      { pillar: 'Operations', title: 'Documents and payments', desc: 'Manage documents, payments, and cargo tracking from one platform.' },
     ],
     logistics: {
       kicker: 'Logistics and compliance',
@@ -131,10 +122,11 @@ export const COPY: Record<Lang, {
     process: {
       title: 'A simple way to start',
       subtitle: 'Speed and commercial clarity so you reach buyers without friction.',
+      averageTime: 'Average time: 24–48 hours.',
       steps: [
-        { title: 'Submit your request', desc: 'Complete the form with your business details.' },
-        { title: 'Executive review', desc: 'We confirm capacity, categories, and target countries.' },
-        { title: 'Receive your link', desc: 'Start onboarding with a unique link for your company.' },
+        { youDo: 'Submit your request', weDo: 'Complete the form with your business details.' },
+        { youDo: 'Executive review', weDo: 'We confirm capacity, categories, and target countries.' },
+        { youDo: 'Receive your link', weDo: 'Start onboarding with a unique link for your company.' },
       ],
     },
     buyers: {
@@ -174,66 +166,62 @@ export const COPY: Record<Lang, {
     footer: {
       tagline: 'Global B2B platform for exporters.',
       cta: 'Request access',
+      adminLogin: 'Admin login',
     },
   },
   pt: {
-    nav: { suppliers: 'Por quê?', process: 'Processo', faq: 'Perguntas', cta: 'Solicitar acesso' },
+    nav: {
+      suppliers: 'Por que NxinMall',
+      process: 'Como funciona',
+      faq: 'Perguntas',
+      cta: 'Solicitar acesso',
+      languagesHint: 'Disponível em',
+      adminLogin: 'Acesso admin',
+    },
     hero: {
       badge: 'Fornecedores exportadores',
-      title: 'Sua producao pronta para compradores internacionales.',
-      subtitle: 'A NxinMall conecta oferta agricola con demanda global por um fluxo simples e acompanhado.',
-      primary: 'Quero ser fornecedor',
-      secondary: 'Ver beneficios',
+      title: 'Sua produção na frente de compradores internacionais.',
+      subtitle: 'Qualificamos sua operação e publicamos um catálogo pronto para vender na NxinMall.',
+      cta: 'Solicitar acesso',
     },
     benefitsTitle: 'Por que NxinMall?',
+    benefitsSubtitle: 'Acesso, confiança e operação em uma única plataforma.',
     benefits: [
-      {
-        title: 'Acesso a novos mercados',
-        desc: 'Conecte-se com compradores internacionais que buscam oferta confiavel e constante.',
-      },
-      {
-        title: 'Transacoes seguras',
-        desc: 'Contratos claros, rastreabilidade e suporte em cada etapa comercial.',
-      },
-      {
-        title: 'Documentos e pagamentos',
-        desc: 'Gerencie documentos e status de pagamento em uma unica plataforma.',
-      },
-      {
-        title: 'Acompanhamento de carga',
-        desc: 'Monitore a logistica e melhore o cumprimento.',
-      },
+      { pillar: 'Acesso', title: 'Novos mercados', desc: 'Conecte-se com compradores internacionais que buscam oferta confiável e constante.' },
+      { pillar: 'Confiança', title: 'Transações seguras', desc: 'Contratos claros, rastreabilidade e suporte em cada etapa comercial.' },
+      { pillar: 'Operação', title: 'Documentos e pagamentos', desc: 'Gerencie documentos, pagamentos e acompanhamento de carga em uma única plataforma.' },
     ],
     logistics: {
-      kicker: 'Logistica e compliance',
+      kicker: 'Logística e compliance',
       title: 'Controle cada etapa do embarque.',
       body: 'Coordenamos documentos, pagamentos e rastreabilidade com visibilidade total.',
     },
     process: {
-      title: 'Um fluxo simples para comecar',
-      subtitle: 'Velocidade e clareza comercial para chegar a compradores sem friccao.',
+      title: 'Um fluxo simples para começar',
+      subtitle: 'Velocidade e clareza comercial para chegar a compradores sem fricção.',
+      averageTime: 'Tempo médio: 24–48 horas.',
       steps: [
-        { title: 'Envie sua solicitacao', desc: 'Complete o formulario com dados comerciais.' },
-        { title: 'Contato do executivo', desc: 'Confirmamos capacidad, categorias e paises alvo.' },
-        { title: 'Receba seu link', desc: 'Inicie o onboarding con um link unico para sua empresa.' },
+        { youDo: 'Envie sua solicitação', weDo: 'Preencha o formulário com seus dados comerciais.' },
+        { youDo: 'Contato do executivo', weDo: 'Confirmamos capacidade, categorias e países alvo.' },
+        { youDo: 'Receba seu link', weDo: 'Inicie o onboarding com um link único para sua empresa.' },
       ],
     },
     buyers: {
       kicker: 'Compradores globais',
-      title: 'Seu catalogo diante de demanda activa.',
+      title: 'Seu catálogo diante de demanda ativa.',
       body: 'Ajudamos a posicionar sua oferta com compradores recorrentes e acordos claros.',
     },
     form: {
-      kicker: 'Solicitacao de fornecedor',
-      title: 'Vamos falar da sua operacao.',
-      subtitle: 'Envie seus dados e um executivo entra em contato para ativar o proximo passo.',
+      kicker: 'Solicitação de fornecedor',
+      title: 'Vamos falar da sua operação.',
+      subtitle: 'Envie seus dados e um executivo entra em contato para ativar o próximo passo.',
       fields: {
         name: 'Nome completo',
         company: 'Empresa',
         email: 'Email',
         whatsapp: 'WhatsApp',
-        country: 'Pais',
-        countryPlaceholder: 'Selecione um pais',
+        country: 'País',
+        countryPlaceholder: 'Selecione um país',
         categoria: 'Que tipo de produtos você oferece?',
         categoriaPlaceholder: 'Selecione uma categoria',
       },
@@ -245,16 +233,17 @@ export const COPY: Record<Lang, {
     },
     faq: {
       title: 'Perguntas frequentes',
-      subtitle: 'Tudo o que voce precisa antes de aplicar.',
+      subtitle: 'Tudo o que você precisa antes de aplicar.',
       items: [
-        { q: 'Quanto tempo leva a respuesta?', a: 'Nossa equipe responde em 24 a 48 horas uteis.' },
-        { q: 'Com quais paises trabalham?', a: 'Peru, Brasil, Colombia e Ecuador. Avaliamos outros.' },
-        { q: 'Quais produtos aceitam?', a: 'Frutas, vegetais, flores e agroindustria em escala exportadora.' },
+        { q: 'Quanto tempo leva a resposta?', a: 'Nossa equipe responde em 24 a 48 horas úteis.' },
+        { q: 'Com quais países trabalham?', a: 'Peru, Brasil, Colômbia e Equador. Avaliamos outros.' },
+        { q: 'Quais produtos aceitam?', a: 'Frutas, vegetais, flores e agroindústria em escala exportadora.' },
       ],
     },
     footer: {
       tagline: 'Plataforma global B2B para exportadores.',
       cta: 'Solicitar acesso',
+      adminLogin: 'Acesso admin',
     },
   },
 };

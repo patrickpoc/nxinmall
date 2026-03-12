@@ -27,14 +27,7 @@ export function Hero({ content, scrollToId }: SectionProps) {
               onClick={scrollToId?.('solicitud')}
               className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-brand-900 text-white font-black text-[16px] hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-brand-900/20"
             >
-              {content.hero.primary} <ArrowUpRight className="w-4 h-4 stroke-[3]" />
-            </a>
-            <a
-              href="#beneficios"
-              onClick={scrollToId?.('beneficios')}
-              className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-brand-900 font-black text-[16px] hover:bg-brand-50 transition-all duration-300"
-            >
-              {content.hero.secondary}
+              {content.hero.cta} <ArrowUpRight className="w-4 h-4 stroke-[3]" />
             </a>
           </div>
         </div>
@@ -62,21 +55,25 @@ export function Benefits({ content }: SectionProps) {
           <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05]">
             {content.benefitsTitle}
           </h2>
+          {content.benefitsSubtitle && (
+            <p className="text-gray-600 mt-2 text-lg">{content.benefitsSubtitle}</p>
+          )}
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {content.benefits.map((benefit: any, index: number) => {
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {content.benefits.map((benefit: { pillar: string; title: string; desc: string }, index: number) => {
             const iconNode = ICON_NODES[index];
             return (
               <div
-                key={benefit.title}
-                className="p-5 rounded-2xl bg-white border border-brand-100 reveal"
+                key={benefit.pillar}
+                className="p-6 rounded-2xl bg-white border border-brand-100 reveal"
                 data-animate="fade-up"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
                 <div className="mb-3">
                   <GradientIcon node={iconNode} id={`benefit-grad-${index}`} />
                 </div>
-                <h3 className="font-medium text-base text-ink mb-2">{benefit.title}</h3>
+                <p className="text-xs font-bold uppercase tracking-wider text-brand-700 mb-1">{benefit.pillar}</p>
+                <h3 className="font-semibold text-lg text-ink mb-2">{benefit.title}</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">{benefit.desc}</p>
               </div>
             );
@@ -112,6 +109,7 @@ export function Logistics({ content }: SectionProps) {
 }
 
 export function Process({ content }: SectionProps) {
+  const steps = content.process.steps as { youDo: string; weDo: string }[];
   return (
     <section className="py-12 bg-white" id="proceso">
       <div className="max-w-6xl mx-auto px-6">
@@ -123,9 +121,9 @@ export function Process({ content }: SectionProps) {
             <p className="text-gray-600 mt-4 text-lg">{content.process.subtitle}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {content.process.steps.map((step: any, index: number) => (
+            {steps.map((step, index) => (
               <div
-                key={step.title}
+                key={index}
                 className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm reveal"
                 data-animate="fade-up"
                 style={{ animationDelay: `${index * 180}ms` }}
@@ -135,13 +133,18 @@ export function Process({ content }: SectionProps) {
                     0{index + 1}
                   </span>
                   <div>
-                    <p className="font-bold text-ink text-lg mb-1">{step.title}</p>
-                    <p className="text-sm text-gray-600 leading-relaxed">{step.desc}</p>
+                    <p className="font-bold text-ink text-lg mb-1">{step.youDo}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed">{step.weDo}</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
+          {content.process.averageTime && (
+            <p className="text-center text-sm text-gray-500 mt-8 reveal" data-animate="fade-up">
+              {content.process.averageTime}
+            </p>
+          )}
         </div>
       </div>
     </section>
