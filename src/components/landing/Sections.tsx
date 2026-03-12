@@ -38,7 +38,11 @@ export function Hero({ content, scrollToId }: SectionProps) {
             className="relative overflow-hidden rounded-[28px] bg-white aspect-[16/7] reveal-zoom"
             data-animate="soft-zoom"
           >
-            <img src="/visuals/hero_nxinmall.jpg" alt="NxinMall Banner" className="w-full h-full object-cover" />
+            <img
+              src={(content.hero as { imageUrl?: string })?.imageUrl || '/visuals/hero_nxinmall.jpg'}
+              alt="NxinMall Banner"
+              className="w-full h-full object-cover"
+            />
             <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(10,99,214,0.18),transparent_55%)]" />
           </div>
         </div>

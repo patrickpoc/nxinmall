@@ -7,7 +7,16 @@ export const ADMIN_LANG_OPTIONS: { code: AdminLang; label: string; flag: string 
 ];
 
 export const ADMIN_COPY: Record<AdminLang, {
-  nav: { leads: string; onboardings: string; logout: string };
+  nav: { leads: string; onboardings: string; content: string; logout: string };
+  content: {
+    title: string;
+    subtitle: string;
+    save: string;
+    saving: string;
+    saved: string;
+    errSave: string;
+    blocks: Record<string, string>;
+  };
   leads: {
     section: string; title: string;
     stats: { total: string; new: string; onboarding: string };
@@ -42,9 +51,39 @@ export const ADMIN_COPY: Record<AdminLang, {
     passPlaceholder: string; createBtn: string; creating: string; errCreate: string;
     created: string;
   };
+  login: {
+    title: string;
+    subtitle: string;
+    emailLabel: string;
+    passwordLabel: string;
+    placeholderEmail: string;
+    placeholderPassword: string;
+    errorAuth: string;
+    submitting: string;
+    submit: string;
+  };
 }> = {
   es: {
-    nav: { leads: 'Leads', onboardings: 'Onboardings', logout: 'Salir' },
+    nav: { leads: 'Leads', onboardings: 'Onboardings', content: 'Contenido', logout: 'Salir' },
+    content: {
+      title: 'Contenido del sitio',
+      subtitle: 'Edita textos e imágenes de la landing por idioma. Los cambios se reflejan en vivo.',
+      save: 'Guardar',
+      saving: 'Guardando…',
+      saved: 'Guardado',
+      errSave: 'Error al guardar',
+      blocks: {
+        hero: 'Hero',
+        nav: 'Navegación',
+        benefits: 'Beneficios',
+        logistics: 'Logística',
+        process: 'Proceso',
+        buyers: 'Compradores',
+        form: 'Formulario',
+        faq: 'Preguntas frecuentes',
+        footer: 'Pie de página',
+      },
+    },
     leads: {
       section: 'Pipeline Admin', title: 'Leads',
       stats: { total: 'total', new: 'nuevos', onboarding: 'en onboarding' },
@@ -81,9 +120,39 @@ export const ADMIN_COPY: Record<AdminLang, {
       passPlaceholder: 'Contraseña (mín. 8 caracteres) *', createBtn: 'Crear usuario', creating: 'Creando...', errCreate: 'Error al crear',
       created: 'Usuario {email} creado',
     },
+    login: {
+      title: 'Acceso admin',
+      subtitle: 'Solo para el equipo NxinMall',
+      emailLabel: 'Email',
+      passwordLabel: 'Contraseña',
+      placeholderEmail: 'ops@nxinmall.com',
+      placeholderPassword: '••••••••',
+      errorAuth: 'Email o contraseña incorrectos.',
+      submitting: 'Ingresando...',
+      submit: 'Ingresar',
+    },
   },
   en: {
-    nav: { leads: 'Leads', onboardings: 'Onboardings', logout: 'Sign out' },
+    nav: { leads: 'Leads', onboardings: 'Onboardings', content: 'Content', logout: 'Sign out' },
+    content: {
+      title: 'Site content',
+      subtitle: 'Edit landing copy and images per language. Changes go live immediately.',
+      save: 'Save',
+      saving: 'Saving…',
+      saved: 'Saved',
+      errSave: 'Error saving',
+      blocks: {
+        hero: 'Hero',
+        nav: 'Navigation',
+        benefits: 'Benefits',
+        logistics: 'Logistics',
+        process: 'Process',
+        buyers: 'Buyers',
+        form: 'Form',
+        faq: 'FAQ',
+        footer: 'Footer',
+      },
+    },
     leads: {
       section: 'Admin Pipeline', title: 'Leads',
       stats: { total: 'total', new: 'new', onboarding: 'in onboarding' },
@@ -120,9 +189,39 @@ export const ADMIN_COPY: Record<AdminLang, {
       passPlaceholder: 'Password (min. 8 characters) *', createBtn: 'Create user', creating: 'Creating...', errCreate: 'Error creating',
       created: 'User {email} created',
     },
+    login: {
+      title: 'Admin Access',
+      subtitle: 'NxinMall team only',
+      emailLabel: 'Email',
+      passwordLabel: 'Password',
+      placeholderEmail: 'ops@nxinmall.com',
+      placeholderPassword: '••••••••',
+      errorAuth: 'Invalid email or password.',
+      submitting: 'Signing in...',
+      submit: 'Sign in',
+    },
   },
   pt: {
-    nav: { leads: 'Leads', onboardings: 'Onboardings', logout: 'Sair' },
+    nav: { leads: 'Leads', onboardings: 'Onboardings', content: 'Conteúdo', logout: 'Sair' },
+    content: {
+      title: 'Conteúdo do site',
+      subtitle: 'Edite textos e imagens da landing por idioma. As alterações entram em vigor ao vivo.',
+      save: 'Salvar',
+      saving: 'Salvando…',
+      saved: 'Salvo',
+      errSave: 'Erro ao salvar',
+      blocks: {
+        hero: 'Hero',
+        nav: 'Navegação',
+        benefits: 'Benefícios',
+        logistics: 'Logística',
+        process: 'Processo',
+        buyers: 'Compradores',
+        form: 'Formulário',
+        faq: 'Perguntas frequentes',
+        footer: 'Rodapé',
+      },
+    },
     leads: {
       section: 'Pipeline Admin', title: 'Leads',
       stats: { total: 'total', new: 'novos', onboarding: 'em onboarding' },
@@ -158,6 +257,17 @@ export const ADMIN_COPY: Record<AdminLang, {
       createLabel: 'Criar usuário', namePlaceholder: 'Nome (opcional)', emailPlaceholder: 'Email *',
       passPlaceholder: 'Senha (mín. 8 caracteres) *', createBtn: 'Criar usuário', creating: 'Criando...', errCreate: 'Erro ao criar',
       created: 'Usuário {email} criado',
+    },
+    login: {
+      title: 'Acesso admin',
+      subtitle: 'Apenas para a equipe NxinMall',
+      emailLabel: 'Email',
+      passwordLabel: 'Senha',
+      placeholderEmail: 'ops@nxinmall.com',
+      placeholderPassword: '••••••••',
+      errorAuth: 'Email ou senha incorretos.',
+      submitting: 'Entrando...',
+      submit: 'Entrar',
     },
   },
 };

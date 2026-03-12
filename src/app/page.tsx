@@ -24,7 +24,16 @@ function HomeContent() {
   
   const sectionIds = useMemo(() => ['inicio', 'beneficios', 'proceso', 'faq'], []);
   const activeSection = useActiveSection(sectionIds);
-  const content = COPY[lang];
+  const [content, setContent] = useState(() => COPY[lang]);
+
+  // Live content from API (merges admin edits over COPY)
+  useEffect(() => {
+    setContent(COPY[lang]);
+    fetch(`/api/site-content?lang=${lang}`)
+      .then((r) => r.ok ? r.json() : COPY[lang])
+      .then((data) => setContent(data))
+      .catch(() => setContent(COPY[lang]));
+  }, [lang]);
 
   // Initialize language from local storage if not in URL
   useEffect(() => {
@@ -150,10 +159,7 @@ function HomeContent() {
             </a>
           </nav>
           <div className="flex-1 flex items-center justify-end gap-3">
-            <div className="relative flex items-center gap-2">
-              <span className="hidden sm:inline text-[11px] text-gray-400 uppercase tracking-wider">
-                {content.nav.languagesHint} {visibleLangOptions.map((o) => o.label).join(', ')}
-              </span>
+            <div className="relative">
               <button
                 type="button"
                 onClick={() => setLangOpen((prev) => !prev)}

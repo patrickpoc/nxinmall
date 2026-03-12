@@ -56,6 +56,7 @@ export default function AdminTopbar() {
           <nav className="flex items-center gap-1">
             <Link href="/admin/leads" className={navItemClass('/admin/leads')}>{t.nav.leads}</Link>
             <Link href="/admin/onboardings" className={navItemClass('/admin/onboardings')}>{t.nav.onboardings}</Link>
+            <Link href="/admin/content" className={navItemClass('/admin/content')}>{t.nav.content}</Link>
           </nav>
         </div>
 
@@ -127,6 +128,9 @@ export default function AdminTopbar() {
           </Link>
           <Link href="/admin/onboardings" onClick={closeMenu} className={clsx(navItemClass('/admin/onboardings'), 'block py-2.5')}>
             {t.nav.onboardings}
+          </Link>
+          <Link href="/admin/content" onClick={closeMenu} className={clsx(navItemClass('/admin/content'), 'block py-2.5')}>
+            {t.nav.content}
           </Link>
 
           <div className="my-1 border-t border-gray-100" />
