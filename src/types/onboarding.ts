@@ -19,7 +19,7 @@ export interface ProductoSeleccionado {
 }
 
 export interface OnboardingState {
-  idioma: 'es' | 'pt';
+  idioma: 'en' | 'es' | 'pt';
   meta: {
     sessionId: string;
     startedAt: string;
@@ -71,7 +71,7 @@ export interface StoreConfig {
     sessionId: string;
     status: string;
     fuente: string;
-    idioma: 'es' | 'pt';
+    idioma: 'en' | 'es' | 'pt';
   };
   proveedor: {
     nombre: string;

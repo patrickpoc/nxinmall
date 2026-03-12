@@ -75,9 +75,11 @@ export default function Step2Perfil({ onNext, onBack }: Step2Props) {
         <p className={labelClass}>{t('paso2Titulo', idioma)} *</p>
         {sinMatch && (
           <div className="mb-4 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-[13px] text-amber-800 font-medium">
-            {idioma === 'pt'
-              ? `Você selecionou "${catInteresLabel}" — escolha a categoria mais próxima por enquanto`
-              : `Seleccionaste "${catInteresLabel}" — por ahora elige la categoría más cercana`}
+            {idioma === 'en'
+              ? `You selected "${catInteresLabel}" — choose the closest category for now`
+              : idioma === 'pt'
+                ? `Você selecionou "${catInteresLabel}" — escolha a categoria mais próxima por enquanto`
+                : `Seleccionaste "${catInteresLabel}" — por ahora elige la categoría más cercana`}
           </div>
         )}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">

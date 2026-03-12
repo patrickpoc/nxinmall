@@ -16,13 +16,13 @@ interface OnboardingStore extends OnboardingState {
   removeProducto: (id: string) => void;
   updateProducto: (id: string, data: Partial<ProductoSeleccionado>) => void;
   setActivacion: (data: Partial<OnboardingState['activacion']>) => void;
-  setIdioma: (idioma: 'es' | 'pt') => void;
+  setIdioma: (idioma: 'en' | 'es' | 'pt') => void;
   clearState: () => void;
   initSession: (token: string, leadData: Partial<OnboardingState['registro']>) => void;
 }
 
 const initialState: OnboardingState = {
-  idioma: 'es',
+  idioma: 'en',
   meta: {
     sessionId: generateId(),
     startedAt: new Date().toISOString(),
@@ -77,7 +77,12 @@ export const useOnboardingStore = create<OnboardingStore>()(
       setRegistro: (data) =>
         set((state) => {
           const newRegistro = { ...state.registro, ...data };
-          const newIdioma = newRegistro.pais === 'Brasil' ? 'pt' : 'es';
+          const newIdioma =
+            newRegistro.pais === 'Brasil'
+              ? 'pt'
+              : ['Peru', 'Colombia', 'Ecuador'].includes(newRegistro.pais || '')
+                ? 'es'
+                : state.idioma;
           return { registro: newRegistro, idioma: newIdioma };
         }),
 
@@ -119,9 +124,12 @@ export const useOnboardingStore = create<OnboardingStore>()(
       setIdioma: (idioma) =>
         set((state) => ({
           idioma,
-          registro: idioma === 'pt'
-            ? { ...state.registro, pais: 'Brasil' }
-            : state.registro,
+          registro:
+            idioma === 'pt'
+              ? { ...state.registro, pais: 'Brasil' }
+              : idioma === 'es'
+                ? { ...state.registro, pais: state.registro.pais || 'Peru' }
+                : state.registro,
         })),
 
       clearState: () =>
@@ -154,7 +162,12 @@ export const useOnboardingStore = create<OnboardingStore>()(
           },
           registro: newRegistro,
           perfil: { ...initialState.perfil, categoria: categoriaInterna as Categoria | '' },
-          idioma: newRegistro.pais === 'Brasil' ? 'pt' : 'es',
+          idioma:
+            newRegistro.pais === 'Brasil'
+              ? 'pt'
+              : ['Peru', 'Colombia', 'Ecuador'].includes(newRegistro.pais || '')
+                ? 'es'
+                : 'en',
         });
       },
     }),

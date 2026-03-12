@@ -232,27 +232,27 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
           {/* Fallback para países sin datos de ubigeo: campos de texto libre */}
           <div className="flex flex-col">
             <label className={labelClass}>
-              {idioma === 'pt' ? 'Estado / Região *' : 'Región / Estado *'}
+              {idioma === 'en' ? 'State / Region *' : idioma === 'pt' ? 'Estado / Região *' : 'Región / Estado *'}
             </label>
             <input
               type="text"
               value={ubicacion.departamento}
               onChange={(e) => setUbicacion({ departamento: e.target.value, provincia: '', distrito: '' })}
               className={inputClass(errors.departamento)}
-              placeholder={idioma === 'pt' ? 'Ex: São Paulo' : 'Ej: Bavaria'}
+              placeholder={idioma === 'en' ? 'E.g.: California' : idioma === 'pt' ? 'Ex: São Paulo' : 'Ej: Bavaria'}
             />
             {errors.departamento && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.departamento}</p>}
           </div>
           <div className="flex flex-col">
             <label className={labelClass}>
-              {idioma === 'pt' ? 'Cidade *' : 'Ciudad *'}
+              {idioma === 'en' ? 'City *' : idioma === 'pt' ? 'Cidade *' : 'Ciudad *'}
             </label>
             <input
               type="text"
               value={ubicacion.provincia}
               onChange={(e) => setUbicacion({ provincia: e.target.value })}
               className={inputClass(errors.provincia)}
-              placeholder={idioma === 'pt' ? 'Ex: Campinas' : 'Ej: Múnich'}
+              placeholder={idioma === 'en' ? 'E.g.: Los Angeles' : idioma === 'pt' ? 'Ex: Campinas' : 'Ej: Múnich'}
             />
             {errors.provincia && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.provincia}</p>}
           </div>

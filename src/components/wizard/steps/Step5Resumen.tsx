@@ -36,7 +36,13 @@ export default function Step5Resumen({ onBack }: Step5Props) {
       setActivacion({ enviado: true });
       router.push('/gracias');
     } catch (err) {
-      setError(t('errDireccion', idioma) === 'La dirección es requerida' ? 'Error al enviar. Por favor intenta de nuevo.' : 'Erro ao enviar. Por favor tente novamente.');
+      const genericErr =
+        idioma === 'en'
+          ? 'Error submitting. Please try again.'
+          : idioma === 'es'
+            ? 'Error al enviar. Por favor intenta de nuevo.'
+            : 'Erro ao enviar. Por favor tente novamente.';
+      setError(genericErr);
     } finally {
       setIsLoading(false);
     }
@@ -128,7 +134,7 @@ export default function Step5Resumen({ onBack }: Step5Props) {
             </p>
             <p className="text-xs text-gray-500 mt-1 font-medium italic">
               {catalogo.productosSeleccionados.slice(0, 3).map((p) => p.nombre).join(', ')}
-              {catalogo.productosSeleccionados.length > 3 && ` +${catalogo.productosSeleccionados.length - 3} ${idioma === 'es' ? 'más' : 'mais'}`}
+              {catalogo.productosSeleccionados.length > 3 && ` +${catalogo.productosSeleccionados.length - 3} ${idioma === 'en' ? 'more' : idioma === 'es' ? 'más' : 'mais'}`}
             </p>
           </div>
         </div>

@@ -28,14 +28,19 @@ export default function WizardShell({
   children,
   onNext,
   onBack,
-  nextLabel = 'Siguiente',
-  backLabel = 'Atrás',
+  nextLabel,
+  backLabel,
   nextDisabled = false,
   isLoading = false,
   hideNav = false,
 }: WizardShellProps) {
   const { idioma, setIdioma } = useOnboardingStore();
   const [langOpen, setLangOpen] = useState(false);
+
+  const defaultNext = idioma === 'en' ? 'Next' : idioma === 'pt' ? 'Próximo' : 'Siguiente';
+  const defaultBack = idioma === 'en' ? 'Back' : idioma === 'pt' ? 'Voltar' : 'Atrás';
+  const nextLabelResolved = nextLabel ?? defaultNext;
+  const backLabelResolved = backLabel ?? defaultBack;
 
   return (
     <div className="min-h-screen bg-brand-50 flex flex-col">
@@ -60,7 +65,7 @@ export default function WizardShell({
               </button>
               {langOpen && (
                 <div className="absolute right-0 mt-2 w-40 rounded-2xl border border-brand-100 bg-white shadow-xl text-xs font-bold uppercase tracking-widest overflow-hidden z-[60] animate-fade-in">
-                  {LANG_OPTIONS.filter((option) => option.code !== 'en').map((option) => (
+                  {LANG_OPTIONS.map((option) => (
                     <button
                       key={option.code}
                       type="button"
@@ -70,7 +75,7 @@ export default function WizardShell({
                           : 'text-gray-500 hover:bg-brand-50 hover:text-brand-900'
                       } transition-colors`}
                       onClick={() => {
-                        setIdioma(option.code as 'es' | 'pt');
+                        setIdioma(option.code as 'en' | 'es' | 'pt');
                         setLangOpen(false);
                       }}
                     >
@@ -85,7 +90,7 @@ export default function WizardShell({
 
             <div className="flex flex-col items-end">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-900/40 leading-none mb-1">Onboarding</span>
-              <span className="text-xs font-bold text-gray-400 text-right">Paso {currentStep} de {idioma === 'es' ? '5' : '5'}</span>
+              <span className="text-xs font-bold text-gray-400 text-right">{idioma === 'en' ? 'Step' : 'Paso'} {currentStep} {idioma === 'en' ? 'of' : 'de'} 5</span>
             </div>
           </div>
         </div>
@@ -113,7 +118,7 @@ export default function WizardShell({
                 onClick={onBack}
                 className="px-6 py-3 rounded-full border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 hover:text-ink transition-all duration-300"
               >
-                {backLabel}
+                {backLabelResolved}
               </button>
             ) : (
               <div />
@@ -125,7 +130,7 @@ export default function WizardShell({
                 disabled={nextDisabled || isLoading}
                 className="px-8 py-3 rounded-full bg-brand-900 text-white text-sm font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 transition-all duration-300 shadow-lg shadow-brand-900/20"
               >
-                {isLoading ? 'Procesando...' : nextLabel}
+                {isLoading ? (idioma === 'en' ? 'Processing...' : idioma === 'pt' ? 'Processando...' : 'Procesando...') : nextLabelResolved}
               </button>
             )}
           </div>

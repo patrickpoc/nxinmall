@@ -15,6 +15,18 @@ export const ADMIN_COPY: Record<AdminLang, {
     saving: string;
     saved: string;
     errSave: string;
+    confirm: string;
+    cancel: string;
+    unsavedChanges: string;
+    confirmSummary: string;
+    changelogTitle: string;
+    changelogEmpty: string;
+    restore: string;
+    restored: string;
+    who: string;
+    before: string;
+    after: string;
+    infoText: string;
     blocks: Record<string, string>;
   };
   leads: {
@@ -72,6 +84,18 @@ export const ADMIN_COPY: Record<AdminLang, {
       saving: 'Guardando…',
       saved: 'Guardado',
       errSave: 'Error al guardar',
+      confirm: 'Confirmar',
+      cancel: 'Cancelar',
+      unsavedChanges: 'Tienes cambios sin confirmar',
+      confirmSummary: 'Se guardarán los cambios en los bloques indicados. ¿Continuar?',
+      changelogTitle: 'Historial de alteraciones (últimas 10)',
+      changelogEmpty: 'Aún no hay registros.',
+      restore: 'Restaurar',
+      restored: 'Restaurado',
+      who: 'Quién',
+      before: 'Antes',
+      after: 'Después',
+      infoText: 'Las alteraciones solo se aplican al pulsar Confirmar. Puedes ver el historial de las últimas 10 alteraciones y restaurar una versión anterior si algo se editó por error.',
       blocks: {
         hero: 'Hero',
         nav: 'Navegación',
@@ -141,6 +165,18 @@ export const ADMIN_COPY: Record<AdminLang, {
       saving: 'Saving…',
       saved: 'Saved',
       errSave: 'Error saving',
+      confirm: 'Confirm',
+      cancel: 'Cancel',
+      unsavedChanges: 'You have unconfirmed changes',
+      confirmSummary: 'The following blocks will be saved. Continue?',
+      changelogTitle: 'Change history (last 10)',
+      changelogEmpty: 'No entries yet.',
+      restore: 'Restore',
+      restored: 'Restored',
+      who: 'Who',
+      before: 'Before',
+      after: 'After',
+      infoText: 'Changes are only applied when you click Confirm. You can view the last 10 changes and restore a previous version if something was edited by mistake.',
       blocks: {
         hero: 'Hero',
         nav: 'Navigation',
@@ -210,6 +246,18 @@ export const ADMIN_COPY: Record<AdminLang, {
       saving: 'Salvando…',
       saved: 'Salvo',
       errSave: 'Erro ao salvar',
+      confirm: 'Confirmar',
+      cancel: 'Cancelar',
+      unsavedChanges: 'Há alterações não confirmadas',
+      confirmSummary: 'As alterações nos blocos indicados serão guardadas. Continuar?',
+      changelogTitle: 'Histórico de alterações (últimas 10)',
+      changelogEmpty: 'Ainda não há registos.',
+      restore: 'Restaurar',
+      restored: 'Restaurado',
+      who: 'Quem',
+      before: 'Antes',
+      after: 'Depois',
+      infoText: 'As alterações só são aplicadas ao clicar em Confirmar. Pode ver o histórico das últimas 10 alterações e restaurar uma versão anterior se algo foi editado por engano.',
       blocks: {
         hero: 'Hero',
         nav: 'Navegação',
