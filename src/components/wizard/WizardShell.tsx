@@ -53,7 +53,7 @@ export default function WizardShell({
                 type="button"
                 onClick={() => setLangOpen((prev) => !prev)}
                 className="text-brand-900 hover:text-brand-700 hover:bg-brand-50 rounded-full p-2 transition-all flex items-center justify-center"
-                aria-label="Cambiar idioma"
+                aria-label="Change language"
                 aria-expanded={langOpen}
               >
                 <Globe className="w-6 h-6" />
@@ -64,7 +64,7 @@ export default function WizardShell({
                     <button
                       key={option.code}
                       type="button"
-                      className={`w-full flex items-center gap-2 px-4 py-3 ${
+                      className={`w-full px-4 py-3 ${
                         option.code === idioma
                           ? 'bg-brand-50 text-brand-900'
                           : 'text-gray-500 hover:bg-brand-50 hover:text-brand-900'
@@ -74,8 +74,7 @@ export default function WizardShell({
                         setLangOpen(false);
                       }}
                     >
-                      <span className="text-base">{option.flag}</span>
-                      <span>{option.label}</span>
+                      {option.label}
                     </button>
                   ))}
                 </div>

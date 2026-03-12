@@ -10,13 +10,13 @@ const AdminLangContext = createContext<{
   setLang: (l: AdminLang) => void;
   t: typeof ADMIN_COPY['es'];
 }>({
-  lang: 'es',
+  lang: 'en',
   setLang: () => {},
-  t: ADMIN_COPY['es'],
+  t: ADMIN_COPY['en'],
 });
 
 export function AdminLangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<AdminLang>('es');
+  const [lang, setLangState] = useState<AdminLang>('en');
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY) as AdminLang | null;

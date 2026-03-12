@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Shield, Check, AlertCircle, Pencil, X } from 'lucide-react';
+import { Shield, Check, AlertCircle, Pencil, X, Globe } from 'lucide-react';
 import clsx from 'clsx';
 import { useAdminLang } from '@/lib/admin-lang-context';
 
@@ -51,11 +51,42 @@ export default function SettingsPage() {
   const [creating, setCreating] = useState(false);
   const [createFeedback, setCreateFeedback] = useState<Feedback>(null);
 
-  useEffect(() => { loadUsers(); }, []);
+  // Language availability config (global, stored in Supabase)
+  const [enabledLanguages, setEnabledLanguages] = useState<{ en: boolean; es: boolean; pt: boolean }>({
+    en: true,
+    es: true,
+    pt: true,
+  });
+  const [defaultLanguage, setDefaultLanguage] = useState<'en' | 'es' | 'pt'>('en');
+  const [languagesSaving, setLanguagesSaving] = useState(false);
+  const [languagesFeedback, setLanguagesFeedback] = useState<Feedback>(null);
+
+  useEffect(() => {
+    loadUsers();
+    loadLanguages();
+  }, []);
 
   async function loadUsers() {
     const res = await fetch('/api/admin/users');
     if (res.ok) { const { users } = await res.json(); setUsers(users); }
+  }
+
+  async function loadLanguages() {
+    try {
+      const res = await fetch('/api/settings/languages');
+      if (!res.ok) return;
+      const data = (await res.json()) as Partial<{ en: boolean; es: boolean; pt: boolean; defaultLanguage: 'en' | 'es' | 'pt' }>;
+      setEnabledLanguages((prev) => ({
+        en: data.en ?? prev.en,
+        es: data.es ?? prev.es,
+        pt: data.pt ?? prev.pt,
+      }));
+      if (data.defaultLanguage && ['en', 'es', 'pt'].includes(data.defaultLanguage)) {
+        setDefaultLanguage(data.defaultLanguage);
+      }
+    } catch {
+      // keep defaults on error
+    }
   }
 
   function openEdit(u: AdminUser) {
@@ -114,6 +145,49 @@ export default function SettingsPage() {
     }
   }
 
+  function toggleLanguage(code: 'en' | 'es' | 'pt') {
+    setEnabledLanguages((prev) => {
+      const next = { ...prev, [code]: !prev[code] };
+      // Prevent disabling all languages – always keep at least one enabled
+      if (!next.en && !next.es && !next.pt) {
+        return prev;
+      }
+      return next;
+    });
+  }
+
+  async function handleSaveLanguages(e: React.FormEvent) {
+    e.preventDefault();
+    setLanguagesSaving(true);
+    setLanguagesFeedback(null);
+    try {
+      const res = await fetch('/api/settings/languages', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...enabledLanguages, defaultLanguage }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setLanguagesFeedback({ type: 'error', msg: data.error ?? 'Could not save language settings.' });
+      } else {
+        setEnabledLanguages({
+          en: data.en ?? true,
+          es: data.es ?? true,
+          pt: data.pt ?? true,
+        });
+        if (data.defaultLanguage && ['en', 'es', 'pt'].includes(data.defaultLanguage)) {
+          setDefaultLanguage(data.defaultLanguage);
+        }
+        setLanguagesFeedback({ type: 'success', msg: 'Language availability updated for all visitors.' });
+      }
+    } catch (err) {
+      setLanguagesFeedback({ type: 'error', msg: 'Could not save language settings.' });
+    } finally {
+      setLanguagesSaving(false);
+    }
+  }
+
   const userCount = `${users.length} ${users.length === 1 ? s.userSingular : s.userPlural}`;
 
   return (
@@ -123,6 +197,7 @@ export default function SettingsPage() {
         <h1 className="text-xl font-bold text-gray-900">{s.title}</h1>
       </div>
 
+      {/* Users card */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="flex items-center gap-2.5 px-5 py-4 border-b border-gray-100">
           <Shield className="w-4 h-4 text-gray-400" />
@@ -141,15 +216,26 @@ export default function SettingsPage() {
                   {u.full_name && <p className="text-xs font-semibold text-gray-900 truncate">{u.full_name}</p>}
                   <p className="text-[11px] text-gray-400 truncate">{u.email}</p>
                 </div>
-                <span className={clsx(
-                  'text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md border shrink-0',
-                  u.role === 'admin' ? 'bg-brand-50 text-brand-700 border-brand-200' : 'bg-gray-100 text-gray-500 border-gray-200'
-                )}>
+                <span
+                  className={clsx(
+                    'text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md border shrink-0',
+                    u.role === 'admin'
+                      ? 'bg-brand-50 text-brand-700 border-brand-200'
+                      : 'bg-gray-100 text-gray-500 border-gray-200'
+                  )}
+                >
                   {roleLabel(u.role)}
                 </span>
-                <span className="text-[10px] text-gray-300 whitespace-nowrap hidden sm:block">
+                <span
+                  className="text-[10px] text-gray-300 whitespace-nowrap hidden sm:block"
+                  suppressHydrationWarning
+                >
                   {u.last_sign_in_at
-                    ? new Date(u.last_sign_in_at).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: '2-digit' })
+                    ? new Date(u.last_sign_in_at).toLocaleDateString('es-PE', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: '2-digit',
+                      })
                     : s.noAccess}
                 </span>
                 <button
@@ -236,6 +322,93 @@ export default function SettingsPage() {
             </button>
           </div>
           <FeedbackMsg state={createFeedback} />
+        </form>
+      </div>
+
+      {/* Languages availability card */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="flex items-center gap-2.5 px-5 py-4 border-b border-gray-100">
+          <Globe className="w-4 h-4 text-gray-400" />
+          <h2 className="text-sm font-bold text-gray-900">Languages</h2>
+          <span className="ml-auto text-xs text-gray-400">Landing & onboarding</span>
+        </div>
+
+        <form onSubmit={handleSaveLanguages} className="p-5 flex flex-col gap-4">
+          <p className="text-xs text-gray-500">
+            Choose which languages are available on the public pages. At least one language must remain enabled.
+          </p>
+
+          <div className="space-y-3">
+            {([
+              { code: 'en', label: 'English', description: 'Default language when visitors open the site.' },
+              { code: 'es', label: 'Spanish', description: 'Spanish copy for landing and onboarding.' },
+              { code: 'pt', label: 'Portuguese', description: 'Portuguese copy for Brazilian suppliers.' },
+            ] as const).map((lang) => (
+              <label
+                key={lang.code}
+                className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl border border-gray-100 hover:border-gray-200 bg-gray-50"
+              >
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">{lang.label}</p>
+                  <p className="text-[11px] text-gray-500">{lang.description}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => toggleLanguage(lang.code)}
+                  className={clsx(
+                    'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
+                    enabledLanguages[lang.code]
+                      ? 'bg-emerald-500'
+                      : 'bg-red-500'
+                  )}
+                >
+                  <span
+                    className={clsx(
+                      'inline-block h-5 w-5 transform rounded-full bg-white transition-transform',
+                      enabledLanguages[lang.code] ? 'translate-x-5' : 'translate-x-1'
+                    )}
+                  />
+                </button>
+              </label>
+            ))}
+          </div>
+
+          <div className="border-t border-gray-100 pt-4 mt-2">
+            <span className={labelClass}>Default language</span>
+            <p className="text-[11px] text-gray-500 mb-2">
+              Visitors without a preferred language will see the site in this language.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {(['en', 'es', 'pt'] as const).map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  onClick={() => {
+                    if (!enabledLanguages[code]) return;
+                    setDefaultLanguage(code);
+                  }}
+                  className={clsx(
+                    'px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors',
+                    !enabledLanguages[code]
+                      ? 'border-gray-200 text-gray-300 cursor-not-allowed'
+                      : defaultLanguage === code
+                        ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
+                        : 'border-gray-200 text-gray-600 hover:border-gray-400',
+                  )}
+                >
+                  {code === 'en' ? 'English' : code === 'es' ? 'Spanish' : 'Portuguese'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button type="submit" disabled={languagesSaving} className={btnPrimary}>
+              {languagesSaving ? 'Saving…' : 'Save languages'}
+            </button>
+          </div>
+
+          <FeedbackMsg state={languagesFeedback} />
         </form>
       </div>
     </div>

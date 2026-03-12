@@ -12,12 +12,15 @@ import { ContactForm, FaqSection } from '@/components/landing/ContactAndFaq';
 function HomeContent() {
   const searchParams = useSearchParams();
   const langParam = (searchParams.get('lang') || '') as Lang;
-  const initialLang: Lang = ['es', 'en', 'pt'].includes(langParam) ? langParam : 'es';
+  const initialLang: Lang = ['es', 'en', 'pt'].includes(langParam) ? langParam : 'en';
   
   const [lang, setLang] = useState<Lang>(initialLang);
   const [langOpen, setLangOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [enabledLanguages, setEnabledLanguages] = useState<Lang[]>(['en', 'es', 'pt']);
+  const [defaultLanguage, setDefaultLanguage] = useState<Lang>('en');
+  const [hasCustomLanguage, setHasCustomLanguage] = useState(false);
   
   const sectionIds = useMemo(() => ['inicio', 'beneficios', 'proceso', 'faq'], []);
   const activeSection = useActiveSection(sectionIds);
@@ -28,14 +31,54 @@ function HomeContent() {
     if (langParam && ['es', 'en', 'pt'].includes(langParam)) {
       setLang(langParam);
       localStorage.setItem('nxin-lang', langParam);
+      setHasCustomLanguage(true);
       return;
     }
 
     const stored = localStorage.getItem('nxin-lang') as Lang | null;
     if (stored && ['es', 'en', 'pt'].includes(stored)) {
       setLang(stored);
+      setHasCustomLanguage(true);
+      return;
     }
   }, [langParam]);
+
+  // Load enabled languages from backend (admin settings)
+  useEffect(() => {
+    const allLangs: Lang[] = ['en', 'es', 'pt'];
+
+    async function loadEnabledFromApi() {
+      try {
+        const res = await fetch('/api/settings/languages');
+        if (!res.ok) {
+          setEnabledLanguages(allLangs);
+          return;
+        }
+        const data = (await res.json()) as Partial<Record<Lang, boolean> & { defaultLanguage?: Lang }>;
+        const active = allLangs.filter((code) => data[code] !== false);
+        const finalActive = active.length ? active : allLangs;
+        setEnabledLanguages(finalActive);
+
+        const serverDefault = data.defaultLanguage && allLangs.includes(data.defaultLanguage)
+          ? data.defaultLanguage
+          : 'en';
+        setDefaultLanguage(serverDefault);
+
+        // If there is no custom language choice yet or current language is not enabled,
+        // fall back to the default language from settings and persist it.
+        if (!hasCustomLanguage || !finalActive.includes(lang)) {
+          setLang(serverDefault);
+          localStorage.setItem('nxin-lang', serverDefault);
+        }
+      } catch {
+        setEnabledLanguages(allLangs);
+      }
+    }
+
+    loadEnabledFromApi();
+  }, [lang, hasCustomLanguage]);
+
+  const visibleLangOptions = LANG_OPTIONS.filter((option) => enabledLanguages.includes(option.code));
 
   // Handle header scroll state
   useEffect(() => {
@@ -112,18 +155,18 @@ function HomeContent() {
                 type="button"
                 onClick={() => setLangOpen((prev) => !prev)}
                 className="text-brand-900 hover:text-brand-700 hover:bg-brand-50 rounded-full p-2 transition-all flex items-center justify-center"
-                aria-label="Cambiar idioma"
+                aria-label="Change language"
                 aria-expanded={langOpen}
               >
                 <Globe className="w-6 h-6" />
               </button>
               {langOpen && (
                 <div className="absolute right-0 mt-2 w-40 rounded-2xl border border-brand-100 bg-white shadow-lg text-sm overflow-hidden z-10 animate-fade-in">
-                  {LANG_OPTIONS.map((option) => (
+                  {visibleLangOptions.map((option) => (
                     <Link
                       key={option.code}
                       href={`/?lang=${option.code}`}
-                      className={`flex items-center gap-2 px-4 py-2 ${
+                      className={`block px-4 py-2 ${
                         option.code === lang ? 'bg-brand-50 text-brand-900 font-semibold' : 'hover:bg-brand-50 text-gray-700'
                       }`}
                       onClick={() => {
@@ -132,8 +175,7 @@ function HomeContent() {
                         setLangOpen(false);
                       }}
                     >
-                      <span className="text-base">{option.flag}</span>
-                      <span>{option.label}</span>
+                      {option.label}
                     </Link>
                   ))}
                 </div>

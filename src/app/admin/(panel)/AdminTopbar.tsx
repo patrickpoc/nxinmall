@@ -79,14 +79,13 @@ export default function AdminTopbar() {
                     type="button"
                     onClick={() => handleLang(o.code)}
                     className={clsx(
-                      'w-full flex items-center gap-2 px-3 py-2 text-xs font-medium transition-colors',
+                      'w-full px-3 py-2 text-xs font-medium transition-colors',
                       lang === o.code
                         ? 'bg-gray-100 text-gray-900'
                         : 'text-gray-700 hover:bg-gray-50'
                     )}
                   >
-                    <span className="text-base">{o.flag}</span>
-                    <span>{o.label}</span>
+                    {o.label}
                   </button>
                 ))}
               </div>
@@ -152,12 +151,11 @@ export default function AdminTopbar() {
                   type="button"
                   onClick={() => handleLang(o.code)}
                   className={clsx(
-                    'flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-md transition-colors',
+                    'text-xs font-semibold px-2 py-1 rounded-md transition-colors',
                     lang === o.code ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-900'
                   )}
                 >
-                  <span className="text-base">{o.flag}</span>
-                  <span>{o.label}</span>
+                  {o.label}
                 </button>
               ))}
             </div>
