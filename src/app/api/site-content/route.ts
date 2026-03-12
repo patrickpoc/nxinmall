@@ -30,12 +30,14 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(merged, { status: 200 });
     }
 
+    const mergedRecord = merged as Record<string, unknown>;
     for (const row of rows || []) {
       const blockId = row.block_id as string;
       const content = row.content as Record<string, unknown>;
-      if (blockId && content && SITE_CONTENT_BLOCK_IDS.includes(blockId as any)) {
-        (merged as Record<string, unknown>)[blockId] = { ...(merged as Record<string, unknown>)[blockId], ...content };
-      }
+      if (!blockId || !content || !SITE_CONTENT_BLOCK_IDS.includes(blockId as any)) continue;
+      const current = mergedRecord[blockId];
+      const base = typeof current === 'object' && current !== null ? (current as Record<string, unknown>) : {};
+      mergedRecord[blockId] = { ...base, ...content };
     }
   } catch {
     // table may not exist
