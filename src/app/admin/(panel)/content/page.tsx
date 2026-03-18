@@ -362,7 +362,7 @@ export default function ContentPage() {
                 type="button"
                 onClick={saveAllDirty}
                 disabled={saving}
-                className="px-4 py-2 rounded-xl bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 disabled:opacity-50"
+                className="px-4 py-2 rounded-xl bg-brand-900 text-white text-sm font-semibold border-2 border-brand-900 disabled:opacity-50"
               >
                 {saving ? c.saving : c.confirm}
               </button>

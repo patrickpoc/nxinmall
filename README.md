@@ -1,59 +1,59 @@
 # NxinMall Onboarding & CRM Platform
 
-Este proyecto es una plataforma centralizada diseñada para optimizar el proceso de adquisición y registro de proveedores para **NxinMall**. Combina una landing page de alto impacto para pautas publicitarias con un sistema robusto de captura de Leads (CRM) y un flujo de Onboarding automatizado.
+This project is a centralized platform designed to optimize the supplier acquisition and onboarding process for **NxinMall**. It combines a high-impact landing page for advertising campaigns with a robust Leads (CRM) capture system and an automated onboarding flow.
 
-## 🚀 Propósito del Proyecto
+## 🚀 Project Purpose
 
-El objetivo principal es proporcionar **autonomía local** a los equipos de cada país para gestionar su propio embudo de conversión, permitiendo:
-- Lanzar pautas publicitarias dirigidas.
-- Capturar información de contacto inmediata (Leads).
-- Completar el perfil comercial y técnico del proveedor (Onboarding) de forma guiada y eficiente.
-- Tener control total sobre el contenido, categorías y validaciones del mercado local.
+The main goal is to provide **local autonomy** to each country team so they can manage their own conversion funnel, enabling:
+- Launch targeted advertising campaigns.
+- Capture immediate contact information (Leads).
+- Complete the supplier's business and technical profile (Onboarding) in a guided and efficient way.
+- Maintain full control over local market content, categories, and validations.
 
-### Estrategia de Fase 1: Activación Relámpago
-El enfoque inicial está centrado en la **generación de inventario real** para NxinMall en tiempo récord:
-1. **Recopilación Local:** El proveedor carga sus productos estrella, fotos y fichas técnicas en el wizard.
-2. **Puente con China:** La data estructurada se envía al equipo de desarrollo en China para su subida inmediata a la plataforma global.
-3. **Control CRM:** Seguimiento inmediato vía WhatsApp a través del panel administrativo local.
+### Phase 1 Strategy: Lightning Activation
+The initial approach focuses on **generating real inventory** for NxinMall in record time:
+1. **Local Collection:** The supplier uploads their best-selling products, photos, and technical sheets in the wizard.
+2. **Bridge with China:** Structured data is sent to the development team in China for immediate publishing to the global platform.
+3. **CRM Control:** Immediate follow-up via WhatsApp through the local admin panel.
 
-## 🛠️ Stack Tecnológico
+## 🛠️ Tech Stack
 
-- **Framework:** [Next.js 15+](https://nextjs.org/) con App Router y TypeScript.
-- **Base de Datos & Auth:** [Supabase](https://supabase.com/) (PostgreSQL).
-- **Estilos:** Tailwind CSS 4.0.
-- **Validación de Formularios:** React Hook Form + Zod.
-- **Estado:** Zustand.
-- **Infraestructura:** Despliegue en Vercel.
+- **Framework:** [Next.js 15+](https://nextjs.org/) with App Router and TypeScript.
+- **Database & Auth:** [Supabase](https://supabase.com/) (PostgreSQL).
+- **Styling:** Tailwind CSS 4.0.
+- **Form Validation:** React Hook Form + Zod.
+- **State Management:** Zustand.
+- **Infrastructure:** Deployed on Vercel.
 
-## 📂 Estructura del Proyecto
+## 📂 Project Structure
 
-- `src/app/`: Rutas de la aplicación (Landing, Admin, Onboarding, API).
-- `src/components/`: Componentes modulares (UI, Landing, Wizard de Onboarding).
-- `src/lib/`: Configuración de Supabase, esquemas de validación y utilidades.
-- `src/data/`: Contenido estático, catálogos por categoría y datos geográficos (Ubigeo).
+- `src/app/`: Application routes (Landing, Admin, Onboarding, API).
+- `src/components/`: Modular components (UI, Landing, Onboarding Wizard).
+- `src/lib/`: Supabase configuration, validation schemas, and utilities.
+- `src/data/`: Static content, catalogs by category, and geographic data (Ubigeo).
 
-## 🚦 Flujo del Usuario
+## 🚦 User Flow
 
-1. **Pauta Publicitaria:** El usuario llega a la Landing Page desde anuncios en redes sociales o buscadores.
-2. **Registro de Lead:** El usuario completa un formulario de contacto inicial (Nombre, Empresa, WhatsApp).
-3. **Invitación al Onboarding:** El sistema genera un enlace único de onboarding.
-4. **Wizard de Onboarding:** Un proceso de 5 pasos para recolectar:
-   - Registro de empresa.
-   - Perfil comercial y certificados.
-   - Ubicación logística.
-   - Selección de catálogo de productos.
-   - Resumen y envío.
+1. **Ad Campaign:** Users land on the Landing Page via social ads or search engines.
+2. **Lead Registration:** Users fill out an initial contact form (Name, Company, WhatsApp).
+3. **Onboarding Invitation:** The system generates a unique onboarding link.
+4. **Onboarding Wizard:** A 5-step process to collect:
+   - Company registration.
+   - Business profile and certifications.
+   - Logistics location.
+   - Product catalog selection.
+   - Summary and submission.
 
-## 💻 Desarrollo
+## 💻 Development
 
-Para iniciar el servidor de desarrollo local:
+To start the local development server:
 
 ```bash
 npm run dev
 ```
 
-El proyecto estará disponible en [http://localhost:3000](http://localhost:3000).
+The project will be available at [http://localhost:3000](http://localhost:3000).
 
 ---
 
-© 2026 NxinMall. Desarrollado para la expansión regional y autonomía operativa.
+© 2026 NxinMall. Built for regional expansion and operational autonomy.
