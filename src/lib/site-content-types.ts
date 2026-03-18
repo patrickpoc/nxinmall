@@ -4,6 +4,7 @@
  */
 export type SiteContentBlockId =
   | 'hero'
+  | 'hero_images'
   | 'nav'
   | 'benefits'
   | 'logistics'
@@ -15,6 +16,7 @@ export type SiteContentBlockId =
 
 export const SITE_CONTENT_BLOCK_IDS: SiteContentBlockId[] = [
   'hero',
+  'hero_images',
   'nav',
   'benefits',
   'logistics',
@@ -25,6 +27,22 @@ export const SITE_CONTENT_BLOCK_IDS: SiteContentBlockId[] = [
   'footer',
 ];
 
+/** Text blocks only (for admin "Text content" section). */
+export const TEXT_CONTENT_BLOCK_IDS: SiteContentBlockId[] = [
+  'hero',
+  'nav',
+  'benefits',
+  'logistics',
+  'process',
+  'buyers',
+  'form',
+  'faq',
+  'footer',
+];
+
+/** Image/asset blocks only (for admin "Images" section). */
+export const IMAGE_CONTENT_BLOCK_IDS: SiteContentBlockId[] = ['hero_images'];
+
 export type Lang = 'es' | 'en' | 'pt';
 
 export interface HeroContent {
@@ -32,7 +50,15 @@ export interface HeroContent {
   title: string;
   subtitle: string;
   cta: string;
-  imageUrl?: string;
+}
+
+export interface HeroBannerItem {
+  url: string;
+  enabled: boolean;
+}
+
+export interface HeroImagesContent {
+  items: HeroBannerItem[];
 }
 
 export interface NavContent {
@@ -74,6 +100,7 @@ export interface FaqItem {
 
 export type SiteContentPayload =
   | HeroContent
+  | HeroImagesContent
   | NavContent
   | BenefitsContent
   | { kicker: string; title: string; body: string }

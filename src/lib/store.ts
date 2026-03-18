@@ -145,8 +145,8 @@ export const useOnboardingStore = create<OnboardingStore>()(
 
       initSession: (token, leadData) => {
         const stored = get().inviteToken;
-        if (stored === token) return; // mismo token → retomar progreso
-        // token distinto o nuevo → reset completo + cargar datos del lead
+        if (stored === token) return; // same token → resume progress
+        // different or new token → full reset + load lead data
         const newRegistro = { ...initialState.registro, ...leadData };
         // Pre-rellenar categoría si el lead eligió una en el formulario
         const categoriaInterna = newRegistro.categoriaInteres

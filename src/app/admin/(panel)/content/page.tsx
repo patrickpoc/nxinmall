@@ -4,8 +4,8 @@ import { useEffect, useState, useMemo } from 'react';
 import { useAdminLang } from '@/lib/admin-lang-context';
 import { COPY } from '@/data/landing-content';
 import type { Lang } from '@/data/landing-content';
-import { SITE_CONTENT_BLOCK_IDS } from '@/lib/site-content-types';
-import { ChevronDown, ChevronRight, Image as ImageIcon, History, RotateCcw, Check, X } from 'lucide-react';
+import { SITE_CONTENT_BLOCK_IDS, TEXT_CONTENT_BLOCK_IDS, IMAGE_CONTENT_BLOCK_IDS, type HeroBannerItem } from '@/lib/site-content-types';
+import { ChevronDown, ChevronRight, Image as ImageIcon, History, RotateCcw, Check, X, Plus, Trash2, Upload, GripVertical } from 'lucide-react';
 import clsx from 'clsx';
 import type { ChangelogEntry } from '@/app/api/admin/site-content/changelog/route';
 
@@ -68,12 +68,15 @@ export default function ContentPage() {
 
   function getMerged(blockId: string, lang: Lang): Record<string, unknown> {
     const def = (COPY[lang] as Record<string, unknown>)[blockId];
-    const ov = overrides[blockId]?.[lang];
+    const ov = blockId === 'hero_images'
+      ? (overrides[blockId]?.en ?? overrides[blockId]?.[lang])
+      : overrides[blockId]?.[lang];
     return { ...(def && typeof def === 'object' ? def : {}), ...(ov && typeof ov === 'object' ? ov : {}) };
   }
 
   function getDraft(blockId: string, lang: Lang): Record<string, unknown> {
     if (draft[blockId]?.[lang]) return draft[blockId][lang];
+    if (blockId === 'hero_images' && draft[blockId]?.en) return draft[blockId].en;
     return getMerged(blockId, lang);
   }
 
@@ -89,7 +92,8 @@ export default function ContentPage() {
 
   const dirtyBlocks = useMemo(() => {
     return SITE_CONTENT_BLOCK_IDS.filter((blockId) => {
-      for (const lang of LANGS) {
+      const langs = blockId === 'hero_images' ? (['en'] as Lang[]) : LANGS;
+      for (const lang of langs) {
         if (!contentEqual(getDraft(blockId, lang), getMerged(blockId, lang))) return true;
       }
       return false;
@@ -104,7 +108,8 @@ export default function ContentPage() {
     let ok = true;
     let lastError: string | null = null;
     for (const blockId of dirtyBlocks) {
-      for (const lang of LANGS) {
+      const langs = blockId === 'hero_images' ? (['en'] as Lang[]) : LANGS;
+      for (const lang of langs) {
         const body = getDraft(blockId, lang);
         const res = await fetch('/api/admin/site-content', {
           method: 'PUT',
@@ -196,8 +201,10 @@ export default function ContentPage() {
         )}
       </div>
 
-      <div className="space-y-2">
-        {SITE_CONTENT_BLOCK_IDS.map((blockId) => (
+      {/* Text content section */}
+      <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Text content</h2>
+      <div className="space-y-2 mb-10">
+        {TEXT_CONTENT_BLOCK_IDS.map((blockId) => (
           <div
             key={blockId}
             className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden"
@@ -236,6 +243,42 @@ export default function ContentPage() {
                   blockId={blockId}
                   lang={activeLang}
                   langLabel={LABELS[activeLang]}
+                  getDraft={getDraft}
+                  setDraftField={setDraftField}
+                />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Images section */}
+      <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Images</h2>
+      <div className="space-y-2 mb-10">
+        {IMAGE_CONTENT_BLOCK_IDS.map((blockId) => (
+          <div
+            key={blockId}
+            className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden"
+          >
+            <button
+              type="button"
+              onClick={() => setExpanded(expanded === blockId ? null : blockId)}
+              className="w-full flex items-center gap-2 px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+            >
+              {expanded === blockId ? (
+                <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-400 shrink-0" />
+              )}
+              <span className="font-semibold text-gray-900">{c.blocks[blockId] || blockId}</span>
+            </button>
+
+            {expanded === blockId && (
+              <div className="border-t border-gray-100 p-4">
+                <BlockFields
+                  blockId={blockId}
+                  lang="en"
+                  langLabel="Global"
                   getDraft={getDraft}
                   setDraftField={setDraftField}
                 />
@@ -387,6 +430,149 @@ export default function ContentPage() {
   );
 }
 
+function HeroImagesFields({
+  data,
+  setDraftField,
+  blockId,
+  lang,
+  inputClass,
+}: {
+  data: Record<string, unknown>;
+  setDraftField: (b: string, l: Lang, f: string, v: unknown) => void;
+  blockId: string;
+  lang: Lang;
+  inputClass: string;
+}) {
+  const rawItems = Array.isArray(data.items)
+    ? (data.items as HeroBannerItem[])
+    : Array.isArray(data.images)
+      ? (data.images as string[]).map((url) => ({ url: String(url), enabled: true }))
+      : [];
+  const items: HeroBannerItem[] = rawItems.map((it) => ({ url: String(it?.url ?? ''), enabled: it?.enabled !== false }));
+  const setItems = (next: HeroBannerItem[]) => setDraftField(blockId, lang, 'items', next);
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
+
+  const moveItem = (from: number, to: number) => {
+    if (from === to || to < 0 || to >= items.length) return;
+    const next = [...items];
+    const [removed] = next.splice(from, 1);
+    next.splice(to, 0, removed);
+    setItems(next);
+  };
+
+  const handleDrop = (targetIndex: number) => {
+    if (draggedIndex === null) return;
+    moveItem(draggedIndex, targetIndex);
+    setDraggedIndex(null);
+    setDropTargetIndex(null);
+  };
+
+  const updateItem = (index: number, patch: Partial<HeroBannerItem>) => {
+    const next = items.map((it, i) => (i === index ? { ...it, ...patch } : it));
+    setItems(next);
+  };
+
+  const addBanner = (url = '') => setItems([...items, { url: url.trim() || '/visuals/hero_nxinmall.jpg', enabled: true }]);
+  const removeBanner = (index: number) => setItems(items.filter((_, i) => i !== index));
+
+  const handleUpload = async (index: number, file: File) => {
+    setUploadingIndex(index);
+    try {
+      const form = new FormData();
+      form.append('file', file);
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: form });
+      const json = await res.json();
+      if (json.url) updateItem(index, { url: json.url });
+      else alert(json.error || 'Upload failed');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Upload failed');
+    } finally {
+      setUploadingIndex(null);
+    }
+  };
+
+  return (
+    <div className="rounded-lg bg-gray-50 p-4 space-y-3">
+      <p className="text-xs font-bold text-gray-400 mb-2">Add or remove banners. Drag to reorder. Toggle off to hide on the site without removing.</p>
+      {items.map((item, i) => (
+        <div
+          key={i}
+          draggable
+          onDragStart={() => setDraggedIndex(i)}
+          onDragEnd={() => { setDraggedIndex(null); setDropTargetIndex(null); }}
+          onDragOver={(e) => { e.preventDefault(); setDropTargetIndex(i); }}
+          onDrop={() => handleDrop(i)}
+          className={clsx(
+            'flex gap-2 items-center p-2 rounded-lg border bg-white',
+            draggedIndex === i ? 'opacity-60' : '',
+            dropTargetIndex === i && draggedIndex !== i ? 'border-brand-400 ring-1 ring-brand-200' : 'border-gray-200'
+          )}
+        >
+          <button type="button" className="cursor-grab active:cursor-grabbing p-1 text-gray-400 hover:text-gray-600" aria-label="Drag to reorder">
+            <GripVertical className="w-4 h-4" />
+          </button>
+          <div className="w-16 h-10 rounded border border-gray-200 bg-gray-100 overflow-hidden shrink-0">
+            <img src={item.url} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          </div>
+          <input
+            type="text"
+            value={item.url}
+            onChange={(e) => updateItem(i, { url: e.target.value })}
+            className={clsx(inputClass, 'flex-1 min-w-0')}
+            placeholder="Image URL"
+          />
+          <button
+            type="button"
+            role="switch"
+            aria-checked={item.enabled}
+            onClick={() => updateItem(i, { enabled: !item.enabled })}
+            className={clsx(
+              'relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1',
+              item.enabled ? 'border-green-500 bg-green-500 focus:ring-green-500' : 'border-red-500 bg-red-500 focus:ring-red-500'
+            )}
+          >
+            <span
+              className={clsx(
+                'absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow ring-0 transition-transform',
+                item.enabled ? 'translate-x-5' : 'translate-x-0'
+              )}
+            />
+          </button>
+          <label className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 cursor-pointer shrink-0">
+            <Upload className="w-4 h-4" />
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              className="sr-only"
+              disabled={uploadingIndex !== null}
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(i, f); e.target.value = ''; }}
+            />
+          </label>
+          <button
+            type="button"
+            onClick={() => removeBanner(i)}
+            className="p-2 rounded-lg border border-gray-200 text-gray-500 hover:bg-red-50 hover:text-red-600 shrink-0"
+            aria-label="Remove"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      ))}
+      <div className="flex flex-wrap gap-2 pt-2">
+        <button
+          type="button"
+          onClick={() => addBanner()}
+          className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-100 text-brand-900 font-medium hover:bg-brand-200"
+        >
+          <Plus className="w-4 h-4" /> Add banner
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function BlockFields({
   blockId,
   lang,
@@ -444,20 +630,19 @@ function BlockFields({
             className={inputClass}
           />
         </div>
-        <div>
-          <label className={labelClass}>
-            <ImageIcon className="w-3.5 h-3.5 inline mr-1" />
-            Hero image URL
-          </label>
-          <input
-            type="text"
-            placeholder="/visuals/hero_nxinmall.jpg"
-            value={(data.imageUrl as string) ?? ''}
-            onChange={(e) => setDraftField(blockId, lang, 'imageUrl', e.target.value)}
-            className={inputClass}
-          />
-        </div>
       </div>
+    );
+  }
+
+  if (blockId === 'hero_images') {
+    return (
+      <HeroImagesFields
+                  data={data}
+                  setDraftField={setDraftField}
+                  blockId={blockId}
+                  lang={lang}
+                  inputClass={inputClass}
+                />
     );
   }
 

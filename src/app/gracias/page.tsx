@@ -48,11 +48,11 @@ export default function GraciasPage() {
         </p>
 
         <a
-          href="mailto:peru@nxinmall.com"
+          href="mailto:support@nxinmall.com"
           className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-brand-900 transition-colors mb-6"
         >
           <Mail className="w-4 h-4" />
-          peru@nxinmall.com
+          support@nxinmall.com
         </a>
 
         <div className="mt-2">

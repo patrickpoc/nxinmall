@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Globe } from 'lucide-react';
 import WizardProgress from './WizardProgress';
 import { useOnboardingStore } from '@/lib/store';
+import { t } from '@/lib/i18n';
 import { LANG_OPTIONS } from '@/data/landing-content';
 
 interface WizardShellProps {
@@ -90,7 +91,7 @@ export default function WizardShell({
 
             <div className="flex flex-col items-end">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-900/40 leading-none mb-1">Onboarding</span>
-              <span className="text-xs font-bold text-gray-400 text-right">{idioma === 'en' ? 'Step' : 'Paso'} {currentStep} {idioma === 'en' ? 'of' : 'de'} 5</span>
+              <span className="text-xs font-bold text-gray-400 text-right">{t('stepLabel', idioma)} {currentStep} {t('stepOf', idioma)} 5</span>
             </div>
           </div>
         </div>

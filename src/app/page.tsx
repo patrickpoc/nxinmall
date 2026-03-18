@@ -230,8 +230,8 @@ function HomeContent() {
               <Link href="#solicitud" className="text-white/80 text-sm hover:text-white transition-colors">
                 {content.footer.cta}
               </Link>
-              <a href="mailto:peru@nxinmall.com" className="text-white/80 text-sm hover:text-white transition-colors">
-                peru@nxinmall.com
+              <a href="mailto:support@nxinmall.com" className="text-white/80 text-sm hover:text-white transition-colors">
+                support@nxinmall.com
               </a>
               <Link
                 href="/admin/login"

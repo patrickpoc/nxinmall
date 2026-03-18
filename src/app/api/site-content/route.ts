@@ -35,9 +35,26 @@ export async function GET(req: NextRequest) {
       const blockId = row.block_id as string;
       const content = row.content as Record<string, unknown>;
       if (!blockId || !content || !SITE_CONTENT_BLOCK_IDS.includes(blockId as any)) continue;
+      if (blockId === 'hero_images') continue;
       const current = mergedRecord[blockId];
       const base = typeof current === 'object' && current !== null ? (current as Record<string, unknown>) : {};
       mergedRecord[blockId] = { ...base, ...content };
+    }
+
+    const { data: heroImagesRows } = await supabase
+      .from(TABLE)
+      .select('content')
+      .eq('block_id', 'hero_images')
+      .limit(1);
+    const heroImagesContent = heroImagesRows?.[0]?.content as Record<string, unknown> | undefined;
+    if (heroImagesContent) {
+      if (Array.isArray(heroImagesContent.items)) {
+        mergedRecord.hero_images = { items: heroImagesContent.items };
+      } else if (Array.isArray(heroImagesContent.images)) {
+        mergedRecord.hero_images = {
+          items: (heroImagesContent.images as string[]).map((url) => ({ url: String(url), enabled: true })),
+        };
+      }
     }
   } catch {
     // table may not exist

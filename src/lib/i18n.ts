@@ -110,6 +110,8 @@ const T = {
     seleccionadoBadge: 'Selected',
     btnAtras: 'Back',
     btnSiguiente: 'Next',
+    stepLabel: 'Step',
+    stepOf: 'of',
     errCategoria: 'Select a category',
     errTagline: 'Tagline must be at least 10 characters',
     errPais: 'Select a country',
@@ -162,7 +164,7 @@ const T = {
     paisPaso1Label: 'País *',
     btnContinuar: 'Continuar',
     opcional: '(opcional)',
-    // Paso 2 — Perfil
+    // Step 2 — Profile
     paso2Titulo: '¿Qué tipo de productos ofreces?',
     paso2Required: '*',
     taglineLabel: 'Tagline de tu empresa *',
@@ -177,7 +179,7 @@ const T = {
     certificacionesLabel: 'Certificaciones',
     logoLabel: 'Logo de tu empresa',
     logoHint: 'PNG, JPG hasta 5MB — cuadrado ideal',
-    // Paso 3 — Ubicación
+    // Step 3 — Location
     paso3Titulo: 'Indica la ubicación de tu empresa o punto de operación principal.',
     paisLabel: 'País *',
     paisPlaceholder: 'Selecciona un país',
@@ -213,7 +215,7 @@ const T = {
     referenciaPlaceholder: 'Frente al mercado central',
     codigoPostalLabel: 'Código postal',
     codigoPostalPlaceholder: '11001',
-    // Paso 4 — Catálogo
+    // Step 4 — Catalog
     paso4Subtitulo: 'Marca los productos que ofreces',
     paso4Buscar: 'Buscar producto...',
     paso4SinResultados: 'Sin resultados. Puedes agregarlo con el botón de abajo.',
@@ -230,7 +232,7 @@ const T = {
     paso4AgregarBtn: 'Agregar producto',
     paso4PersonalizadoBadge: 'Personalizado',
     paso4DescripcionEnLabel: 'Product description (for NxinMall platform):',
-    // Paso 5 - Resumen
+    // Step 5 - Summary
     resumenProductosTitulo: 'Detalle de Productos',
     resumenUbicacionLabel: 'Ubicación',
     resumenContactoLabel: 'Contacto',
@@ -242,17 +244,19 @@ const T = {
     btnDescargar: 'Descargar copia de mi perfil (.json)',
     btnRegresar: 'Regresar',
     procesando: 'Procesando...',
-    // ProductRow
+    // Product row
     moqLabel: 'MOQ (cantidad mínima de pedido)',
     precioLabel: 'Precio (USD)',
     usarImagenStock: 'Usar imagen de referencia',
     fotoProductoLabel: 'Foto de tu producto (opcional)',
     fotoProductoHint: 'JPG, PNG hasta 5MB',
     seleccionadoBadge: 'Seleccionado',
-    // Botones nav
+    // Nav buttons
     btnAtras: 'Atrás',
     btnSiguiente: 'Siguiente',
-    // Errores
+    stepLabel: 'Paso',
+    stepOf: 'de',
+    // Errors
     errCategoria: 'Selecciona una categoría',
     errTagline: 'El tagline debe tener al menos 10 caracteres',
     errPais: 'Selecciona un país',
@@ -261,7 +265,7 @@ const T = {
     errNivel3: 'Selecciona esta opción',
     errDireccion: 'La dirección es requerida',
     errProductos: 'Selecciona al menos un producto',
-    // Gracias
+    // Thank you
     graciasTitle: '¡Perfil enviado!',
     graciasSubtitle: 'El equipo de NxinMall revisará tu información y configurará tu tienda. Te contactaremos por WhatsApp en las próximas',
     graciasHoras: '24 horas',
@@ -307,7 +311,7 @@ const T = {
     paisPaso1Label: 'País *',
     btnContinuar: 'Continuar',
     opcional: '(opcional)',
-    // Paso 2 — Perfil
+    // Step 2 — Profile
     paso2Titulo: 'Que tipo de produtos você oferece?',
     paso2Required: '*',
     taglineLabel: 'Tagline da sua empresa *',
@@ -322,7 +326,7 @@ const T = {
     certificacionesLabel: 'Certificações',
     logoLabel: 'Logo da sua empresa',
     logoHint: 'PNG, JPG até 5MB — quadrado ideal',
-    // Paso 3 — Ubicación
+    // Step 3 — Location
     paso3Titulo: 'Indique a localização da sua empresa ou ponto de operação principal.',
     paisLabel: 'País *',
     paisPlaceholder: 'Selecione um país',
@@ -358,10 +362,10 @@ const T = {
     referenciaPlaceholder: 'Em frente ao mercado central',
     codigoPostalLabel: 'CEP/Código postal',
     codigoPostalPlaceholder: '01310-100',
-    // Paso 4 — Catálogo
+    // Step 4 — Catalog
     paso4Subtitulo: 'Marque os produtos que você oferece',
     paso4Buscar: 'Buscar produto...',
-    paso4SinResultados: 'Sem resultados. Você pode adicioná-lo com o botón abaixo.',
+    paso4SinResultados: 'Sem resultados. Você pode adicioná-lo com o botão abaixo.',
     paso4SeleccionadoBadge: 'selecionado',
     paso4SeleccionadosBadge: 'selecionados',
     paso4AgregarPersonalizado: 'Adicionar produto que não está na lista',
@@ -375,7 +379,7 @@ const T = {
     paso4AgregarBtn: 'Adicionar produto',
     paso4PersonalizadoBadge: 'Personalizado',
     paso4DescripcionEnLabel: 'Product description (for NxinMall platform):',
-    // Paso 5 - Resumen
+    // Step 5 - Summary
     resumenProductosTitulo: 'Detalhes dos Produtos',
     resumenUbicacionLabel: 'Localização',
     resumenContactoLabel: 'Contato',
@@ -394,10 +398,12 @@ const T = {
     fotoProductoLabel: 'Foto do seu produto (opcional)',
     fotoProductoHint: 'JPG, PNG até 5MB',
     seleccionadoBadge: 'Selecionado',
-    // Botones nav
+    // Nav buttons
     btnAtras: 'Voltar',
     btnSiguiente: 'Próximo',
-    // Errores
+    stepLabel: 'Passo',
+    stepOf: 'de',
+    // Errors
     errCategoria: 'Selecione uma categoria',
     errTagline: 'O tagline deve ter pelo menos 10 caracteres',
     errPais: 'Selecione um país',
@@ -406,7 +412,7 @@ const T = {
     errNivel3: 'Selecione esta opção',
     errDireccion: 'O endereço é obrigatório',
     errProductos: 'Selecione pelo menos um produto',
-    // Gracias
+    // Thank you
     graciasTitle: 'Perfil enviado!',
     graciasSubtitle: 'A equipe da NxinMall revisará suas informações e configurará sua loja. Entraremos em contato pelo WhatsApp nas próximas',
     graciasHoras: '24 horas',

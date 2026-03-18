@@ -1,9 +1,9 @@
 export type AdminLang = 'es' | 'en' | 'pt';
 
 export const ADMIN_LANG_OPTIONS: { code: AdminLang; label: string; flag: string }[] = [
-  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'es', label: 'Spanish', flag: '🇪🇸' },
   { code: 'en', label: 'English', flag: '🇺🇸' },
-  { code: 'pt', label: 'Português', flag: '🇧🇷' },
+  { code: 'pt', label: 'Portuguese', flag: '🇧🇷' },
 ];
 
 export const ADMIN_COPY: Record<AdminLang, {
@@ -98,6 +98,7 @@ export const ADMIN_COPY: Record<AdminLang, {
       infoText: 'Las alteraciones solo se aplican al pulsar Confirmar. Puedes ver el historial de las últimas 10 alteraciones y restaurar una versión anterior si algo se editó por error.',
       blocks: {
         hero: 'Hero',
+        hero_images: 'Hero slider images',
         nav: 'Navegación',
         benefits: 'Beneficios',
         logistics: 'Logística',
@@ -179,6 +180,7 @@ export const ADMIN_COPY: Record<AdminLang, {
       infoText: 'Changes are only applied when you click Confirm. You can view the last 10 changes and restore a previous version if something was edited by mistake.',
       blocks: {
         hero: 'Hero',
+        hero_images: 'Hero slider images',
         nav: 'Navigation',
         benefits: 'Benefits',
         logistics: 'Logistics',
@@ -260,6 +262,7 @@ export const ADMIN_COPY: Record<AdminLang, {
       infoText: 'As alterações só são aplicadas ao clicar em Confirmar. Pode ver o histórico das últimas 10 alterações e restaurar uma versão anterior se algo foi editado por engano.',
       blocks: {
         hero: 'Hero',
+        hero_images: 'Hero slider images',
         nav: 'Navegação',
         benefits: 'Benefícios',
         logistics: 'Logística',

@@ -170,7 +170,7 @@ export default function ProductRow({
               </div>
             </div>
 
-            {/* Descripción EN editable */}
+            {/* Editable description (EN) */}
             <div className="sm:col-span-2 flex flex-col">
               <label className={labelClass}>
                 📋 {t('paso4DescripcionEnLabel', idioma)}

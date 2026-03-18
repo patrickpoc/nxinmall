@@ -2,9 +2,12 @@ import { JSX } from 'react';
 
 export type Lang = 'es' | 'en' | 'pt';
 
+const DEFAULT_HERO_IMAGE = '/visuals/hero_nxinmall.jpg';
+
 export const COPY: Record<Lang, {
   nav: { suppliers: string; process: string; faq: string; cta: string; languagesHint: string; adminLogin: string };
   hero: { badge: string; title: string; subtitle: string; cta: string };
+  hero_images: { items: { url: string; enabled: boolean }[] };
   benefitsTitle: string;
   benefitsSubtitle: string;
   benefits: { pillar: string; title: string; desc: string }[];
@@ -30,6 +33,7 @@ export const COPY: Record<Lang, {
       subtitle: 'Calificamos tu operación y publicamos un catálogo listo para vender en NxinMall.',
       cta: 'Solicitar acceso',
     },
+    hero_images: { items: [{ url: DEFAULT_HERO_IMAGE, enabled: true }, { url: DEFAULT_HERO_IMAGE, enabled: true }, { url: DEFAULT_HERO_IMAGE, enabled: true }] },
     benefitsTitle: '¿Por qué NxinMall?',
     benefitsSubtitle: 'Acceso, confianza y operación en una sola plataforma.',
     benefits: [
@@ -107,6 +111,7 @@ export const COPY: Record<Lang, {
       subtitle: 'We qualify your operation and publish a ready-to-sell catalog on NxinMall.',
       cta: 'Request access',
     },
+    hero_images: { items: [{ url: DEFAULT_HERO_IMAGE, enabled: true }, { url: DEFAULT_HERO_IMAGE, enabled: true }, { url: DEFAULT_HERO_IMAGE, enabled: true }] },
     benefitsTitle: 'Why NxinMall?',
     benefitsSubtitle: 'Access, trust, and operations in one platform.',
     benefits: [
@@ -184,6 +189,7 @@ export const COPY: Record<Lang, {
       subtitle: 'Qualificamos sua operação e publicamos um catálogo pronto para vender na NxinMall.',
       cta: 'Solicitar acesso',
     },
+    hero_images: { items: [{ url: DEFAULT_HERO_IMAGE, enabled: true }, { url: DEFAULT_HERO_IMAGE, enabled: true }, { url: DEFAULT_HERO_IMAGE, enabled: true }] },
     benefitsTitle: 'Por que NxinMall?',
     benefitsSubtitle: 'Acesso, confiança e operação em uma única plataforma.',
     benefits: [
@@ -312,7 +318,7 @@ export const ICON_NODES: IconNode[] = [
 ];
 
 export const LANG_OPTIONS: { code: Lang; label: string; flag: string }[] = [
-  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'es', label: 'Spanish', flag: '🇪🇸' },
   { code: 'en', label: 'English', flag: '🇺🇸' },
-  { code: 'pt', label: 'Português', flag: '🇧🇷' },
+  { code: 'pt', label: 'Portuguese', flag: '🇧🇷' },
 ];
