@@ -254,7 +254,7 @@ function HomeContent() {
 
       <main>
         <Hero content={content} scrollToId={scrollToId} />
-        <div className="max-w-6xl mx-auto px-6 mt-6">
+        <div className="max-w-6xl mx-auto px-6 my-6 sm:my-8">
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               type="button"
