@@ -1,6 +1,9 @@
 import { getSupabaseAdmin } from '@/lib/supabase';
 import LeadsTable, { type Lead } from './LeadsTable';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function LeadsPage() {
   const supabase = getSupabaseAdmin();
   const primaryQuery = await supabase

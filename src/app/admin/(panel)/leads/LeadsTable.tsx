@@ -164,7 +164,9 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
   async function handleDelete(lead: Lead) {
     const res = await fetch(`/api/admin/leads/${lead.id}`, { method: 'DELETE' });
     if (!res.ok) {
-      setActionFeedback({ type: 'error', text: lang === 'pt' ? 'Não foi possível excluir o lead.' : lang === 'es' ? 'No se pudo eliminar el lead.' : 'Could not delete lead.' });
+      const payload = await res.json().catch(() => ({} as { error?: string }));
+      const fallback = lang === 'pt' ? 'Não foi possível excluir o lead.' : lang === 'es' ? 'No se pudo eliminar el lead.' : 'Could not delete lead.';
+      setActionFeedback({ type: 'error', text: typeof payload?.error === 'string' ? payload.error : fallback });
       return;
     }
     const data = await res.json();
@@ -172,7 +174,10 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
     setRows((prev) => prev.filter((l) => l.id !== lead.id));
     setDeletedHistory((prev) => [deleted, ...prev].slice(0, 10));
     setPendingDelete(null);
-    setActionFeedback({ type: 'success', text: lang === 'pt' ? 'Lead excluído com sucesso.' : lang === 'es' ? 'Lead eliminado con éxito.' : 'Lead deleted successfully.' });
+    const successText = data?.softDeleted
+      ? (lang === 'pt' ? 'Lead marcado como descartado (não pôde ser excluído fisicamente).' : lang === 'es' ? 'Lead marcado como descartado (no se pudo eliminar físicamente).' : 'Lead marked as discarded (physical delete blocked).')
+      : (lang === 'pt' ? 'Lead excluído com sucesso.' : lang === 'es' ? 'Lead eliminado con éxito.' : 'Lead deleted successfully.');
+    setActionFeedback({ type: 'success', text: successText });
   }
 
   async function handleRestore(lead: Lead) {

@@ -63,24 +63,49 @@ export async function DELETE(
 ) {
   const { id } = await params;
   const supabase = getSupabaseAdmin();
-
-  let fetchResult = await supabase
+  // Prefer deleting with returning payload in one DB roundtrip.
+  // Fallback to legacy select list if new columns are unavailable.
+  let deleteResult = await supabase
     .from('leads')
-    .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token, lead_type, document_person_type, document_type, document_number, document_deferred')
+    .delete()
     .eq('id', id)
-    .single();
-  if (fetchResult.error && /column .* does not exist/i.test(fetchResult.error.message)) {
-    fetchResult = await supabase
+    .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token, lead_type, document_person_type, document_type, document_number, document_deferred')
+    .maybeSingle();
+
+  if (deleteResult.error && /column .* does not exist/i.test(deleteResult.error.message)) {
+    deleteResult = await supabase
       .from('leads')
-      .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token')
+      .delete()
       .eq('id', id)
-      .single();
+      .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token')
+      .maybeSingle();
   }
-  const { data: existing, error: fetchError } = fetchResult;
-  if (fetchError) return NextResponse.json({ error: fetchError.message }, { status: 500 });
 
-  const { error } = await supabase.from('leads').delete().eq('id', id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  const { data: deleted, error } = deleteResult;
+  if (error) {
+    // If physical delete is blocked (e.g., FK dependencies), fallback to soft-delete.
+    if ((error as { code?: string }).code === '23503') {
+      const soft = await supabase
+        .from('leads')
+        .update({ estado: 'descartado' })
+        .eq('id', id)
+        .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token')
+        .maybeSingle();
 
-  return NextResponse.json({ success: true, deleted: existing });
+      if (soft.error) {
+        return NextResponse.json({ error: soft.error.message }, { status: 500 });
+      }
+      return NextResponse.json({
+        success: true,
+        deleted: soft.data,
+        softDeleted: true,
+      });
+    }
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+  if (!deleted) {
+    return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+  }
+
+  return NextResponse.json({ success: true, deleted });
 }

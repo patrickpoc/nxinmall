@@ -1,6 +1,9 @@
 import { getSupabaseAdmin } from '@/lib/supabase';
 import OnboardingsTable, { type Onboarding } from './OnboardingsTable';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function OnboardingsPage() {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
