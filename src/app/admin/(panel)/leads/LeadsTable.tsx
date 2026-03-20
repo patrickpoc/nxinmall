@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ExternalLink, ChevronUp, ChevronDown, ChevronsUpDown, Pencil, Trash2, RotateCcw, X } from 'lucide-react';
 
 function WhatsAppIcon({ className }: { className?: string }) {
@@ -44,6 +44,7 @@ const ESTADO_STYLES: Record<Estado, string> = {
 };
 
 const PAISES_PRINCIPALES = UBIGEO_COUNTRIES;
+const DELETED_HISTORY_STORAGE_KEY = 'admin:leads:deletedHistory';
 
 function EstadoSelect({ lead }: { lead: Lead }) {
   const { t } = useAdminLang();
@@ -112,6 +113,27 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
   const [paisFilter, setPaisFilter] = useState<'' | typeof PAISES_PRINCIPALES[number] | 'otros'>('');
   const [sortKey, setSortKey] = useState<SortKey>('created_at');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(DELETED_HISTORY_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as Lead[];
+      if (Array.isArray(parsed)) {
+        setDeletedHistory(parsed.slice(0, 10));
+      }
+    } catch {
+      // ignore malformed localStorage payload
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(DELETED_HISTORY_STORAGE_KEY, JSON.stringify(deletedHistory.slice(0, 10)));
+    } catch {
+      // ignore storage failures (private mode, quota, etc.)
+    }
+  }, [deletedHistory]);
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));

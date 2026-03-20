@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChevronUp, ChevronDown, ChevronsUpDown, MessageCircle, Download, Eye, FileText, X, Pencil, Trash2, RotateCcw } from 'lucide-react';
 import clsx from 'clsx';
 import { useAdminLang } from '@/lib/admin-lang-context';
@@ -71,6 +71,7 @@ function EstadoSelect({ onboarding }: { onboarding: Onboarding }) {
 
 type SortKey = 'empresa' | 'categoria' | 'estado' | 'created_at' | 'num_productos';
 type SortDir = 'asc' | 'desc';
+const DELETED_HISTORY_STORAGE_KEY = 'admin:onboardings:deletedHistory';
 
 function SortIcon({ field, sortKey, sortDir }: { field: SortKey; sortKey: SortKey; sortDir: SortDir }) {
   if (sortKey !== field) return <ChevronsUpDown className="w-3 h-3 text-gray-300 ml-1 inline" />;
@@ -107,6 +108,27 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
   const [sortDir, setSortDir] = useState<SortDir>('desc');
   const [selected, setSelected] = useState<Onboarding | null>(null);
   const [drawerMode, setDrawerMode] = useState<'profile' | 'summary' | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(DELETED_HISTORY_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as Onboarding[];
+      if (Array.isArray(parsed)) {
+        setDeletedHistory(parsed.slice(0, 10));
+      }
+    } catch {
+      // ignore malformed localStorage payload
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(DELETED_HISTORY_STORAGE_KEY, JSON.stringify(deletedHistory.slice(0, 10)));
+    } catch {
+      // ignore storage failures
+    }
+  }, [deletedHistory]);
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
