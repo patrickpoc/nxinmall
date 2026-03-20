@@ -499,8 +499,6 @@ function HeroImagesFields({
       {items.map((item, i) => (
         <div
           key={i}
-          draggable
-          onDragStart={() => setDraggedIndex(i)}
           onDragEnd={() => { setDraggedIndex(null); setDropTargetIndex(null); }}
           onDragOver={(e) => { e.preventDefault(); setDropTargetIndex(i); }}
           onDrop={() => handleDrop(i)}
@@ -510,7 +508,17 @@ function HeroImagesFields({
             dropTargetIndex === i && draggedIndex !== i ? 'border-brand-400 ring-1 ring-brand-200' : 'border-gray-200'
           )}
         >
-          <button type="button" className="cursor-grab active:cursor-grabbing p-1 text-gray-400 hover:text-gray-600" aria-label="Drag to reorder">
+          <button
+            type="button"
+            draggable
+            onDragStart={(e) => {
+              setDraggedIndex(i);
+              e.dataTransfer.effectAllowed = 'move';
+              e.dataTransfer.setData('text/plain', String(i));
+            }}
+            className="cursor-grab active:cursor-grabbing p-1 text-gray-400 hover:text-gray-600"
+            aria-label="Drag to reorder"
+          >
             <GripVertical className="w-4 h-4" />
           </button>
           <div className="w-16 h-10 rounded border border-gray-200 bg-gray-100 overflow-hidden shrink-0">
