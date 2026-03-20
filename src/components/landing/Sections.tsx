@@ -32,7 +32,7 @@ export function Hero({ content, scrollToId }: SectionProps) {
   }, [displayImages.length]);
 
   return (
-    <section className="pt-28 bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_55%,#f3f7ff_100%)]" id="inicio">
+    <section className="pt-28 bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_55%,#f3f7ff_100%)]" id="home">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto reveal" data-animate="fade-up">
           <p className="text-xs uppercase tracking-[0.3em] text-brand-700 font-semibold mb-4">
@@ -44,8 +44,8 @@ export function Hero({ content, scrollToId }: SectionProps) {
           <p className="text-lg text-gray-600 leading-relaxed mb-6">{content.hero.subtitle}</p>
           <div className="flex flex-wrap justify-center gap-3 mt-8">
             <a
-              href="#solicitud"
-              onClick={scrollToId?.('solicitud')}
+              href="#request"
+              onClick={scrollToId?.('request')}
               className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-brand-900 text-white font-black text-[16px] hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-brand-900/20"
             >
               {content.hero.cta} <ArrowUpRight className="w-4 h-4 stroke-[3]" />
@@ -109,7 +109,7 @@ export function Hero({ content, scrollToId }: SectionProps) {
 
 export function Benefits({ content }: SectionProps) {
   return (
-    <section className="py-20 bg-brand-50" id="beneficios">
+    <section className="py-20 bg-brand-50" id="benefits">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-10 reveal" data-animate="fade-up">
           <h2 className="text-[2.25rem] font-black text-ink font-display leading-[1.05]">
@@ -171,7 +171,7 @@ export function Logistics({ content }: SectionProps) {
 export function Process({ content }: SectionProps) {
   const steps = content.process.steps as { youDo: string; weDo: string }[];
   return (
-    <section className="py-12 bg-white" id="proceso">
+    <section className="py-12 bg-white" id="process">
       <div className="max-w-6xl mx-auto px-6">
         <div className="bg-gray-50/80 rounded-[40px] border border-gray-100 p-8 sm:p-16">
           <div className="text-center max-w-2xl mx-auto mb-12 reveal" data-animate="fade-up">

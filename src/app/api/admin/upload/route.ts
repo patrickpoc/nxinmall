@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 const BUCKET = 'content';
 const HERO_PREFIX = 'hero/';
@@ -11,6 +12,15 @@ const HERO_PREFIX = 'hero/';
  * Create a public bucket "content" in Supabase Dashboard → Storage if it doesn't exist.
  */
 export async function POST(req: NextRequest) {
+  const ip = getClientIp(req.headers);
+  const rl = checkRateLimit(`api:admin-upload:${ip}`, 20, 60_000);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again soon.' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } }
+    );
+  }
+
   try {
     const formData = await req.formData();
     const file = formData.get('file');

@@ -34,7 +34,7 @@ export default function Step5Resumen({ onBack }: Step5Props) {
       if (!res.ok) throw new Error('Error al enviar');
 
       setActivacion({ enviado: true });
-      router.push('/gracias');
+      router.push('/submitted');
     } catch (err) {
       const genericErr =
         idioma === 'en'

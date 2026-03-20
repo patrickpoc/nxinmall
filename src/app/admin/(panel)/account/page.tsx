@@ -82,7 +82,7 @@ export default function AccountPage() {
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 flex flex-col gap-6">
         <form onSubmit={handleSaveName} className="flex flex-col gap-2">
           <label className={labelClass}>{a.nameLabel}</label>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <input
               type="text"
               value={fullName}
@@ -117,7 +117,7 @@ export default function AccountPage() {
             className={inputClass}
             autoComplete="new-password"
           />
-          <div className="flex justify-end mt-1">
+          <div className="flex justify-stretch sm:justify-end mt-1">
             <button type="submit" disabled={passSaving || !newPass} className={btnPrimary}>
               {passSaving ? a.saving : a.changePassBtn}
             </button>

@@ -79,8 +79,8 @@ function EstadoSelect({ lead }: { lead: Lead }) {
 
 function getOnboardingUrl(token: string | null): string | null {
   if (!token) return null;
-  const base = process.env.NEXT_PUBLIC_APP_URL ?? (typeof window !== 'undefined' ? window.location.origin : '');
-  return `${base}/onboarding?token=${token}`;
+  const base = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ?? '';
+  return base ? `${base}/onboarding?token=${token}` : `/onboarding?token=${token}`;
 }
 
 type SortKey = 'empresa' | 'pais' | 'estado' | 'created_at';
@@ -94,7 +94,7 @@ function SortIcon({ field, sortKey, sortDir }: { field: SortKey; sortKey: SortKe
 }
 
 export default function LeadsTable({ leads }: { leads: Lead[] }) {
-  const { t } = useAdminLang();
+  const { t, lang } = useAdminLang();
   const [query, setQuery] = useState('');
   const [estadoFilter, setEstadoFilter] = useState<Estado | 'todos'>('todos');
   const [paisFilter, setPaisFilter] = useState<'' | typeof PAISES_PRINCIPALES[number] | 'otros'>('');
@@ -134,19 +134,30 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
   const total = leads.length;
   const nuevos = counts['nuevo'] ?? 0;
   const onboarding = counts['onboarding'] ?? 0;
+  const locale = lang === 'es' ? 'es-PE' : lang === 'pt' ? 'pt-BR' : 'en-US';
+  const waTitle = lang === 'es'
+    ? 'Send onboarding link via WhatsApp'
+    : lang === 'pt'
+      ? 'Send onboarding link via WhatsApp'
+      : 'Send onboarding link via WhatsApp';
+  const openTitle = lang === 'es'
+    ? 'Open onboarding link'
+    : lang === 'pt'
+      ? 'Open onboarding link'
+      : 'Open onboarding link';
 
-  const thClass = 'px-4 py-2.5 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap select-none cursor-pointer hover:text-gray-800 transition-colors';
-  const tdClass = 'px-4 py-3 text-sm text-gray-700 align-top';
+  const thClass = 'px-3 sm:px-4 py-2.5 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap select-none cursor-pointer hover:text-gray-800 transition-colors';
+  const tdClass = 'px-3 sm:px-4 py-3 text-xs sm:text-sm text-gray-700 align-top';
 
   return (
     <div className="flex flex-col gap-4">
       {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">{t.leads.section}</p>
           <h1 className="text-xl font-bold text-gray-900">{t.leads.title}</h1>
         </div>
-        <div className="flex items-center gap-4 text-xs text-gray-500">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-gray-500">
           <span><span className="font-bold text-gray-800">{total}</span> {t.leads.stats.total}</span>
           <span className="w-px h-3 bg-gray-200" />
           <span><span className="font-bold text-blue-700">{nuevos}</span> {t.leads.stats.new}</span>
@@ -157,7 +168,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
 
       {/* Filtros */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <div className="relative flex-1 max-w-xs">
+        <div className="relative w-full sm:flex-1 sm:max-w-xs">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input
             value={query}
@@ -167,7 +178,8 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
           />
         </div>
 
-        <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+        <div className="-mx-1 px-1 overflow-x-auto">
+          <div className="inline-flex items-center gap-1 bg-gray-100 rounded-lg p-1 min-w-max">
           {(['todos', ...ESTADOS] as const).map((s) => (
             <button
               key={s}
@@ -184,12 +196,13 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
               </span>
             </button>
           ))}
+          </div>
         </div>
 
         <select
           value={paisFilter}
           onChange={(e) => setPaisFilter(e.target.value as typeof paisFilter)}
-          className="rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+          className="w-full sm:w-auto rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
         >
           <option value="">{t.countries.all}</option>
           {PAISES_PRINCIPALES.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -203,7 +216,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
           <div className="py-16 text-center text-sm text-gray-400">{t.leads.empty}</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
+            <table className="w-full min-w-[980px] border-collapse">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className={thClass} onClick={() => toggleSort('empresa')}>
@@ -255,16 +268,16 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                       </td>
                       <td className={tdClass}>
                         <span className="text-[11px] text-gray-400 whitespace-nowrap">
-                          {new Date(lead.created_at).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: '2-digit' })}
+                          {new Date(lead.created_at).toLocaleDateString(locale, { day: '2-digit', month: 'short', year: '2-digit' })}
                         </span>
                       </td>
                       <td className={tdClass}>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex flex-wrap items-center gap-1.5">
                           <a
                             href={waUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            title="Enviar link de onboarding por WhatsApp"
+                            title={waTitle}
                             className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors"
                           >
                             <WhatsAppIcon className="w-3 h-3" />
@@ -275,7 +288,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                               href={onboardingUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              title="Abrir link de onboarding"
+                              title={openTitle}
                               className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 hover:text-gray-700 transition-colors"
                             >
                               <ExternalLink className="w-3 h-3" />
@@ -293,7 +306,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
 
         {filtered.length > 0 && (
           <div className="px-4 py-2.5 bg-gray-50 border-t border-gray-100 text-[11px] text-gray-400 font-medium">
-            {filtered.length} {t.leads.footer} {leads.length} leads
+            {filtered.length} {t.leads.footer} {leads.length} {t.leads.title.toLowerCase()}
           </div>
         )}
       </div>

@@ -22,7 +22,7 @@ function HomeContent() {
   const [defaultLanguage, setDefaultLanguage] = useState<Lang>('en');
   const [hasCustomLanguage, setHasCustomLanguage] = useState(false);
   
-  const sectionIds = useMemo(() => ['inicio', 'beneficios', 'proceso', 'faq'], []);
+  const sectionIds = useMemo(() => ['home', 'benefits', 'process', 'faq'], []);
   const activeSection = useActiveSection(sectionIds);
   const [content, setContent] = useState(() => COPY[lang]);
 
@@ -135,18 +135,18 @@ function HomeContent() {
           </div>
           <nav className="hidden md:flex items-center gap-6 text-[16px] font-bold text-gray-600 justify-center">
             <a
-              href="#beneficios"
-              onClick={scrollToId('beneficios')}
+              href="#benefits"
+              onClick={scrollToId('benefits')}
               className={`transition-colors ${
-                activeSection === 'beneficios' ? 'text-brand-900' : 'hover:text-brand-900'
+                activeSection === 'benefits' ? 'text-brand-900' : 'hover:text-brand-900'
               }`}
             >
               {content.nav.suppliers}
             </a>
             <a
-              href="#proceso"
-              onClick={scrollToId('proceso')}
-              className={`transition-colors ${activeSection === 'proceso' ? 'text-brand-900' : 'hover:text-brand-900'}`}
+              href="#process"
+              onClick={scrollToId('process')}
+              className={`transition-colors ${activeSection === 'process' ? 'text-brand-900' : 'hover:text-brand-900'}`}
             >
               {content.nav.process}
             </a>
@@ -191,8 +191,8 @@ function HomeContent() {
               )}
             </div>
             <a
-              href="#solicitud"
-              onClick={scrollToId('solicitud')}
+              href="#request"
+              onClick={scrollToId('request')}
               className="btn-cta-premium group whitespace-nowrap px-4 sm:px-6 py-1 sm:py-1.5 transition-all duration-300"
             >
               <span className="text-brand-900 group-hover:text-white text-[13px] sm:text-[15px] font-black transition-colors duration-300">
@@ -227,7 +227,7 @@ function HomeContent() {
               <p className="text-white/70 text-sm">{content.footer.tagline}</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start sm:items-center">
-              <Link href="#solicitud" className="text-white/80 text-sm hover:text-white transition-colors">
+              <Link href="#request" className="text-white/80 text-sm hover:text-white transition-colors">
                 {content.footer.cta}
               </Link>
               <a href="mailto:support@nxinmall.com" className="text-white/80 text-sm hover:text-white transition-colors">

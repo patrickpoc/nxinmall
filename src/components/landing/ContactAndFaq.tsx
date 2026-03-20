@@ -34,7 +34,7 @@ export function ContactForm({ content, lang, handleSubmit, submitted }: SectionP
   const labelClasses = "text-[11px] font-black text-brand-900/50 uppercase tracking-[0.2em] ml-1 mb-1";
 
   return (
-    <section className="py-24 bg-gray-50/50" id="solicitud">
+    <section className="py-24 bg-gray-50/50" id="request">
       <div className="max-w-6xl mx-auto px-6">
         <div className="max-w-2xl mx-auto text-center reveal mb-16" data-animate="fade-up">
           <p className="text-xs font-bold text-brand-700 mb-4 uppercase tracking-[0.3em]">{content.form.kicker}</p>

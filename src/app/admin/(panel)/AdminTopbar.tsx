@@ -92,10 +92,10 @@ export default function AdminTopbar() {
               </div>
             )}
           </div>
-          <Link href="/admin/account" className={iconBtnClass('/admin/account')} aria-label="Mi cuenta">
+          <Link href="/admin/account" className={iconBtnClass('/admin/account')} aria-label={t.account.title}>
             <UserCircle className="w-4 h-4" />
           </Link>
-          <Link href="/admin/settings" className={iconBtnClass('/admin/settings')} aria-label="Gestores">
+          <Link href="/admin/settings" className={iconBtnClass('/admin/settings')} aria-label={t.settings.title}>
             <Settings className="w-4 h-4" />
           </Link>
           <button
@@ -113,7 +113,7 @@ export default function AdminTopbar() {
           type="button"
           onClick={() => { setMenuOpen((p) => !p); setLangOpen(false); }}
           className="sm:hidden flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
-          aria-label="Menú"
+          aria-label="Menu"
         >
           {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -137,7 +137,7 @@ export default function AdminTopbar() {
 
           {/* Cuenta y gestores */}
           <Link href="/admin/account" onClick={closeMenu} className={clsx(navItemClass('/admin/account'), 'flex items-center gap-2 py-2.5')}>
-            <UserCircle className="w-4 h-4" /> Mi cuenta
+            <UserCircle className="w-4 h-4" /> {t.account.title}
           </Link>
           <Link href="/admin/settings" onClick={closeMenu} className={clsx(navItemClass('/admin/settings'), 'flex items-center gap-2 py-2.5')}>
             <Settings className="w-4 h-4" /> {t.settings.title}

@@ -17,6 +17,12 @@ function contentEqual(a: Record<string, unknown>, b: Record<string, unknown>): b
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
+function formatTimestampUTC(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '—';
+  return `${date.toISOString().slice(0, 19).replace('T', ' ')} UTC`;
+}
+
 export default function ContentPage() {
   const { t } = useAdminLang();
   const c = t.content;
@@ -333,7 +339,7 @@ export default function ContentPage() {
                         <td className="py-2 pr-2 max-w-[120px] truncate text-gray-600" title={summaryContent(entry.content_after, 200)}>
                           {summaryContent(entry.content_after)}
                         </td>
-                        <td className="py-2 pr-2 text-gray-500">{new Date(entry.changed_at).toLocaleString()}</td>
+                        <td className="py-2 pr-2 text-gray-500">{formatTimestampUTC(entry.changed_at)}</td>
                         <td className="py-2">
                           <button
                             type="button"

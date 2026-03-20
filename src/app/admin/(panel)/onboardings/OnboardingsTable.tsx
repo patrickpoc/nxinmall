@@ -85,7 +85,7 @@ function duracionLabel(seg: number | null) {
 }
 
 export default function OnboardingsTable({ onboardings }: { onboardings: Onboarding[] }) {
-  const { t } = useAdminLang();
+  const { t, lang } = useAdminLang();
   const [query, setQuery] = useState('');
   const [estadoFilter, setEstadoFilter] = useState<Estado | 'todos'>('todos');
   const [paisFilter, setPaisFilter] = useState<'' | typeof UBIGEO_COUNTRIES[number] | 'otros'>('');
@@ -125,19 +125,30 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
   const total = onboardings.length;
   const pendientes = counts['en_revision'] ?? 0;
   const aprobados = counts['aprobado'] ?? 0;
+  const locale = lang === 'es' ? 'es-PE' : lang === 'pt' ? 'pt-BR' : 'en-US';
+  const waTemplate = lang === 'es'
+    ? 'Hi {name}, your NxinMall store is being set up.'
+    : lang === 'pt'
+      ? 'Hi {name}, your NxinMall store is being set up.'
+      : 'Hi {name}, your NxinMall store is being set up.';
+  const downloadTitle = lang === 'es'
+    ? 'Download JSON'
+    : lang === 'pt'
+      ? 'Download JSON'
+      : 'Download JSON';
 
-  const thClass = 'px-4 py-2.5 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap select-none cursor-pointer hover:text-gray-800 transition-colors';
-  const tdClass = 'px-4 py-3 text-sm text-gray-700 align-top';
+  const thClass = 'px-3 sm:px-4 py-2.5 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap select-none cursor-pointer hover:text-gray-800 transition-colors';
+  const tdClass = 'px-3 sm:px-4 py-3 text-xs sm:text-sm text-gray-700 align-top';
 
   return (
     <div className="flex flex-col gap-4">
       {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">{t.onboardings.section}</p>
           <h1 className="text-xl font-bold text-gray-900">{t.onboardings.title}</h1>
         </div>
-        <div className="flex items-center gap-4 text-xs text-gray-500">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-gray-500">
           <span><span className="font-bold text-gray-800">{total}</span> {t.onboardings.stats.total}</span>
           <span className="w-px h-3 bg-gray-200" />
           <span><span className="font-bold text-amber-700">{pendientes}</span> {t.onboardings.stats.pending}</span>
@@ -148,7 +159,7 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
 
       {/* Filtros */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <div className="relative flex-1 max-w-xs">
+        <div className="relative w-full sm:flex-1 sm:max-w-xs">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input
             value={query}
@@ -158,7 +169,8 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
           />
         </div>
 
-        <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+        <div className="-mx-1 px-1 overflow-x-auto">
+          <div className="inline-flex items-center gap-1 bg-gray-100 rounded-lg p-1 min-w-max">
           {(['todos', ...ESTADOS] as const).map((s) => (
             <button
               key={s}
@@ -175,12 +187,13 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
               </span>
             </button>
           ))}
+          </div>
         </div>
 
         <select
           value={paisFilter}
           onChange={(e) => setPaisFilter(e.target.value as typeof paisFilter)}
-          className="rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+          className="w-full sm:w-auto rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
         >
           <option value="">{t.countries.all}</option>
           {UBIGEO_COUNTRIES.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -194,7 +207,7 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
           <div className="py-16 text-center text-sm text-gray-400">{t.onboardings.empty}</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
+            <table className="w-full min-w-[980px] border-collapse">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className={thClass} onClick={() => toggleSort('empresa')}>
@@ -219,7 +232,7 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
               <tbody className="divide-y divide-gray-100">
                 {filtered.map((o) => {
                   const phoneClean = o.whatsapp?.replace(/[^0-9]/g, '') ?? '';
-                  const waUrl = `https://wa.me/${phoneClean}?text=${encodeURIComponent(`Hola ${o.nombre}, tu tienda en NxinMall está siendo configurada.`)}`;
+                  const waUrl = `https://wa.me/${phoneClean}?text=${encodeURIComponent(waTemplate.replace('{name}', o.nombre))}`;
 
                   return (
                     <tr key={o.id} className="hover:bg-gray-50/60 transition-colors">
@@ -249,12 +262,12 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
                       </td>
                       <td className={tdClass}>
                         <span className="text-[11px] text-gray-400 whitespace-nowrap">
-                          {new Date(o.created_at).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: '2-digit' })}
+                          {new Date(o.created_at).toLocaleDateString(locale, { day: '2-digit', month: 'short', year: '2-digit' })}
                         </span>
                         <p className="text-[10px] text-gray-300 mt-0.5">{duracionLabel(o.duracion_seg)}</p>
                       </td>
                       <td className={tdClass}>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex flex-wrap items-center gap-1.5">
                           {o.whatsapp && (
                             <a
                               href={waUrl}
@@ -268,7 +281,7 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
                           )}
                           <a
                             href={`/api/admin/onboardings/${o.id}/download`}
-                            title="Descargar JSON"
+                            title={downloadTitle}
                             className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 hover:text-brand-900 transition-colors"
                           >
                             <Download className="w-3 h-3" />
@@ -286,7 +299,7 @@ export default function OnboardingsTable({ onboardings }: { onboardings: Onboard
 
         {filtered.length > 0 && (
           <div className="px-4 py-2.5 bg-gray-50 border-t border-gray-100 text-[11px] text-gray-400 font-medium">
-            {filtered.length} {t.onboardings.footer} {onboardings.length} onboardings
+            {filtered.length} {t.onboardings.footer} {onboardings.length} {t.onboardings.title.toLowerCase()}
           </div>
         )}
       </div>
