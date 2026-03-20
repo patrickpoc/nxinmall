@@ -18,9 +18,10 @@ interface SectionProps {
   lang: Lang;
   handleSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
   submitted?: boolean;
+  submitError?: string | null;
 }
 
-export function ContactForm({ content, lang, handleSubmit, submitted }: SectionProps) {
+export function ContactForm({ content, lang, handleSubmit, submitted, submitError }: SectionProps) {
   const [selectedCountry, setSelectedCountry] = useState(() => lang === 'pt' ? 'Brasil' : '');
 
   // When language changes externally, auto-select country
@@ -60,6 +61,11 @@ export function ContactForm({ content, lang, handleSubmit, submitted }: SectionP
             className="max-w-4xl mx-auto reveal"
             data-animate="fade-up"
           >
+            {submitError && (
+              <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {submitError}
+              </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
               {/* Nombre + Empresa */}
               <div className="flex flex-col">

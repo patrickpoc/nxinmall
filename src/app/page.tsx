@@ -19,6 +19,7 @@ function HomeContent() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [enabledLanguages, setEnabledLanguages] = useState<Lang[]>(['en', 'es', 'pt']);
   const [defaultLanguage, setDefaultLanguage] = useState<Lang>('en');
   const [hasCustomLanguage, setHasCustomLanguage] = useState(false);
@@ -113,13 +114,37 @@ function HomeContent() {
     event.preventDefault();
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
+    setSubmitError(null);
 
-    const res = await fetch('/api/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    if (res.ok) setSubmitted(true);
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+        return;
+      }
+      const payload = await res.json().catch(() => ({}));
+      setSubmitError(
+        typeof payload?.error === 'string'
+          ? payload.error
+          : lang === 'pt'
+            ? 'Não foi possível enviar. Tente novamente.'
+            : lang === 'es'
+              ? 'No se pudo enviar. Inténtalo nuevamente.'
+              : 'Could not submit. Please try again.'
+      );
+    } catch {
+      setSubmitError(
+        lang === 'pt'
+          ? 'Não foi possível enviar. Tente novamente.'
+          : lang === 'es'
+            ? 'No se pudo enviar. Inténtalo nuevamente.'
+            : 'Could not submit. Please try again.'
+      );
+    }
   };
 
   return (
@@ -230,7 +255,7 @@ function HomeContent() {
         <Logistics content={content} />
         <Process content={content} />
         <Buyers content={content} />
-        <ContactForm content={content} lang={lang} handleSubmit={handleSubmit} submitted={submitted} />
+        <ContactForm content={content} lang={lang} handleSubmit={handleSubmit} submitted={submitted} submitError={submitError} />
         <FaqSection content={content} />
       </main>
 

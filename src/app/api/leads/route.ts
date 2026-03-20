@@ -23,7 +23,13 @@ export async function POST(req: NextRequest) {
       { nombre, empresa, email, whatsapp, pais, categoria, onboarding_url, invite_token },
       { onConflict: 'email' }
     );
-    if (dbError) console.error('[leads] Supabase error:', dbError.message, dbError.details);
+    if (dbError) {
+      console.error('[leads] Supabase error:', dbError.message, dbError.details);
+      return NextResponse.json(
+        { success: false, error: 'Could not save lead.' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
