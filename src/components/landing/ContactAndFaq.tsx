@@ -19,10 +19,14 @@ interface SectionProps {
   handleSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
   submitted?: boolean;
   submitError?: string | null;
+  selectedLeadType?: 'supplier' | 'buyer';
+  onLeadTypeChange?: (leadType: 'supplier' | 'buyer') => void;
 }
 
-export function ContactForm({ content, lang, handleSubmit, submitted, submitError }: SectionProps) {
+export function ContactForm({ content, lang, handleSubmit, submitted, submitError, selectedLeadType = 'supplier', onLeadTypeChange }: SectionProps) {
   const [selectedCountry, setSelectedCountry] = useState(() => lang === 'pt' ? 'Brasil' : '');
+  const [documentType, setDocumentType] = useState('');
+  const [documentDeferred, setDocumentDeferred] = useState(false);
 
   // When language changes externally, auto-select country
   useEffect(() => {
@@ -61,11 +65,28 @@ export function ContactForm({ content, lang, handleSubmit, submitted, submitErro
             className="max-w-4xl mx-auto reveal"
             data-animate="fade-up"
           >
+            <input type="hidden" name="lead_type" value={selectedLeadType} />
             {submitError && (
               <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                 {submitError}
               </div>
             )}
+            <div className="mb-5 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => onLeadTypeChange?.('supplier')}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${selectedLeadType === 'supplier' ? 'bg-brand-900 text-white' : 'bg-white border border-gray-200 text-gray-700'}`}
+              >
+                {lang === 'pt' ? 'Cadastro de vendedor' : lang === 'es' ? 'Registro de vendedor' : 'Supplier registration'}
+              </button>
+              <button
+                type="button"
+                onClick={() => onLeadTypeChange?.('buyer')}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${selectedLeadType === 'buyer' ? 'bg-brand-900 text-white' : 'bg-white border border-gray-200 text-gray-700'}`}
+              >
+                {lang === 'pt' ? 'Cadastro de comprador' : lang === 'es' ? 'Registro de comprador' : 'Buyer registration'}
+              </button>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
               {/* Nombre + Empresa */}
               <div className="flex flex-col">
@@ -114,6 +135,48 @@ export function ContactForm({ content, lang, handleSubmit, submitted, submitErro
                     </option>
                   ))}
                 </select>
+              </div>
+              <div className="flex flex-col">
+                <label className={labelClasses}>{lang === 'pt' ? 'Pessoa' : lang === 'es' ? 'Persona' : 'Person type'}</label>
+                <select name="document_person_type" defaultValue="" className={inputClasses + ' cursor-pointer'}>
+                  <option value="">{lang === 'pt' ? 'Selecione' : lang === 'es' ? 'Seleccione' : 'Select'}</option>
+                  <option value="individual">{lang === 'pt' ? 'Pessoa física' : lang === 'es' ? 'Persona natural' : 'Individual'}</option>
+                  <option value="company">{lang === 'pt' ? 'Pessoa jurídica' : lang === 'es' ? 'Persona jurídica' : 'Company'}</option>
+                </select>
+              </div>
+              <div className="flex flex-col">
+                <label className={labelClasses}>{lang === 'pt' ? 'Tipo de documento' : lang === 'es' ? 'Tipo de documento' : 'Document type'}</label>
+                <select
+                  name="document_type"
+                  value={documentType}
+                  onChange={(e) => setDocumentType(e.target.value)}
+                  className={inputClasses + ' cursor-pointer'}
+                >
+                  <option value="">{lang === 'pt' ? 'Selecione' : lang === 'es' ? 'Seleccione' : 'Select'}</option>
+                  {selectedCountry === 'Brasil' ? (
+                    <>
+                      <option value="cpf">CPF</option>
+                      <option value="cnpj">CNPJ</option>
+                    </>
+                  ) : selectedCountry === 'Peru' ? (
+                    <option value="ruc">RUC</option>
+                  ) : (
+                    <option value="tax_id">{lang === 'pt' ? 'Documento fiscal' : lang === 'es' ? 'Documento fiscal' : 'Tax ID'}</option>
+                  )}
+                </select>
+              </div>
+              <div className="flex flex-col sm:col-span-2">
+                <label className={labelClasses}>{documentType === 'cpf' ? 'CPF' : documentType === 'cnpj' ? 'CNPJ' : documentType === 'ruc' ? 'RUC' : (lang === 'pt' ? 'Documento fiscal' : lang === 'es' ? 'Documento fiscal' : 'Tax ID')}</label>
+                <input
+                  name="document_number"
+                  disabled={documentDeferred}
+                  className={inputClasses}
+                  placeholder={documentType === 'cpf' ? '000.000.000-00' : documentType === 'cnpj' ? '00.000.000/0000-00' : documentType === 'ruc' ? '20123456789' : (lang === 'pt' ? 'Opcional' : lang === 'es' ? 'Opcional' : 'Optional')}
+                />
+                <label className="mt-2 inline-flex items-center gap-2 text-xs text-gray-500">
+                  <input type="checkbox" name="document_deferred" checked={documentDeferred} onChange={(e) => setDocumentDeferred(e.target.checked)} />
+                  {lang === 'pt' ? 'Prefiro não informar agora' : lang === 'es' ? 'Prefiero no informar ahora' : 'I prefer not to inform now'}
+                </label>
               </div>
               {/* Email + WhatsApp — prefijo ya fijado por país */}
               <div className="flex flex-col">

@@ -19,13 +19,39 @@ export async function POST(req: NextRequest) {
       categoria: (lead.categoria as string | undefined) ?? null,
       estado: (lead.estado as string | undefined) ?? 'nuevo',
       invite_token: (lead.invite_token as string | undefined) ?? null,
+      lead_type: (lead.lead_type as string | undefined) ?? 'supplier',
+      document_person_type: (lead.document_person_type as string | undefined) ?? null,
+      document_type: (lead.document_type as string | undefined) ?? null,
+      document_number: (lead.document_number as string | undefined) ?? null,
+      document_deferred: Boolean(lead.document_deferred),
     };
 
-    const { data, error } = await getSupabaseAdmin()
+    let upsertResult = await getSupabaseAdmin()
       .from('leads')
       .upsert(payload, { onConflict: 'id' })
-      .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token')
+      .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token, lead_type, document_person_type, document_type, document_number, document_deferred')
       .single();
+
+    if (upsertResult.error && /column .* does not exist/i.test(upsertResult.error.message)) {
+      const legacyPayload = {
+        id: payload.id,
+        nombre: payload.nombre,
+        empresa: payload.empresa,
+        email: payload.email,
+        whatsapp: payload.whatsapp,
+        pais: payload.pais,
+        categoria: payload.categoria,
+        estado: payload.estado,
+        invite_token: payload.invite_token,
+      };
+      upsertResult = await getSupabaseAdmin()
+        .from('leads')
+        .upsert(legacyPayload, { onConflict: 'id' })
+        .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token')
+        .single();
+    }
+
+    const { data, error } = upsertResult;
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ success: true, restored: data });

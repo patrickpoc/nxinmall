@@ -48,9 +48,14 @@ export interface OnboardingState {
     currentStep: number;
   };
   registro: {
+    leadType?: 'supplier' | 'buyer';
     nombre: string;
     empresa: string;
     ruc: string;
+    documentPersonType?: 'individual' | 'company' | '';
+    documentType?: 'cpf' | 'cnpj' | 'ruc' | 'tax_id' | '';
+    documentNumber?: string;
+    documentDeferred?: boolean;
     email: string;
     whatsapp: string;
     cargo: string;
@@ -100,10 +105,15 @@ export interface StoreConfig {
     idioma: 'en' | 'es' | 'pt';
   };
   proveedor: {
+    leadType?: 'supplier' | 'buyer';
     nombre: string;
     cargo: string;
     empresa: string;
     ruc: string;
+    documentPersonType?: 'individual' | 'company' | '';
+    documentType?: 'cpf' | 'cnpj' | 'ruc' | 'tax_id' | '';
+    documentNumber?: string;
+    documentDeferred?: boolean;
     email: string;
     whatsapp: string;
     pais: string;

@@ -20,6 +20,7 @@ interface WizardShellProps {
   nextDisabled?: boolean;
   isLoading?: boolean;
   hideNav?: boolean;
+  totalSteps?: number;
 }
 
 export default function WizardShell({
@@ -34,6 +35,7 @@ export default function WizardShell({
   nextDisabled = false,
   isLoading = false,
   hideNav = false,
+  totalSteps = 5,
 }: WizardShellProps) {
   const { idioma: language, setIdioma: setLanguage } = useOnboardingStore();
   const [langOpen, setLangOpen] = useState(false);
@@ -91,13 +93,13 @@ export default function WizardShell({
 
             <div className="flex flex-col items-end">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-900/40 leading-none mb-1">{t('onboardingHeader', language)}</span>
-              <span className="text-xs font-bold text-gray-500 text-right">{t('stepLabel', language)} {currentStep} {t('stepOf', language)} 5</span>
+              <span className="text-xs font-bold text-gray-500 text-right">{t('stepLabel', language)} {currentStep} {t('stepOf', language)} {totalSteps}</span>
               <span className="text-[10px] text-gray-400">{t('estimatedTime', language)}</span>
             </div>
           </div>
         </div>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-2">
-          <WizardProgress currentStep={currentStep} />
+          <WizardProgress currentStep={currentStep} totalSteps={totalSteps} />
         </div>
       </header>
 

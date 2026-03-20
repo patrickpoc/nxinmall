@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import clsx from 'clsx';
+import { CircleHelp } from 'lucide-react';
 import { useOnboardingStore } from '@/lib/store';
 import { CATEGORIAS_LIST } from '@/data/catalog';
 import { CATEGORIAS_FORM, CATEGORIA_FORM_MAP } from '@/data/categories';
@@ -141,6 +142,11 @@ export default function Step2Perfil({ onNext, onBack }: Step2Props) {
   const labelClass = "text-[11px] font-black text-brand-900/50 uppercase tracking-[0.2em] ml-1 mb-1";
   const inputClass = "w-full px-4 py-3.5 text-sm rounded-2xl bg-gray-50 border-none shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:bg-white focus:shadow-md transition-all duration-300";
   const optionalMark = <span className="text-[10px] text-gray-400 italic normal-case tracking-normal font-semibold whitespace-nowrap leading-none relative -top-px">* {t('opcional', language).replace(/[()]/g, '')}</span>;
+  const keywordHelpText = language === 'pt'
+    ? 'Digite uma palavra-chave e pressione + para adicionar. Use x para remover.'
+    : language === 'es'
+      ? 'Escribe una palabra clave y presiona + para agregar. Usa x para eliminar.'
+      : 'Type a keyword and press + to add. Use x to remove.';
 
   return (
     <div className="flex flex-col gap-8">
@@ -167,6 +173,10 @@ export default function Step2Perfil({ onNext, onBack }: Step2Props) {
           ))}
         </div>
         <div className="mt-4 rounded-2xl border border-gray-100 bg-white p-4">
+          <div className="mb-2 inline-flex items-center gap-1 text-[11px] text-gray-500">
+            <CircleHelp className="w-3.5 h-3.5" />
+            <span>{keywordHelpText}</span>
+          </div>
           <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
@@ -288,6 +298,10 @@ export default function Step2Perfil({ onNext, onBack }: Step2Props) {
           ))}
         </div>
         <div className="mt-4 rounded-2xl border border-gray-100 bg-white p-4">
+          <div className="mb-2 inline-flex items-center gap-1 text-[11px] text-gray-500">
+            <CircleHelp className="w-3.5 h-3.5" />
+            <span>{keywordHelpText}</span>
+          </div>
           <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"

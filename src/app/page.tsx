@@ -9,6 +9,8 @@ import { useScrollReveal, useActiveSection } from '@/lib/hooks';
 import { Hero, Benefits, Logistics, Process, Buyers } from '@/components/landing/Sections';
 import { ContactForm, FaqSection } from '@/components/landing/ContactAndFaq';
 
+type LeadType = 'supplier' | 'buyer';
+
 function HomeContent() {
   const searchParams = useSearchParams();
   const langParam = (searchParams.get('lang') || '') as Lang;
@@ -20,6 +22,7 @@ function HomeContent() {
   const [scrolled, setScrolled] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [selectedLeadType, setSelectedLeadType] = useState<LeadType>('supplier');
   const [enabledLanguages, setEnabledLanguages] = useState<Lang[]>(['en', 'es', 'pt']);
   const [defaultLanguage, setDefaultLanguage] = useState<Lang>('en');
   const [hasCustomLanguage, setHasCustomLanguage] = useState(false);
@@ -120,7 +123,7 @@ function HomeContent() {
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, lead_type: selectedLeadType }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -251,11 +254,37 @@ function HomeContent() {
 
       <main>
         <Hero content={content} scrollToId={scrollToId} />
+        <div className="max-w-6xl mx-auto px-6 mt-6">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedLeadType('supplier');
+                const target = document.getElementById('request');
+                target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+              className={`px-6 py-3 rounded-full text-sm font-black transition-all ${selectedLeadType === 'supplier' ? 'bg-brand-900 text-white shadow-lg shadow-brand-900/25' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'}`}
+            >
+              {lang === 'pt' ? 'Quero ser vendedor' : lang === 'es' ? 'Quiero ser vendedor' : 'I want to sell'}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedLeadType('buyer');
+                const target = document.getElementById('request');
+                target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+              className={`px-6 py-3 rounded-full text-sm font-black transition-all ${selectedLeadType === 'buyer' ? 'bg-brand-900 text-white shadow-lg shadow-brand-900/25' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'}`}
+            >
+              {lang === 'pt' ? 'Quero comprar no NxinMall' : lang === 'es' ? 'Quiero comprar en NxinMall' : 'I want to buy on NxinMall'}
+            </button>
+          </div>
+        </div>
         <Benefits content={content} />
         <Logistics content={content} />
         <Process content={content} />
         <Buyers content={content} />
-        <ContactForm content={content} lang={lang} handleSubmit={handleSubmit} submitted={submitted} submitError={submitError} />
+        <ContactForm content={content} lang={lang} handleSubmit={handleSubmit} submitted={submitted} submitError={submitError} selectedLeadType={selectedLeadType} onLeadTypeChange={setSelectedLeadType} />
         <FaqSection content={content} />
       </main>
 

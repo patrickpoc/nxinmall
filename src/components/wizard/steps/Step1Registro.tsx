@@ -32,6 +32,10 @@ export default function Step1Registro({ onNext }: Step1Props) {
       nombre: registration.nombre,
       empresa: registration.empresa,
       ruc: registration.ruc,
+      documentPersonType: registration.documentPersonType ?? '',
+      documentType: registration.documentType ?? '',
+      documentNumber: registration.documentNumber ?? registration.ruc,
+      documentDeferred: Boolean(registration.documentDeferred),
       email: registration.email,
       whatsapp: registration.whatsapp,
       cargo: registration.cargo,
@@ -41,6 +45,19 @@ export default function Step1Registro({ onNext }: Step1Props) {
 
   const whatsapp = watch('whatsapp');
   const selectedCountry = watch('pais');
+  const selectedDocumentType = watch('documentType');
+  const documentDeferred = watch('documentDeferred');
+  const taxIdLabel = selectedCountry === 'Brasil'
+    ? selectedDocumentType === 'cpf'
+      ? 'CPF'
+      : 'CNPJ'
+    : t('rucLabel', language);
+  const taxIdPlaceholder = selectedCountry === 'Brasil'
+    ? selectedDocumentType === 'cpf'
+      ? '000.000.000-00'
+      : '00.000.000/0000-00'
+    : t('rucPlaceholder', language);
+  const taxIdMaxLength = selectedCountry === 'Brasil' ? (selectedDocumentType === 'cpf' ? 14 : 18) : 16;
 
   // Sync pais field when store changes (e.g. language toggle in header sets Brasil)
   useEffect(() => {
@@ -53,7 +70,10 @@ export default function Step1Registro({ onNext }: Step1Props) {
   }, [language, trigger]);
 
   const onSubmit = (data: Step1Data) => {
-    setRegistration(data);
+    setRegistration({
+      ...data,
+      ruc: data.documentNumber ?? data.ruc ?? '',
+    });
     onNext();
   };
 
@@ -125,18 +145,43 @@ export default function Step1Registro({ onNext }: Step1Props) {
         />
       </div>
 
-      {/* RUC */}
+      {/* Document type / number */}
+      <div className="flex flex-col">
+        <label className={labelClass}>{language === 'pt' ? 'Tipo de documento' : language === 'es' ? 'Tipo de documento' : 'Document type'}</label>
+        <select
+          {...register('documentType')}
+          className={inputClass(errors.documentType)}
+        >
+          <option value="">{language === 'pt' ? 'Selecione' : language === 'es' ? 'Seleccione' : 'Select'}</option>
+          {selectedCountry === 'Brasil' ? (
+            <>
+              <option value="cpf">CPF</option>
+              <option value="cnpj">CNPJ</option>
+            </>
+          ) : selectedCountry === 'Peru' ? (
+            <option value="ruc">RUC</option>
+          ) : (
+            <option value="tax_id">{language === 'pt' ? 'Documento fiscal' : language === 'es' ? 'Documento fiscal' : 'Tax ID'}</option>
+          )}
+        </select>
+        {errors.documentType && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.documentType.message}</p>}
+      </div>
       <div className="flex flex-col">
         <label className={labelClass}>
-          {t('rucLabel', language)} <span className="opacity-50 font-normal lowercase tracking-normal">{t('opcional', language)}</span>
+          {taxIdLabel} <span className="opacity-50 font-normal lowercase tracking-normal">{t('opcional', language)}</span>
         </label>
         <input
-          {...register('ruc')}
-          className={inputClass(errors.ruc)}
-          placeholder={t('rucPlaceholder', language)}
-          maxLength={11}
+          {...register('documentNumber')}
+          className={inputClass(errors.documentNumber)}
+          placeholder={taxIdPlaceholder}
+          maxLength={taxIdMaxLength}
+          disabled={documentDeferred}
         />
-        {errors.ruc && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.ruc.message}</p>}
+        {errors.documentNumber && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.documentNumber.message}</p>}
+        <label className="mt-2 inline-flex items-center gap-2 text-xs text-gray-500">
+          <input type="checkbox" {...register('documentDeferred')} />
+          {language === 'pt' ? 'Prefiro não informar agora' : language === 'es' ? 'Prefiero no informar ahora' : 'I prefer not to inform now'}
+        </label>
       </div>
 
       {/* Job title */}

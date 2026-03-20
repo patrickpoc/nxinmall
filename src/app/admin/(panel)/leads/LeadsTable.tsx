@@ -23,6 +23,11 @@ export type Lead = {
   whatsapp: string;
   pais: string;
   categoria?: string;
+  lead_type?: 'supplier' | 'buyer';
+  document_person_type?: string | null;
+  document_type?: string | null;
+  document_number?: string | null;
+  document_deferred?: boolean | null;
   estado: string;
   invite_token: string | null;
 };
@@ -77,10 +82,11 @@ function EstadoSelect({ lead }: { lead: Lead }) {
   );
 }
 
-function getOnboardingUrl(token: string | null): string | null {
+function getOnboardingUrl(token: string | null, leadType?: 'supplier' | 'buyer'): string | null {
   if (!token) return null;
   const base = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ?? '';
-  return base ? `${base}/onboarding?token=${token}` : `/onboarding?token=${token}`;
+  const path = leadType === 'buyer' ? '/onboarding-buyer' : '/onboarding';
+  return base ? `${base}${path}?token=${token}` : `${path}?token=${token}`;
 }
 
 type SortKey = 'empresa' | 'pais' | 'estado' | 'created_at';
@@ -209,6 +215,10 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
         whatsapp: next.whatsapp,
         pais: next.pais,
         categoria: next.categoria ?? null,
+        lead_type: next.lead_type ?? 'supplier',
+        document_person_type: next.document_person_type ?? null,
+        document_type: next.document_type ?? null,
+        document_number: next.document_number ?? null,
       }),
     });
     setSavingEdit(false);
@@ -303,6 +313,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                   <th className={thClass} onClick={() => toggleSort('pais')}>
                     {t.leads.cols.country} <SortIcon field="pais" sortKey={sortKey} sortDir={sortDir} />
                   </th>
+                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>Type</th>
                   <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>{t.leads.cols.category}</th>
                   <th className={thClass} onClick={() => toggleSort('estado')}>
                     {t.leads.cols.status} <SortIcon field="estado" sortKey={sortKey} sortDir={sortDir} />
@@ -316,8 +327,10 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
               <tbody className="divide-y divide-gray-100">
                 {filtered.map((lead) => {
                   const phoneClean = lead.whatsapp?.replace(/[^0-9]/g, '') ?? '';
-                  const onboardingUrl = getOnboardingUrl(lead.invite_token);
-                  const waText = t.leads.waMessage.replace('{nombre}', lead.nombre);
+                  const onboardingUrl = getOnboardingUrl(lead.invite_token, lead.lead_type);
+                  const waText = (lead.lead_type === 'buyer'
+                    ? (lang === 'pt' ? 'Olá {nombre}, aqui está seu link de onboarding de comprador na NxinMall:' : lang === 'es' ? 'Hola {nombre}, aquí está tu enlace de onboarding de comprador en NxinMall:' : 'Hi {nombre}, here is your NxinMall buyer onboarding link:')
+                    : t.leads.waMessage).replace('{nombre}', lead.nombre);
                   const msg = encodeURIComponent(`${waText}\n${onboardingUrl ?? ''}`);
                   const waUrl = `https://wa.me/${phoneClean}?text=${msg}`;
 
@@ -333,6 +346,11 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                       </td>
                       <td className={tdClass}>
                         <span className="text-xs text-gray-600">{lead.pais}</span>
+                      </td>
+                      <td className={tdClass}>
+                        <span className={clsx('inline-block px-2 py-0.5 rounded-md border text-[11px] font-semibold capitalize', lead.lead_type === 'buyer' ? 'bg-violet-50 text-violet-700 border-violet-200' : 'bg-blue-50 text-blue-700 border-blue-200')}>
+                          {lead.lead_type === 'buyer' ? 'buyer' : 'supplier'}
+                        </span>
                       </td>
                       <td className={tdClass}>
                         {lead.categoria
@@ -456,7 +474,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
               </button>
             </div>
             <div className="p-5 space-y-4">
-              {(['nombre', 'empresa', 'email', 'whatsapp', 'pais', 'categoria'] as const).map((field) => (
+              {(['nombre', 'empresa', 'email', 'whatsapp', 'pais', 'categoria', 'lead_type', 'document_person_type', 'document_type', 'document_number'] as const).map((field) => (
                 <div key={field}>
                   <label className="block text-[11px] font-semibold uppercase tracking-wide text-gray-500 mb-1">{field}</label>
                   <input

@@ -2,17 +2,17 @@
 
 import clsx from 'clsx';
 
-const STEPS = [1, 2, 3, 4, 5];
-
 interface WizardProgressProps {
   currentStep: number;
+  totalSteps?: number;
 }
 
-export default function WizardProgress({ currentStep }: WizardProgressProps) {
+export default function WizardProgress({ currentStep, totalSteps = 5 }: WizardProgressProps) {
+  const steps = Array.from({ length: totalSteps }, (_, index) => index + 1);
   return (
     <div className="w-full">
       <div className="flex items-center gap-1.5">
-        {STEPS.map((step) => (
+        {steps.map((step) => (
           <div 
             key={step}
             className={clsx(

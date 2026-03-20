@@ -13,16 +13,63 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { nombre, empresa, email, whatsapp, pais, categoria } = await req.json();
+    const {
+      nombre,
+      empresa,
+      email,
+      whatsapp,
+      pais,
+      categoria,
+      lead_type,
+      document_person_type,
+      document_type,
+      document_number,
+      document_deferred,
+    } = await req.json();
 
     const invite_token = crypto.randomUUID();
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${req.nextUrl.protocol}//${req.nextUrl.host}`;
-    const onboarding_url = `${baseUrl}/onboarding?token=${invite_token}`;
+    const leadType = lead_type === 'buyer' ? 'buyer' : 'supplier';
+    const onboardingPath = leadType === 'buyer' ? '/onboarding-buyer' : '/onboarding';
+    const onboarding_url = `${baseUrl}${onboardingPath}?token=${invite_token}`;
 
-    const { error: dbError } = await getSupabaseAdmin().from('leads').upsert(
-      { nombre, empresa, email, whatsapp, pais, categoria, onboarding_url, invite_token },
-      { onConflict: 'email' }
-    );
+    const fullPayload = {
+      nombre,
+      empresa,
+      email,
+      whatsapp,
+      pais,
+      categoria,
+      lead_type: leadType,
+      document_person_type: document_person_type ?? null,
+      document_type: document_type ?? null,
+      document_number: document_number ?? null,
+      document_deferred: Boolean(document_deferred),
+      onboarding_url,
+      invite_token,
+    };
+
+    let { error: dbError } = await getSupabaseAdmin()
+      .from('leads')
+      .upsert(fullPayload, { onConflict: 'email' });
+
+    if (dbError && /column .* does not exist/i.test(dbError.message)) {
+      const legacyPayload = {
+        nombre,
+        empresa,
+        email,
+        whatsapp,
+        pais,
+        categoria,
+        onboarding_url,
+        invite_token,
+      };
+      const legacyResult = await getSupabaseAdmin()
+        .from('leads')
+        .upsert(legacyPayload, { onConflict: 'email' });
+      dbError = legacyResult.error ?? null;
+    }
+
     if (dbError) {
       console.error('[leads] Supabase error:', dbError.message, dbError.details);
       return NextResponse.json(

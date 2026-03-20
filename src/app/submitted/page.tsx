@@ -8,6 +8,21 @@ import { t } from '@/lib/i18n';
 
 export default function SubmittedPage() {
   const { idioma: language, registro: registration } = useOnboardingStore();
+  const isBuyer = registration.leadType === 'buyer';
+  const title = isBuyer
+    ? language === 'pt'
+      ? 'Cadastro de comprador enviado!'
+      : language === 'es'
+        ? 'Registro de comprador enviado!'
+        : 'Buyer profile submitted!'
+    : t('submittedTitle', language);
+  const subtitle = isBuyer
+    ? language === 'pt'
+      ? 'A equipe NxinMall revisará seu perfil de comprador e retornará em breve com os próximos passos.'
+      : language === 'es'
+        ? 'El equipo NxinMall revisará tu perfil de comprador y volverá pronto con los próximos pasos.'
+        : 'The NxinMall team will review your buyer profile and get back to you soon with next steps.'
+    : t('submittedSubtitle', language);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
@@ -32,7 +47,7 @@ export default function SubmittedPage() {
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-3">
-          {t('submittedTitle', language)}
+          {title}
         </h1>
 
         {registration.nombre && (
@@ -42,7 +57,7 @@ export default function SubmittedPage() {
         )}
 
         <p className="text-gray-500 text-sm leading-relaxed mb-8">
-          {t('submittedSubtitle', language)}{' '}
+          {subtitle}{' '}
           <strong className="text-gray-700">{t('submittedHours', language)}</strong>.
         </p>
 

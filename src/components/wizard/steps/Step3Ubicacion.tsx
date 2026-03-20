@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { useOnboardingStore } from '@/lib/store';
 import { t } from '@/lib/i18n';
@@ -19,8 +19,50 @@ interface Step3Props {
 export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
   const { ubicacion: location, registro: registration, idioma: language, setUbicacion: setLocation, setRegistro: setRegistration } = useOnboardingStore();
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [remoteMunicipalities, setRemoteMunicipalities] = useState<string[]>([]);
+  const [loadingMunicipalities, setLoadingMunicipalities] = useState(false);
 
   const country = registration.pais || 'Peru';
+  const BRAZIL_UF_BY_STATE: Record<string, string> = {
+    Acre: 'AC',
+    Alagoas: 'AL',
+    Amapa: 'AP',
+    Amapá: 'AP',
+    Amazonas: 'AM',
+    Bahia: 'BA',
+    Ceara: 'CE',
+    Ceará: 'CE',
+    'Distrito Federal': 'DF',
+    'Espirito Santo': 'ES',
+    'Espírito Santo': 'ES',
+    Goias: 'GO',
+    Goiás: 'GO',
+    Maranhao: 'MA',
+    Maranhão: 'MA',
+    'Mato Grosso': 'MT',
+    'Mato Grosso do Sul': 'MS',
+    'Minas Gerais': 'MG',
+    Para: 'PA',
+    Pará: 'PA',
+    Paraiba: 'PB',
+    Paraíba: 'PB',
+    Parana: 'PR',
+    Paraná: 'PR',
+    Pernambuco: 'PE',
+    Piaui: 'PI',
+    Piauí: 'PI',
+    'Rio de Janeiro': 'RJ',
+    'Rio Grande do Norte': 'RN',
+    'Rio Grande do Sul': 'RS',
+    Rondonia: 'RO',
+    Rondônia: 'RO',
+    Roraima: 'RR',
+    'Santa Catarina': 'SC',
+    'Sao Paulo': 'SP',
+    'São Paulo': 'SP',
+    Sergipe: 'SE',
+    Tocantins: 'TO',
+  };
 
   // Derive level 1 options by country
   const nivel1Options = (() => {
@@ -33,11 +75,51 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
   // Derive level 2 options by country + selected level 1
   const nivel2Options = (() => {
     if (!location.departamento) return [];
-    if (country === 'Brasil') return MUNICIPIOS_BRASIL[location.departamento] ?? [];
+    if (country === 'Brasil') {
+      return remoteMunicipalities.length > 0
+        ? remoteMunicipalities
+        : (MUNICIPIOS_BRASIL[location.departamento] ?? []);
+    }
     if (country === 'Colombia') return MUNICIPIOS_COLOMBIA[location.departamento] ?? [];
     if (country === 'Ecuador') return CANTONES_ECUADOR[location.departamento] ?? [];
     return PROVINCIAS[location.departamento] ?? []; // Peru
   })();
+
+  useEffect(() => {
+    async function loadBrazilMunicipalities() {
+      if (country !== 'Brasil' || !location.departamento) {
+        setRemoteMunicipalities([]);
+        return;
+      }
+      const uf = BRAZIL_UF_BY_STATE[location.departamento];
+      if (!uf) {
+        setRemoteMunicipalities([]);
+        return;
+      }
+      setLoadingMunicipalities(true);
+      try {
+        const res = await fetch(`/api/geo/br-municipios/${uf}`);
+        if (!res.ok) {
+          setRemoteMunicipalities([]);
+          return;
+        }
+        const payload = (await res.json()) as { municipalities?: string[] };
+        setRemoteMunicipalities(Array.isArray(payload.municipalities) ? payload.municipalities : []);
+      } catch {
+        setRemoteMunicipalities([]);
+      } finally {
+        setLoadingMunicipalities(false);
+      }
+    }
+    void loadBrazilMunicipalities();
+  }, [country, location.departamento]);
+
+  const filteredMunicipalityOptions = useMemo(() => {
+    if (country !== 'Brasil') return nivel2Options;
+    const term = location.provincia.trim().toLowerCase();
+    if (!term) return nivel2Options.slice(0, 80);
+    return nivel2Options.filter((item) => item.toLowerCase().includes(term)).slice(0, 80);
+  }, [country, nivel2Options, location.provincia]);
 
   // Derive level 3 options (Peru only)
   const nivel3Options = country === 'Peru' && location.departamento && location.provincia
@@ -171,17 +253,35 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
           {/* Nivel 2: Provincia / Município / Municipio / Cantón */}
           <div className="flex flex-col">
             <label className={labelClass}>{nivel2Label}</label>
-            <select
-              value={location.provincia}
-              onChange={(e) => handleNivel2Change(e.target.value)}
-              className={selectClass(errors.provincia)}
-              disabled={!location.departamento}
-            >
-              <option value="">{nivel2Placeholder}</option>
-              {nivel2Options.map((p) => (
-                <option key={p} value={p}>{p}</option>
-              ))}
-            </select>
+            {country === 'Brasil' ? (
+              <>
+                <input
+                  list="municipality-options-br"
+                  value={location.provincia}
+                  onChange={(e) => handleNivel2Change(e.target.value)}
+                  className={inputClass(errors.provincia)}
+                  disabled={!location.departamento}
+                  placeholder={loadingMunicipalities ? 'Loading municipalities...' : nivel2Placeholder}
+                />
+                <datalist id="municipality-options-br">
+                  {filteredMunicipalityOptions.map((city) => (
+                    <option key={city} value={city} />
+                  ))}
+                </datalist>
+              </>
+            ) : (
+              <select
+                value={location.provincia}
+                onChange={(e) => handleNivel2Change(e.target.value)}
+                className={selectClass(errors.provincia)}
+                disabled={!location.departamento}
+              >
+                <option value="">{nivel2Placeholder}</option>
+                {nivel2Options.map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
+            )}
             {errors.provincia && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.provincia}</p>}
           </div>
 

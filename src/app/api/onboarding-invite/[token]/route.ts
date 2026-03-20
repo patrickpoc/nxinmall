@@ -17,15 +17,31 @@ export async function GET(
 
   const { token } = await params;
 
-  const { data, error } = await getSupabaseAdmin()
+  let query = await getSupabaseAdmin()
     .from('leads')
-    .select('nombre, empresa, email, whatsapp, pais, categoria')
+    .select('nombre, empresa, email, whatsapp, pais, categoria, lead_type, document_person_type, document_type, document_number, document_deferred')
     .eq('invite_token', token)
     .single();
 
+  if (query.error && /column .* does not exist/i.test(query.error.message)) {
+    query = await getSupabaseAdmin()
+      .from('leads')
+      .select('nombre, empresa, email, whatsapp, pais, categoria')
+      .eq('invite_token', token)
+      .single();
+  }
+
+  const { data, error } = query;
   if (error || !data) {
     return NextResponse.json({ error: 'Token inválido' }, { status: 404 });
   }
 
-  return NextResponse.json(data);
+  return NextResponse.json({
+    ...data,
+    lead_type: (data as any).lead_type ?? 'supplier',
+    document_person_type: (data as any).document_person_type ?? null,
+    document_type: (data as any).document_type ?? null,
+    document_number: (data as any).document_number ?? null,
+    document_deferred: (data as any).document_deferred ?? false,
+  });
 }

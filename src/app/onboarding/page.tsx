@@ -30,8 +30,16 @@ function OnboardingContent() {
         if (!res.ok) throw new Error('invalid');
         return res.json();
       })
-      .then(({ categoria, ...rest }) => {
-        initSession(token, { ...rest, categoriaInteres: categoria ?? undefined });
+      .then(({ categoria, lead_type, document_person_type, document_type, document_number, document_deferred, ...rest }) => {
+        initSession(token, {
+          ...rest,
+          leadType: lead_type ?? 'supplier',
+          documentPersonType: document_person_type ?? '',
+          documentType: document_type ?? '',
+          documentNumber: document_number ?? '',
+          documentDeferred: Boolean(document_deferred),
+          categoriaInteres: categoria ?? undefined,
+        });
         setReady(true);
       })
       .catch(() => {
