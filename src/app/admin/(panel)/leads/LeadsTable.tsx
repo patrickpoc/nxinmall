@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ExternalLink, ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react';
+import { ExternalLink, ChevronUp, ChevronDown, ChevronsUpDown, Pencil, Trash2, RotateCcw, X } from 'lucide-react';
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -95,6 +95,12 @@ function SortIcon({ field, sortKey, sortDir }: { field: SortKey; sortKey: SortKe
 
 export default function LeadsTable({ leads }: { leads: Lead[] }) {
   const { t, lang } = useAdminLang();
+  const [rows, setRows] = useState<Lead[]>(leads);
+  const [deletedHistory, setDeletedHistory] = useState<Lead[]>([]);
+  const [pendingDelete, setPendingDelete] = useState<Lead | null>(null);
+  const [actionFeedback, setActionFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  const [savingEdit, setSavingEdit] = useState(false);
   const [query, setQuery] = useState('');
   const [estadoFilter, setEstadoFilter] = useState<Estado | 'todos'>('todos');
   const [paisFilter, setPaisFilter] = useState<'' | typeof PAISES_PRINCIPALES[number] | 'otros'>('');
@@ -108,7 +114,7 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return leads
+    return rows
       .filter((l) => {
         const matchQ = !q || [l.empresa, l.nombre, l.email, l.whatsapp].some((v) => v?.toLowerCase().includes(q));
         const matchE = estadoFilter === 'todos' || l.estado === estadoFilter;
@@ -123,31 +129,97 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
         const vb = b[sortKey] ?? '';
         return sortDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
       });
-  }, [leads, query, estadoFilter, paisFilter, sortKey, sortDir]);
+  }, [rows, query, estadoFilter, paisFilter, sortKey, sortDir]);
 
   const counts = useMemo(() => {
-    const c: Record<string, number> = { todos: leads.length };
-    ESTADOS.forEach((s) => { c[s] = leads.filter((l) => l.estado === s).length; });
+    const c: Record<string, number> = { todos: rows.length };
+    ESTADOS.forEach((s) => { c[s] = rows.filter((l) => l.estado === s).length; });
     return c;
-  }, [leads]);
+  }, [rows]);
 
-  const total = leads.length;
+  const total = rows.length;
   const nuevos = counts['nuevo'] ?? 0;
   const onboarding = counts['onboarding'] ?? 0;
   const locale = lang === 'es' ? 'es-PE' : lang === 'pt' ? 'pt-BR' : 'en-US';
   const waTitle = lang === 'es'
-    ? 'Send onboarding link via WhatsApp'
+    ? 'Enviar enlace de onboarding por WhatsApp'
     : lang === 'pt'
-      ? 'Send onboarding link via WhatsApp'
+      ? 'Enviar link de onboarding por WhatsApp'
       : 'Send onboarding link via WhatsApp';
   const openTitle = lang === 'es'
-    ? 'Open onboarding link'
+    ? 'Abrir enlace de onboarding'
     : lang === 'pt'
-      ? 'Open onboarding link'
+      ? 'Abrir link de onboarding'
       : 'Open onboarding link';
 
   const thClass = 'px-3 sm:px-4 py-2.5 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap select-none cursor-pointer hover:text-gray-800 transition-colors';
   const tdClass = 'px-3 sm:px-4 py-3 text-xs sm:text-sm text-gray-700 align-top';
+
+  async function handleDelete(lead: Lead) {
+    const res = await fetch(`/api/admin/leads/${lead.id}`, { method: 'DELETE' });
+    if (!res.ok) {
+      setActionFeedback({ type: 'error', text: lang === 'pt' ? 'Não foi possível excluir o lead.' : lang === 'es' ? 'No se pudo eliminar el lead.' : 'Could not delete lead.' });
+      return;
+    }
+    const data = await res.json();
+    const deleted = (data?.deleted as Lead | undefined) ?? lead;
+    setRows((prev) => prev.filter((l) => l.id !== lead.id));
+    setDeletedHistory((prev) => [deleted, ...prev].slice(0, 10));
+    setPendingDelete(null);
+    setActionFeedback({ type: 'success', text: lang === 'pt' ? 'Lead excluído com sucesso.' : lang === 'es' ? 'Lead eliminado con éxito.' : 'Lead deleted successfully.' });
+  }
+
+  async function handleRestore(lead: Lead) {
+    const res = await fetch('/api/admin/leads/restore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lead }),
+    });
+    if (!res.ok) {
+      setActionFeedback({ type: 'error', text: lang === 'pt' ? 'Não foi possível restaurar o lead.' : lang === 'es' ? 'No se pudo restaurar el lead.' : 'Could not restore lead.' });
+      return;
+    }
+    const data = await res.json();
+    const restored = (data?.restored as Lead | undefined) ?? lead;
+    setRows((prev) => [restored, ...prev]);
+    setDeletedHistory((prev) => prev.filter((l) => l.id !== lead.id));
+    setActionFeedback({ type: 'success', text: lang === 'pt' ? 'Lead restaurado com sucesso.' : lang === 'es' ? 'Lead restaurado con éxito.' : 'Lead restored successfully.' });
+  }
+
+  function handlePurgeHistoryItem(lead: Lead) {
+    const msg = lang === 'pt'
+      ? 'Deseja remover este item do histórico de excluídos?'
+      : lang === 'es'
+        ? '¿Deseas eliminar este elemento del historial de eliminados?'
+        : 'Do you want to remove this item from deleted history?';
+    if (!window.confirm(msg)) return;
+    setDeletedHistory((prev) => prev.filter((l) => l.id !== lead.id));
+    setActionFeedback({ type: 'success', text: lang === 'pt' ? 'Item removido do histórico.' : lang === 'es' ? 'Elemento removido del historial.' : 'Item removed from history.' });
+  }
+
+  async function handleSaveEdit(next: Lead) {
+    setSavingEdit(true);
+    const res = await fetch(`/api/admin/leads/${next.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre: next.nombre,
+        empresa: next.empresa,
+        email: next.email,
+        whatsapp: next.whatsapp,
+        pais: next.pais,
+        categoria: next.categoria ?? null,
+      }),
+    });
+    setSavingEdit(false);
+    if (!res.ok) {
+      setActionFeedback({ type: 'error', text: lang === 'pt' ? 'Não foi possível salvar o lead.' : lang === 'es' ? 'No se pudo guardar el lead.' : 'Could not save lead.' });
+      return;
+    }
+    setRows((prev) => prev.map((l) => (l.id === next.id ? next : l)));
+    setEditingLead(null);
+    setActionFeedback({ type: 'success', text: lang === 'pt' ? 'Lead atualizado com sucesso.' : lang === 'es' ? 'Lead actualizado con éxito.' : 'Lead updated successfully.' });
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -165,6 +237,11 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
           <span><span className="font-bold text-emerald-700">{onboarding}</span> {t.leads.stats.onboarding}</span>
         </div>
       </div>
+      {actionFeedback && (
+        <div className={clsx('rounded-lg border px-3 py-2 text-xs font-medium', actionFeedback.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-red-50 border-red-200 text-red-700')}>
+          {actionFeedback.text}
+        </div>
+      )}
 
       {/* Filtros */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -294,6 +371,22 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                               <ExternalLink className="w-3 h-3" />
                             </a>
                           )}
+                          <button
+                            type="button"
+                            onClick={() => setEditingLead(lead)}
+                            className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 hover:text-gray-700 transition-colors"
+                            title={lang === 'pt' ? 'Editar lead' : lang === 'es' ? 'Editar lead' : 'Edit lead'}
+                          >
+                            <Pencil className="w-3 h-3" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setPendingDelete(lead)}
+                            className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors"
+                            title={lang === 'pt' ? 'Excluir lead' : lang === 'es' ? 'Eliminar lead' : 'Delete lead'}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -306,10 +399,121 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
 
         {filtered.length > 0 && (
           <div className="px-4 py-2.5 bg-gray-50 border-t border-gray-100 text-[11px] text-gray-400 font-medium">
-            {filtered.length} {t.leads.footer} {leads.length} {t.leads.title.toLowerCase()}
+            {filtered.length} {t.leads.footer} {rows.length} {t.leads.title.toLowerCase()}
           </div>
         )}
       </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-gray-900">
+            {lang === 'pt' ? 'Histórico de excluídos (últimos 10)' : lang === 'es' ? 'Historial de eliminados (últimos 10)' : 'Deleted history (last 10)'}
+          </h3>
+          <span className="text-xs text-gray-400">{deletedHistory.length}/10</span>
+        </div>
+        {deletedHistory.length === 0 ? (
+          <p className="text-xs text-gray-400 mt-2">{lang === 'pt' ? 'Nenhum lead excluído recentemente.' : lang === 'es' ? 'No hay leads eliminados recientemente.' : 'No recently deleted leads.'}</p>
+        ) : (
+          <div className="mt-3 space-y-2">
+            {deletedHistory.map((item) => (
+              <div key={item.id} className="flex items-center justify-between rounded-lg border border-gray-100 px-3 py-2">
+                <div>
+                  <p className="text-xs font-semibold text-gray-800">{item.empresa}</p>
+                  <p className="text-[11px] text-gray-400">{item.email}</p>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleRestore(item)}
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 hover:text-brand-900 transition-colors"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    {lang === 'pt' ? 'Desfazer' : lang === 'es' ? 'Deshacer' : 'Undo'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePurgeHistoryItem(item)}
+                    title={lang === 'pt' ? 'Excluir de vez do histórico' : lang === 'es' ? 'Eliminar definitivamente del historial' : 'Delete permanently from history'}
+                    className="inline-flex items-center justify-center w-7 h-7 rounded-md text-gray-400 border border-gray-200 hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {editingLead && (
+        <div className="fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-black/30" onClick={() => setEditingLead(null)} />
+          <div className="absolute right-0 top-0 h-full w-full max-w-xl bg-white border-l border-gray-200 shadow-2xl overflow-y-auto">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <h3 className="text-sm font-bold text-gray-900">{lang === 'pt' ? 'Editar lead' : lang === 'es' ? 'Editar lead' : 'Edit lead'}</h3>
+              <button type="button" onClick={() => setEditingLead(null)} className="p-1 rounded-md text-gray-400 hover:text-gray-700 hover:bg-gray-100">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-5 space-y-4">
+              {(['nombre', 'empresa', 'email', 'whatsapp', 'pais', 'categoria'] as const).map((field) => (
+                <div key={field}>
+                  <label className="block text-[11px] font-semibold uppercase tracking-wide text-gray-500 mb-1">{field}</label>
+                  <input
+                    value={(editingLead[field] ?? '') as string}
+                    onChange={(e) => setEditingLead((prev) => (prev ? { ...prev, [field]: e.target.value } : prev))}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                  />
+                </div>
+              ))}
+              <button
+                type="button"
+                disabled={savingEdit}
+                onClick={() => handleSaveEdit(editingLead)}
+                className="w-full py-2.5 rounded-lg bg-brand-900 text-white text-sm font-semibold hover:bg-brand-900/90 disabled:opacity-60"
+              >
+                {savingEdit ? (lang === 'pt' ? 'Salvando...' : lang === 'es' ? 'Guardando...' : 'Saving...') : (lang === 'pt' ? 'Salvar alterações' : lang === 'es' ? 'Guardar cambios' : 'Save changes')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {pendingDelete && (
+        <div className="fixed inset-0 z-[60]">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setPendingDelete(null)} />
+          <div className="absolute inset-0 flex items-center justify-center p-4">
+            <div className="w-full max-w-md rounded-xl bg-white border border-gray-200 shadow-2xl p-5">
+              <h4 className="text-base font-bold text-gray-900">
+                {lang === 'pt' ? 'Excluir lead' : lang === 'es' ? 'Eliminar lead' : 'Delete lead'}
+              </h4>
+              <p className="mt-2 text-sm text-gray-600">
+                {lang === 'pt'
+                  ? 'Esta ação não pode ser desfeita. Deseja excluir este lead?'
+                  : lang === 'es'
+                    ? 'Esta acción no se puede deshacer. ¿Deseas eliminar este lead?'
+                    : 'This action cannot be undone. Do you want to delete this lead?'}
+              </p>
+              <div className="mt-4 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPendingDelete(null)}
+                  className="px-3 py-1.5 rounded-md text-xs font-semibold text-gray-600 border border-gray-200 hover:bg-gray-50"
+                >
+                  {lang === 'pt' ? 'Cancelar' : lang === 'es' ? 'Cancelar' : 'Cancel'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(pendingDelete)}
+                  className="px-3 py-1.5 rounded-md text-xs font-semibold text-white bg-red-600 hover:bg-red-700"
+                >
+                  {lang === 'pt' ? 'Desejo excluir' : lang === 'es' ? 'Deseo eliminar' : 'Yes, delete'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

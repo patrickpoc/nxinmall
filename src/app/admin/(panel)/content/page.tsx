@@ -24,7 +24,7 @@ function formatTimestampUTC(value: string): string {
 }
 
 export default function ContentPage() {
-  const { t } = useAdminLang();
+  const { t, lang } = useAdminLang();
   const c = t.content;
   const [overrides, setOverrides] = useState<Record<string, Record<string, unknown>>>({});
   const [loading, setLoading] = useState(true);
@@ -185,7 +185,7 @@ export default function ContentPage() {
   if (loading) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12 flex justify-center">
-        <p className="text-sm text-gray-500">Loading…</p>
+        <p className="text-sm text-gray-500">{c.saving}</p>
       </div>
     );
   }
@@ -193,7 +193,7 @@ export default function ContentPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 pb-28">
       <div className="mb-8">
-        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Admin</p>
+        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">{t.nav.content}</p>
         <h1 className="text-xl font-bold text-gray-900">{c.title}</h1>
         <p className="text-sm text-gray-500 mt-1">{c.subtitle}</p>
         <p className="text-sm text-gray-600 mt-2 rounded-lg bg-gray-50 border border-gray-100 px-3 py-2">
@@ -208,7 +208,7 @@ export default function ContentPage() {
       </div>
 
       {/* Text content section */}
-      <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Text content</h2>
+      <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">{lang === 'en' ? 'Text content' : lang === 'pt' ? 'Conteúdo de texto' : 'Contenido de texto'}</h2>
       <div className="space-y-2 mb-10">
         {TEXT_CONTENT_BLOCK_IDS.map((blockId) => (
           <div
@@ -259,7 +259,7 @@ export default function ContentPage() {
       </div>
 
       {/* Images section */}
-      <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Images</h2>
+      <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">{lang === 'en' ? 'Images' : lang === 'pt' ? 'Imagens' : 'Imágenes'}</h2>
       <div className="space-y-2 mb-10">
         {IMAGE_CONTENT_BLOCK_IDS.map((blockId) => (
           <div
@@ -319,11 +319,11 @@ export default function ContentPage() {
                   <thead>
                     <tr className="text-left text-xs text-gray-500 uppercase tracking-wider border-b border-gray-100">
                       <th className="pb-2 pr-2">{c.who}</th>
-                      <th className="pb-2 pr-2">Block</th>
-                      <th className="pb-2 pr-2">Lang</th>
+                      <th className="pb-2 pr-2">{lang === 'en' ? 'Block' : lang === 'pt' ? 'Bloco' : 'Bloque'}</th>
+                      <th className="pb-2 pr-2">{lang === 'en' ? 'Lang' : lang === 'pt' ? 'Idioma' : 'Idioma'}</th>
                       <th className="pb-2 pr-2 max-w-[120px]">{c.before}</th>
                       <th className="pb-2 pr-2 max-w-[120px]">{c.after}</th>
-                      <th className="pb-2">Data</th>
+                      <th className="pb-2">{lang === 'en' ? 'Date' : lang === 'pt' ? 'Data' : 'Fecha'}</th>
                       <th className="pb-2 w-24"></th>
                     </tr>
                   </thead>
@@ -449,6 +449,7 @@ function HeroImagesFields({
   lang: Lang;
   inputClass: string;
 }) {
+  const { lang: adminLang } = useAdminLang();
   const rawItems = Array.isArray(data.items)
     ? (data.items as HeroBannerItem[])
     : Array.isArray(data.images)
@@ -491,9 +492,9 @@ function HeroImagesFields({
       const res = await fetch('/api/admin/upload', { method: 'POST', body: form });
       const json = await res.json();
       if (json.url) updateItem(index, { url: json.url });
-      else alert(json.error || 'Upload failed');
+      else alert(json.error || (adminLang === 'pt' ? 'Falha no upload' : adminLang === 'es' ? 'Error de carga' : 'Upload failed'));
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Upload failed');
+      alert(err instanceof Error ? err.message : (adminLang === 'pt' ? 'Falha no upload' : adminLang === 'es' ? 'Error de carga' : 'Upload failed'));
     } finally {
       setUploadingIndex(null);
     }
@@ -501,7 +502,7 @@ function HeroImagesFields({
 
   return (
     <div className="rounded-lg bg-gray-50 p-4 space-y-3">
-      <p className="text-xs font-bold text-gray-400 mb-2">Add or remove banners. Drag to reorder. Toggle off to hide on the site without removing.</p>
+      <p className="text-xs font-bold text-gray-400 mb-2">{adminLang === 'pt' ? 'Adicione ou remova banners. Arraste para reordenar. Desligue para ocultar no site sem remover.' : adminLang === 'es' ? 'Agrega o elimina banners. Arrastra para reordenar. Apaga para ocultar en el sitio sin eliminar.' : 'Add or remove banners. Drag to reorder. Toggle off to hide on the site without removing.'}</p>
       {items.map((item, i) => (
         <div
           key={i}
@@ -535,7 +536,7 @@ function HeroImagesFields({
             value={item.url}
             onChange={(e) => updateItem(i, { url: e.target.value })}
             className={clsx(inputClass, 'flex-1 min-w-0')}
-            placeholder="Image URL"
+            placeholder={adminLang === 'pt' ? 'URL da imagem' : adminLang === 'es' ? 'URL de la imagen' : 'Image URL'}
           />
           <button
             type="button"
@@ -568,7 +569,7 @@ function HeroImagesFields({
             type="button"
             onClick={() => removeBanner(i)}
             className="p-2 rounded-lg border border-gray-200 text-gray-500 hover:bg-red-50 hover:text-red-600 shrink-0"
-            aria-label="Remove"
+            aria-label={adminLang === 'pt' ? 'Remover' : adminLang === 'es' ? 'Eliminar' : 'Remove'}
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -580,7 +581,7 @@ function HeroImagesFields({
           onClick={() => addBanner()}
           className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-100 text-brand-900 font-medium hover:bg-brand-200"
         >
-          <Plus className="w-4 h-4" /> Add banner
+          <Plus className="w-4 h-4" /> {adminLang === 'pt' ? 'Adicionar banner' : adminLang === 'es' ? 'Agregar banner' : 'Add banner'}
         </button>
       </div>
     </div>

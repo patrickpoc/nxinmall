@@ -5,7 +5,7 @@ export default async function OnboardingsPage() {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('onboardings')
-    .select('id, created_at, nombre, empresa, ruc, email, whatsapp, pais, categoria, num_productos, productos, estado, duracion_seg')
+    .select('id, created_at, nombre, empresa, ruc, email, whatsapp, pais, categoria, num_productos, productos, estado, duracion_seg, raw_data')
     .order('created_at', { ascending: false });
 
   const onboardings: Onboarding[] = data ?? [];

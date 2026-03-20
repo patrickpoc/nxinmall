@@ -7,7 +7,7 @@ import { useOnboardingStore } from '@/lib/store';
 import { t } from '@/lib/i18n';
 
 export default function SubmittedPage() {
-  const { idioma, registro } = useOnboardingStore();
+  const { idioma: language, registro: registration } = useOnboardingStore();
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
@@ -32,18 +32,18 @@ export default function SubmittedPage() {
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-3">
-          {t('graciasTitle', idioma)}
+          {t('submittedTitle', language)}
         </h1>
 
-        {registro.nombre && (
+        {registration.nombre && (
           <p className="text-base font-semibold text-brand-900 mb-2">
-            {registro.nombre}
+            {registration.nombre}
           </p>
         )}
 
         <p className="text-gray-500 text-sm leading-relaxed mb-8">
-          {t('graciasSubtitle', idioma)}{' '}
-          <strong className="text-gray-700">{t('graciasHoras', idioma)}</strong>.
+          {t('submittedSubtitle', language)}{' '}
+          <strong className="text-gray-700">{t('submittedHours', language)}</strong>.
         </p>
 
         <a
@@ -59,7 +59,7 @@ export default function SubmittedPage() {
             href="/"
             className="text-xs font-bold text-gray-300 hover:text-gray-500 uppercase tracking-widest transition-colors"
           >
-            {t('graciasVolver', idioma)}
+            {t('submittedBackHome', language)}
           </Link>
         </div>
       </div>

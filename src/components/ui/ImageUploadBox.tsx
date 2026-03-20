@@ -13,6 +13,7 @@ interface ImageUploadBoxProps {
   onChange: (value: { dataUrl: string; name: string } | null) => void;
   previewVariant?: 'square' | 'circle' | 'banner';
   maxSizeMB?: number;
+  locale?: 'en' | 'es' | 'pt';
 }
 
 export default function ImageUploadBox({
@@ -22,8 +23,14 @@ export default function ImageUploadBox({
   onChange,
   previewVariant = 'square',
   maxSizeMB = 5,
+  locale = 'en',
 }: ImageUploadBoxProps) {
   const [error, setError] = useState<string | null>(null);
+  const copy = {
+    en: { remove: 'Remove image', drop: 'Drop here', upload: 'Upload image', sizeError: `Image size must be less than ${maxSizeMB}MB` },
+    es: { remove: 'Eliminar imagen', drop: 'Suelta aquí', upload: 'Subir imagen', sizeError: `La imagen no debe superar ${maxSizeMB}MB` },
+    pt: { remove: 'Remover imagem', drop: 'Solte aqui', upload: 'Enviar imagem', sizeError: `A imagem não pode ultrapassar ${maxSizeMB}MB` },
+  }[locale];
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -32,14 +39,14 @@ export default function ImageUploadBox({
       if (!file) return;
 
       if (file.size > maxSizeMB * 1024 * 1024) {
-        setError(`La imagen no debe superar ${maxSizeMB}MB`);
+        setError(copy.sizeError);
         return;
       }
 
       const dataUrl = await fileToDataUrl(file);
       onChange({ dataUrl, name: file.name });
     },
-    [onChange, maxSizeMB]
+    [onChange, maxSizeMB, copy.sizeError]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -65,7 +72,7 @@ export default function ImageUploadBox({
             type="button"
             onClick={() => onChange(null)}
             className="absolute -top-1 -right-1 bg-white border border-gray-100 rounded-full p-1 shadow-lg hover:bg-red-50 hover:text-red-500 transition-all"
-            aria-label="Eliminar imagen"
+            aria-label={copy.remove}
           >
             <X className="w-4 h-4" />
           </button>
@@ -86,7 +93,7 @@ export default function ImageUploadBox({
           </div>
           <div className="text-center">
             <p className="text-[11px] font-black text-ink uppercase tracking-widest">
-              {isDragActive ? 'Suelta aquí' : 'Subir imagen'}
+              {isDragActive ? copy.drop : copy.upload}
             </p>
             {hint && <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter mt-1">{hint}</p>}
           </div>

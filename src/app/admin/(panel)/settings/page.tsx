@@ -32,8 +32,9 @@ const inputClass = 'w-full px-4 py-2.5 text-sm rounded-xl bg-gray-50 border bord
 const btnPrimary = 'px-5 py-2.5 rounded-xl bg-brand-900 text-white text-xs font-bold hover:bg-brand-900/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap';
 
 export default function SettingsPage() {
-  const { t } = useAdminLang();
+  const { t, lang } = useAdminLang();
   const s = t.settings;
+  const locale = lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-PE';
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -169,7 +170,7 @@ export default function SettingsPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setLanguagesFeedback({ type: 'error', msg: data.error ?? 'Could not save language settings.' });
+        setLanguagesFeedback({ type: 'error', msg: data.error ?? s.saveLanguagesError });
       } else {
         setEnabledLanguages({
           en: data.en ?? true,
@@ -179,10 +180,10 @@ export default function SettingsPage() {
         if (data.defaultLanguage && ['en', 'es', 'pt'].includes(data.defaultLanguage)) {
           setDefaultLanguage(data.defaultLanguage);
         }
-        setLanguagesFeedback({ type: 'success', msg: 'Language availability updated for all visitors.' });
+        setLanguagesFeedback({ type: 'success', msg: s.saveLanguagesSuccess });
       }
     } catch (err) {
-      setLanguagesFeedback({ type: 'error', msg: 'Could not save language settings.' });
+      setLanguagesFeedback({ type: 'error', msg: s.saveLanguagesError });
     } finally {
       setLanguagesSaving(false);
     }
@@ -231,7 +232,7 @@ export default function SettingsPage() {
                   suppressHydrationWarning
                 >
                   {u.last_sign_in_at
-                    ? new Date(u.last_sign_in_at).toLocaleDateString('es-PE', {
+                    ? new Date(u.last_sign_in_at).toLocaleDateString(locale, {
                         day: '2-digit',
                         month: 'short',
                         year: '2-digit',
@@ -329,20 +330,18 @@ export default function SettingsPage() {
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="flex items-center gap-2.5 px-5 py-4 border-b border-gray-100">
           <Globe className="w-4 h-4 text-gray-400" />
-          <h2 className="text-sm font-bold text-gray-900">Languages</h2>
-          <span className="ml-auto text-xs text-gray-400">Landing & onboarding</span>
+          <h2 className="text-sm font-bold text-gray-900">{s.languagesTitle}</h2>
+          <span className="ml-auto text-xs text-gray-400">{s.languagesSubtitle}</span>
         </div>
 
         <form onSubmit={handleSaveLanguages} className="p-5 flex flex-col gap-4">
-          <p className="text-xs text-gray-500">
-            Choose which languages are available on the public pages. At least one language must remain enabled.
-          </p>
+          <p className="text-xs text-gray-500">{s.languagesInfo}</p>
 
           <div className="space-y-3">
             {([
-              { code: 'en', label: 'English', description: 'Default language when visitors open the site.' },
-              { code: 'es', label: 'Spanish', description: 'Spanish copy for landing and onboarding.' },
-              { code: 'pt', label: 'Portuguese', description: 'Portuguese copy for Brazilian suppliers.' },
+              { code: 'en', label: s.languageEnglish, description: s.defaultLanguageHint },
+              { code: 'es', label: s.languageSpanish, description: s.languagesSubtitle },
+              { code: 'pt', label: s.languagePortuguese, description: s.languagesSubtitle },
             ] as const).map((lang) => (
               <label
                 key={lang.code}
@@ -374,10 +373,8 @@ export default function SettingsPage() {
           </div>
 
           <div className="border-t border-gray-100 pt-4 mt-2">
-            <span className={labelClass}>Default language</span>
-            <p className="text-[11px] text-gray-500 mb-2">
-              Visitors without a preferred language will see the site in this language.
-            </p>
+            <span className={labelClass}>{s.defaultLanguageLabel}</span>
+            <p className="text-[11px] text-gray-500 mb-2">{s.defaultLanguageHint}</p>
             <div className="flex flex-wrap gap-2">
               {(['en', 'es', 'pt'] as const).map((code) => (
                 <button
@@ -396,7 +393,7 @@ export default function SettingsPage() {
                         : 'border-gray-200 text-gray-600 hover:border-gray-400',
                   )}
                 >
-                  {code === 'en' ? 'English' : code === 'es' ? 'Spanish' : 'Portuguese'}
+                  {code === 'en' ? s.languageEnglish : code === 'es' ? s.languageSpanish : s.languagePortuguese}
                 </button>
               ))}
             </div>
@@ -404,7 +401,7 @@ export default function SettingsPage() {
 
           <div className="flex justify-end">
             <button type="submit" disabled={languagesSaving} className={btnPrimary}>
-              {languagesSaving ? 'Saving…' : 'Save languages'}
+              {languagesSaving ? s.saving : s.saveLanguagesBtn}
             </button>
           </div>
 

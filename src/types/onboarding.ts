@@ -18,6 +18,28 @@ export interface ProductoSeleccionado {
   };
 }
 
+export interface Step4InterviewData {
+  produtosPrincipais: string[];
+  produtoAncora: string;
+  sazonalidade: 'yes' | 'no' | '';
+  janelaSazonal: string;
+  moqTipico: string;
+  faixaPreco: string;
+  unidadeVenda: string;
+  formatos: string;
+  tipoOperacao: string;
+  origemProduto: string;
+  capacidadeMensalLinha: string;
+  mercadosAtendidos: string;
+  incoterms: string;
+  leadTime: string;
+  docsCertsVenda: string;
+  condicoesMinimas: string;
+  diferenciais: string;
+  riscosRestricoes: string;
+  onboardingSummary: string;
+}
+
 export interface OnboardingState {
   idioma: 'en' | 'es' | 'pt';
   meta: {
@@ -38,11 +60,14 @@ export interface OnboardingState {
   };
   perfil: {
     categoria: Categoria | '';
+    categoriasSelecionadas: Categoria[];
+    outrasAtividades: string[];
     tagline: string;
     descripcion: string;
     anosFundacion: string;
     capacidadMensual: string;
     certificaciones: string[];
+    outrasCertificacoes: string[];
     logo: { dataUrl: string; name: string } | null;
     banner: { dataUrl: string; name: string } | null;
   };
@@ -57,6 +82,7 @@ export interface OnboardingState {
   catalogo: {
     productosSeleccionados: ProductoSeleccionado[];
     productosPersonalizados: ProductoSeleccionado[];
+    entrevista: Step4InterviewData;
   };
   activacion: {
     enviado: boolean;
@@ -92,17 +118,21 @@ export interface StoreConfig {
   };
   tienda: {
     categoria: Categoria | '';
+    categoriasSelecionadas: Categoria[];
+    outrasAtividades: string[];
     tagline: string;
     descripcion: string;
     anosFundacion: string;
     capacidadMensual: string;
     certificaciones: string[];
+    outrasCertificacoes: string[];
     colorPrimario: string;
     logo: { dataUrl: string; name: string } | null;
     banner: { dataUrl: string; name: string } | null;
   };
   catalogo: {
     totalProductos: number;
+    entrevista: Step4InterviewData;
     productos: Array<{
       id: string;
       nombre: string;

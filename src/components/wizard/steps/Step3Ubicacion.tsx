@@ -17,94 +17,94 @@ interface Step3Props {
 }
 
 export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
-  const { ubicacion, registro, idioma, setUbicacion, setRegistro, setIdioma } = useOnboardingStore();
+  const { ubicacion: location, registro: registration, idioma: language, setUbicacion: setLocation, setRegistro: setRegistration } = useOnboardingStore();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const pais = registro.pais || 'Peru';
+  const country = registration.pais || 'Peru';
 
   // Derive level 1 options by country
   const nivel1Options = (() => {
-    if (pais === 'Brasil') return ESTADOS_BRASIL;
-    if (pais === 'Colombia') return DEPARTAMENTOS_COLOMBIA;
-    if (pais === 'Ecuador') return PROVINCIAS_ECUADOR;
+    if (country === 'Brasil') return ESTADOS_BRASIL;
+    if (country === 'Colombia') return DEPARTAMENTOS_COLOMBIA;
+    if (country === 'Ecuador') return PROVINCIAS_ECUADOR;
     return DEPARTAMENTOS; // Peru
   })();
 
   // Derive level 2 options by country + selected level 1
   const nivel2Options = (() => {
-    if (!ubicacion.departamento) return [];
-    if (pais === 'Brasil') return MUNICIPIOS_BRASIL[ubicacion.departamento] ?? [];
-    if (pais === 'Colombia') return MUNICIPIOS_COLOMBIA[ubicacion.departamento] ?? [];
-    if (pais === 'Ecuador') return CANTONES_ECUADOR[ubicacion.departamento] ?? [];
-    return PROVINCIAS[ubicacion.departamento] ?? []; // Peru
+    if (!location.departamento) return [];
+    if (country === 'Brasil') return MUNICIPIOS_BRASIL[location.departamento] ?? [];
+    if (country === 'Colombia') return MUNICIPIOS_COLOMBIA[location.departamento] ?? [];
+    if (country === 'Ecuador') return CANTONES_ECUADOR[location.departamento] ?? [];
+    return PROVINCIAS[location.departamento] ?? []; // Peru
   })();
 
   // Derive level 3 options (Peru only)
-  const nivel3Options = pais === 'Peru' && ubicacion.departamento && ubicacion.provincia
-    ? (DISTRITOS[`${ubicacion.departamento}|${ubicacion.provincia}`] ?? [])
+  const nivel3Options = country === 'Peru' && location.departamento && location.provincia
+    ? (DISTRITOS[`${location.departamento}|${location.provincia}`] ?? [])
     : [];
 
-  const handlePaisChange = (nuevoPais: string) => {
-    setRegistro({ pais: nuevoPais });
+  const handleCountryChange = (newCountry: string) => {
+    setRegistration({ pais: newCountry });
     // idioma auto-set in store via setRegistro
-    setUbicacion({ departamento: '', provincia: '', distrito: '' });
+    setLocation({ departamento: '', provincia: '', distrito: '' });
     setErrors({});
   };
 
   const handleNivel1Change = (val: string) => {
-    setUbicacion({ departamento: val, provincia: '', distrito: '' });
+    setLocation({ departamento: val, provincia: '', distrito: '' });
   };
 
   const handleNivel2Change = (val: string) => {
-    if (pais === 'Peru') {
-      setUbicacion({ provincia: val, distrito: '' });
+    if (country === 'Peru') {
+      setLocation({ provincia: val, distrito: '' });
     } else {
       // For non-Peru countries, store in "provincia" field (level 2)
-      setUbicacion({ provincia: val });
+      setLocation({ provincia: val });
     }
   };
 
   // Labels helpers
   const nivel1Label = (() => {
-    if (pais === 'Brasil') return t('nivel1LabelBrasil', idioma);
-    if (pais === 'Ecuador') return t('nivel1LabelEcuador', idioma);
-    return t('nivel1LabelPeru', idioma); // Peru & Colombia share same label
+    if (country === 'Brasil') return t('nivel1LabelBrasil', language);
+    if (country === 'Ecuador') return t('nivel1LabelEcuador', language);
+    return t('nivel1LabelPeru', language); // Peru & Colombia share same label
   })();
 
   const nivel1Placeholder = (() => {
-    if (pais === 'Brasil') return t('nivel1PlaceholderBrasil', idioma);
-    if (pais === 'Colombia') return t('nivel1PlaceholderColombia', idioma);
-    if (pais === 'Ecuador') return t('nivel1PlaceholderEcuador', idioma);
-    return t('nivel1PlaceholderPeru', idioma);
+    if (country === 'Brasil') return t('nivel1PlaceholderBrasil', language);
+    if (country === 'Colombia') return t('nivel1PlaceholderColombia', language);
+    if (country === 'Ecuador') return t('nivel1PlaceholderEcuador', language);
+    return t('nivel1PlaceholderPeru', language);
   })();
 
   const nivel2Label = (() => {
-    if (pais === 'Brasil') return t('nivel2LabelBrasil', idioma);
-    if (pais === 'Colombia') return t('nivel2LabelColombia', idioma);
-    if (pais === 'Ecuador') return t('nivel2LabelEcuador', idioma);
-    return t('nivel2LabelPeru', idioma);
+    if (country === 'Brasil') return t('nivel2LabelBrasil', language);
+    if (country === 'Colombia') return t('nivel2LabelColombia', language);
+    if (country === 'Ecuador') return t('nivel2LabelEcuador', language);
+    return t('nivel2LabelPeru', language);
   })();
 
   const nivel2Placeholder = (() => {
-    if (!ubicacion.departamento) {
-      if (pais === 'Brasil') return t('nivel2PlaceholderPrimeiroBrasil', idioma);
-      if (pais === 'Colombia') return t('nivel2PlaceholderPrimeroColombia', idioma);
-      if (pais === 'Ecuador') return t('nivel2PlaceholderPrimeroEcuador', idioma);
-      return t('nivel2PlaceholderPrimero', idioma);
+    if (!location.departamento) {
+      if (country === 'Brasil') return t('nivel2PlaceholderPrimeiroBrasil', language);
+      if (country === 'Colombia') return t('nivel2PlaceholderPrimeroColombia', language);
+      if (country === 'Ecuador') return t('nivel2PlaceholderPrimeroEcuador', language);
+      return t('nivel2PlaceholderPrimero', language);
     }
-    if (pais === 'Brasil') return t('nivel2PlaceholderBrasil', idioma);
-    if (pais === 'Colombia') return t('nivel2PlaceholderColombia', idioma);
-    if (pais === 'Ecuador') return t('nivel2PlaceholderEcuador', idioma);
-    return t('nivel2PlaceholderPeru', idioma);
+    if (country === 'Brasil') return t('nivel2PlaceholderBrasil', language);
+    if (country === 'Colombia') return t('nivel2PlaceholderColombia', language);
+    if (country === 'Ecuador') return t('nivel2PlaceholderEcuador', language);
+    return t('nivel2PlaceholderPeru', language);
   })();
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!pais) newErrors.pais = t('errPais', idioma);
-    if (!ubicacion.departamento) newErrors.departamento = t('errNivel1', idioma);
-    if (!ubicacion.provincia) newErrors.provincia = t('errNivel2', idioma);
-    if (hasUbigeo(pais) && pais === 'Peru' && !ubicacion.distrito) newErrors.distrito = t('errNivel3', idioma);
-    if (!ubicacion.direccion || ubicacion.direccion.length < 5) newErrors.direccion = t('errDireccion', idioma);
+    if (!country) newErrors.pais = t('errPais', language);
+    if (!location.departamento) newErrors.departamento = t('errNivel1', language);
+    if (!location.provincia) newErrors.provincia = t('errNivel2', language);
+    if (hasUbigeo(country) && country === 'Peru' && !location.distrito) newErrors.distrito = t('errNivel3', language);
+    if (!location.direccion || location.direccion.length < 5) newErrors.direccion = t('errDireccion', language);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -114,6 +114,11 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
   };
 
   const labelClass = "text-[11px] font-black text-brand-900/50 uppercase tracking-[0.2em] ml-1 mb-1";
+  const optionalMark = (
+    <span className="text-[10px] text-gray-400 italic normal-case tracking-normal font-semibold whitespace-nowrap leading-none relative -top-px">
+      * {t('opcional', language).replace(/[()]/g, '')}
+    </span>
+  );
   
   const selectClass = (error?: string) =>
     clsx(
@@ -130,28 +135,28 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
   return (
     <div className="flex flex-col gap-6">
       <div className="text-center sm:text-left">
-        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">{t('paso3Titulo', idioma)}</p>
+        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">{t('paso3Titulo', language)}</p>
       </div>
 
       {/* País */}
       <div className="flex flex-col">
-        <label className={labelClass}>{t('paisLabel', idioma)}</label>
+        <label className={labelClass}>{t('paisLabel', language)}</label>
         <CountryCombobox
-          value={pais}
-          onChange={handlePaisChange}
-          placeholder={t('paisPlaceholder', idioma)}
+          value={country}
+          onChange={handleCountryChange}
+          placeholder={t('paisPlaceholder', language)}
           error={!!errors.pais}
         />
         {errors.pais && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.pais}</p>}
       </div>
 
-      {hasUbigeo(pais) ? (
+      {hasUbigeo(country) ? (
         <>
           {/* Nivel 1: Departamento / Estado / Provincia */}
           <div className="flex flex-col">
             <label className={labelClass}>{nivel1Label}</label>
             <select
-              value={ubicacion.departamento}
+              value={location.departamento}
               onChange={(e) => handleNivel1Change(e.target.value)}
               className={selectClass(errors.departamento)}
             >
@@ -167,10 +172,10 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
           <div className="flex flex-col">
             <label className={labelClass}>{nivel2Label}</label>
             <select
-              value={ubicacion.provincia}
+              value={location.provincia}
               onChange={(e) => handleNivel2Change(e.target.value)}
               className={selectClass(errors.provincia)}
-              disabled={!ubicacion.departamento}
+              disabled={!location.departamento}
             >
               <option value="">{nivel2Placeholder}</option>
               {nivel2Options.map((p) => (
@@ -181,21 +186,21 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
           </div>
 
           {/* Nivel 3: Distrito (Peru only) */}
-          {pais === 'Peru' && (
+          {country === 'Peru' && (
             <div className="flex flex-col">
-              <label className={labelClass}>{t('nivel3LabelPeru', idioma)}</label>
+              <label className={labelClass}>{t('nivel3LabelPeru', language)}</label>
               <select
-                value={ubicacion.distrito}
-                onChange={(e) => setUbicacion({ distrito: e.target.value })}
+                value={location.distrito}
+                onChange={(e) => setLocation({ distrito: e.target.value })}
                 className={selectClass(errors.distrito)}
-                disabled={!ubicacion.provincia}
+                disabled={!location.provincia}
               >
                 <option value="">
-                  {ubicacion.provincia
+                  {location.provincia
                     ? nivel3Options.length > 0
-                      ? t('nivel3PlaceholderPeru', idioma)
-                      : t('nivel3PlaceholderVacio', idioma)
-                    : t('nivel2PlaceholderPrimero', idioma)}
+                      ? t('nivel3PlaceholderPeru', language)
+                      : t('nivel3PlaceholderVacio', language)
+                    : t('nivel2PlaceholderPrimero', language)}
                 </option>
                 {nivel3Options.map((d) => (
                   <option key={d} value={d}>{d}</option>
@@ -206,20 +211,20 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
                   <p className="ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider mb-2">{errors.distrito}</p>
                   <input
                     type="text"
-                    placeholder={t('nivel3EscribePeru', idioma)}
-                    value={ubicacion.distrito}
-                    onChange={(e) => setUbicacion({ distrito: e.target.value })}
+                    placeholder={t('nivel3EscribePeru', language)}
+                    value={location.distrito}
+                    onChange={(e) => setLocation({ distrito: e.target.value })}
                     className={inputClass(errors.distrito)}
                   />
                 </div>
               )}
-              {!errors.distrito && nivel3Options.length === 0 && ubicacion.provincia && (
+              {!errors.distrito && nivel3Options.length === 0 && location.provincia && (
                 <div className="mt-2">
                   <input
                     type="text"
-                    placeholder={t('nivel3EscribePeru', idioma)}
-                    value={ubicacion.distrito}
-                    onChange={(e) => setUbicacion({ distrito: e.target.value })}
+                    placeholder={t('nivel3EscribePeru', language)}
+                    value={location.distrito}
+                    onChange={(e) => setLocation({ distrito: e.target.value })}
                     className={inputClass(undefined)}
                   />
                 </div>
@@ -232,27 +237,27 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
           {/* Fallback para países sin datos de ubigeo: campos de texto libre */}
           <div className="flex flex-col">
             <label className={labelClass}>
-              {idioma === 'en' ? 'State / Region *' : idioma === 'pt' ? 'Estado / Região *' : 'Región / Estado *'}
+              {language === 'en' ? 'State / Region *' : language === 'pt' ? 'Estado / Região *' : 'Región / Estado *'}
             </label>
             <input
               type="text"
-              value={ubicacion.departamento}
-              onChange={(e) => setUbicacion({ departamento: e.target.value, provincia: '', distrito: '' })}
+              value={location.departamento}
+              onChange={(e) => setLocation({ departamento: e.target.value, provincia: '', distrito: '' })}
               className={inputClass(errors.departamento)}
-              placeholder={idioma === 'en' ? 'E.g.: California' : idioma === 'pt' ? 'Ex: São Paulo' : 'Ej: Bavaria'}
+              placeholder={language === 'en' ? 'E.g.: California' : language === 'pt' ? 'Ex: São Paulo' : 'Ej: Bavaria'}
             />
             {errors.departamento && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.departamento}</p>}
           </div>
           <div className="flex flex-col">
             <label className={labelClass}>
-              {idioma === 'en' ? 'City *' : idioma === 'pt' ? 'Cidade *' : 'Ciudad *'}
+              {language === 'en' ? 'City *' : language === 'pt' ? 'Cidade *' : 'Ciudad *'}
             </label>
             <input
               type="text"
-              value={ubicacion.provincia}
-              onChange={(e) => setUbicacion({ provincia: e.target.value })}
+              value={location.provincia}
+              onChange={(e) => setLocation({ provincia: e.target.value })}
               className={inputClass(errors.provincia)}
-              placeholder={idioma === 'en' ? 'E.g.: Los Angeles' : idioma === 'pt' ? 'Ex: Campinas' : 'Ej: Múnich'}
+              placeholder={language === 'en' ? 'E.g.: Los Angeles' : language === 'pt' ? 'Ex: Campinas' : 'Ej: Múnich'}
             />
             {errors.provincia && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.provincia}</p>}
           </div>
@@ -261,42 +266,42 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
 
       {/* Dirección */}
       <div className="flex flex-col">
-        <label className={labelClass}>{t('direccionLabel', idioma)}</label>
+        <label className={labelClass}>{t('direccionLabel', language)}</label>
         <input
           type="text"
-          value={ubicacion.direccion}
-          onChange={(e) => setUbicacion({ direccion: e.target.value })}
+          value={location.direccion}
+          onChange={(e) => setLocation({ direccion: e.target.value })}
           className={inputClass(errors.direccion)}
-          placeholder={t('direccionPlaceholder', idioma)}
+          placeholder={t('direccionPlaceholder', language)}
         />
         {errors.direccion && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.direccion}</p>}
       </div>
 
       {/* Referencia */}
       <div className="flex flex-col">
-        <label className={labelClass}>
-          {t('referenciaLabel', idioma)} <span className="opacity-50 font-normal lowercase tracking-normal">({t('referenciaOpcional', idioma)})</span>
+        <label className={clsx(labelClass, 'inline-flex items-baseline gap-1')}>
+          <span>{t('referenciaLabel', language)}</span>{optionalMark}
         </label>
         <input
           type="text"
-          value={ubicacion.referencia}
-          onChange={(e) => setUbicacion({ referencia: e.target.value })}
+          value={location.referencia}
+          onChange={(e) => setLocation({ referencia: e.target.value })}
           className={inputClass(undefined)}
-          placeholder={t('referenciaPlaceholder', idioma)}
+          placeholder={t('referenciaPlaceholder', language)}
         />
       </div>
 
       {/* Código postal */}
       <div className="flex flex-col">
-        <label className={labelClass}>
-          {t('codigoPostalLabel', idioma)} <span className="opacity-50 font-normal lowercase tracking-normal">({t('referenciaOpcional', idioma)})</span>
+        <label className={clsx(labelClass, 'inline-flex items-baseline gap-1')}>
+          <span>{t('codigoPostalLabel', language)}</span>{optionalMark}
         </label>
         <input
           type="text"
-          value={ubicacion.codigoPostal}
-          onChange={(e) => setUbicacion({ codigoPostal: e.target.value })}
+          value={location.codigoPostal}
+          onChange={(e) => setLocation({ codigoPostal: e.target.value })}
           className={inputClass(undefined)}
-          placeholder={t('codigoPostalPlaceholder', idioma)}
+          placeholder={t('codigoPostalPlaceholder', language)}
         />
       </div>
 
@@ -307,14 +312,14 @@ export default function Step3Ubicacion({ onNext, onBack }: Step3Props) {
           onClick={onBack}
           className="px-6 py-3 rounded-full border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 hover:text-ink transition-all duration-300"
         >
-          {t('btnAtras', idioma)}
+          {t('btnAtras', language)}
         </button>
         <button
           type="button"
           onClick={handleNext}
           className="px-8 py-3 rounded-full bg-brand-900 text-white text-sm font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-brand-900/20"
         >
-          {t('btnSiguiente', idioma)}
+          {t('btnSiguiente', language)}
         </button>
       </div>
     </div>

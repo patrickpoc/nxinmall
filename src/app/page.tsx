@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Globe } from 'lucide-react';
+import { Globe, Menu, X } from 'lucide-react';
 import { COPY, LANG_OPTIONS, Lang } from '@/data/landing-content';
 import { useScrollReveal, useActiveSection } from '@/lib/hooks';
 import { Hero, Benefits, Logistics, Process, Buyers } from '@/components/landing/Sections';
@@ -16,6 +16,7 @@ function HomeContent() {
   
   const [lang, setLang] = useState<Lang>(initialLang);
   const [langOpen, setLangOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [enabledLanguages, setEnabledLanguages] = useState<Lang[]>(['en', 'es', 'pt']);
@@ -199,8 +200,27 @@ function HomeContent() {
                 {content.nav.cta}
               </span>
             </a>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              className="md:hidden inline-flex items-center justify-center rounded-full p-2 text-brand-900 hover:bg-brand-50"
+              aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-100 px-6 py-3 bg-white">
+            <div className="flex flex-col gap-2 text-sm font-semibold text-gray-700">
+              <a href="#benefits" onClick={(e) => { scrollToId('benefits')(e); setMobileMenuOpen(false); }} className="py-1">{content.nav.suppliers}</a>
+              <a href="#process" onClick={(e) => { scrollToId('process')(e); setMobileMenuOpen(false); }} className="py-1">{content.nav.process}</a>
+              <a href="#faq" onClick={(e) => { scrollToId('faq')(e); setMobileMenuOpen(false); }} className="py-1">{content.nav.faq}</a>
+              <a href="#request" onClick={(e) => { scrollToId('request')(e); setMobileMenuOpen(false); }} className="py-1 text-brand-900">{content.nav.cta}</a>
+            </div>
+          </div>
+        )}
         {!scrolled && <div className="h-px w-full bg-transparent" />}
       </header>
 

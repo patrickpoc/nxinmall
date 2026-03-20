@@ -14,7 +14,7 @@ import { t } from '@/lib/i18n';
 function OnboardingContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { meta, idioma, setCurrentStep, initSession } = useOnboardingStore();
+  const { meta, idioma: language, setCurrentStep, initSession } = useOnboardingStore();
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -42,11 +42,11 @@ function OnboardingContent() {
   const currentStep = meta.currentStep;
 
   const stepMeta = [
-    { title: t('step1Title', idioma), subtitle: t('step1Subtitle', idioma) },
-    { title: t('step2Title', idioma), subtitle: t('step2Subtitle', idioma) },
-    { title: t('step3Title', idioma), subtitle: t('step3Subtitle', idioma) },
-    { title: t('step4Title', idioma), subtitle: t('step4Subtitle', idioma) },
-    { title: t('step5Title', idioma), subtitle: t('step5Subtitle', idioma) },
+    { title: t('step1Title', language), subtitle: t('step1Subtitle', language) },
+    { title: t('step2Title', language), subtitle: t('step2Subtitle', language) },
+    { title: t('step3Title', language), subtitle: t('step3Subtitle', language) },
+    { title: t('step4Title', language), subtitle: t('step4Subtitle', language) },
+    { title: t('step5Title', language), subtitle: t('step5Subtitle', language) },
   ][currentStep - 1];
 
   const goNext = () => setCurrentStep(Math.min(currentStep + 1, 5));

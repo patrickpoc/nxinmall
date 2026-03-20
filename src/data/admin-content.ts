@@ -43,6 +43,14 @@ export const ADMIN_COPY: Record<AdminLang, {
     search: string; all: string; empty: string;
     cols: { company: string; contact: string; category: string; products: string; status: string; date: string; actions: string };
     footer: string;
+    viewProfile: string;
+    viewSummary: string;
+    profileDetailsTitle: string;
+    internalSummaryTitle: string;
+    sectionCompany: string;
+    sectionLocation: string;
+    sectionStore: string;
+    noData: string;
   };
   leadStatuses: Record<string, string>;
   onboardingStatuses: Record<string, string>;
@@ -62,6 +70,17 @@ export const ADMIN_COPY: Record<AdminLang, {
     createLabel: string; namePlaceholder: string; emailPlaceholder: string;
     passPlaceholder: string; createBtn: string; creating: string; errCreate: string;
     created: string;
+    languagesTitle: string;
+    languagesSubtitle: string;
+    languagesInfo: string;
+    defaultLanguageLabel: string;
+    defaultLanguageHint: string;
+    saveLanguagesBtn: string;
+    saveLanguagesSuccess: string;
+    saveLanguagesError: string;
+    languageEnglish: string;
+    languageSpanish: string;
+    languagePortuguese: string;
   };
   login: {
     title: string;
@@ -125,6 +144,14 @@ export const ADMIN_COPY: Record<AdminLang, {
       all: 'Todos', empty: 'Sin resultados para los filtros actuales.',
       cols: { company: 'Empresa', contact: 'Contacto', category: 'Categoría', products: 'Productos', status: 'Estado', date: 'Fecha', actions: 'Acciones' },
       footer: 'de',
+      viewProfile: 'Ver perfil',
+      viewSummary: 'Ver resumen',
+      profileDetailsTitle: 'Detalle completo del perfil',
+      internalSummaryTitle: 'Resumen interno de onboarding',
+      sectionCompany: 'Empresa y contacto',
+      sectionLocation: 'Ubicación',
+      sectionStore: 'Operación comercial',
+      noData: 'Sin información disponible',
     },
     leadStatuses: { nuevo: 'nuevo', contactado: 'contactado', onboarding: 'onboarding', completado: 'completado', descartado: 'descartado' },
     onboardingStatuses: { en_revision: 'En revisión', aprobado: 'Aprobado', rechazado: 'Rechazado' },
@@ -144,6 +171,17 @@ export const ADMIN_COPY: Record<AdminLang, {
       createLabel: 'Crear usuario', namePlaceholder: 'Nombre (opcional)', emailPlaceholder: 'Email *',
       passPlaceholder: 'Contraseña (mín. 8 caracteres) *', createBtn: 'Crear usuario', creating: 'Creando...', errCreate: 'Error al crear',
       created: 'Usuario {email} creado',
+      languagesTitle: 'Idiomas',
+      languagesSubtitle: 'Landing y onboarding',
+      languagesInfo: 'Elige qué idiomas estarán disponibles en las páginas públicas. Al menos un idioma debe permanecer activo.',
+      defaultLanguageLabel: 'Idioma predeterminado',
+      defaultLanguageHint: 'Los visitantes sin idioma preferido verán el sitio en este idioma.',
+      saveLanguagesBtn: 'Guardar idiomas',
+      saveLanguagesSuccess: 'La disponibilidad de idiomas fue actualizada para todos los visitantes.',
+      saveLanguagesError: 'No se pudieron guardar los idiomas.',
+      languageEnglish: 'Inglés',
+      languageSpanish: 'Español',
+      languagePortuguese: 'Portugués',
     },
     login: {
       title: 'Acceso admin',
@@ -207,6 +245,14 @@ export const ADMIN_COPY: Record<AdminLang, {
       all: 'All', empty: 'No results for the current filters.',
       cols: { company: 'Company', contact: 'Contact', category: 'Category', products: 'Products', status: 'Status', date: 'Date', actions: 'Actions' },
       footer: 'of',
+      viewProfile: 'View profile',
+      viewSummary: 'View summary',
+      profileDetailsTitle: 'Full profile details',
+      internalSummaryTitle: 'Internal onboarding summary',
+      sectionCompany: 'Company and contact',
+      sectionLocation: 'Location',
+      sectionStore: 'Commercial operation',
+      noData: 'No data available',
     },
     leadStatuses: { nuevo: 'new', contactado: 'contacted', onboarding: 'onboarding', completado: 'completed', descartado: 'discarded' },
     onboardingStatuses: { en_revision: 'Under review', aprobado: 'Approved', rechazado: 'Rejected' },
@@ -226,6 +272,17 @@ export const ADMIN_COPY: Record<AdminLang, {
       createLabel: 'Create user', namePlaceholder: 'Name (optional)', emailPlaceholder: 'Email *',
       passPlaceholder: 'Password (min. 8 characters) *', createBtn: 'Create user', creating: 'Creating...', errCreate: 'Error creating',
       created: 'User {email} created',
+      languagesTitle: 'Languages',
+      languagesSubtitle: 'Landing and onboarding',
+      languagesInfo: 'Choose which languages are available on public pages. At least one language must remain enabled.',
+      defaultLanguageLabel: 'Default language',
+      defaultLanguageHint: 'Visitors without a preferred language will see the site in this language.',
+      saveLanguagesBtn: 'Save languages',
+      saveLanguagesSuccess: 'Language availability has been updated for all visitors.',
+      saveLanguagesError: 'Could not save language settings.',
+      languageEnglish: 'English',
+      languageSpanish: 'Spanish',
+      languagePortuguese: 'Portuguese',
     },
     login: {
       title: 'Admin Access',
@@ -289,6 +346,14 @@ export const ADMIN_COPY: Record<AdminLang, {
       all: 'Todos', empty: 'Sem resultados para os filtros atuais.',
       cols: { company: 'Empresa', contact: 'Contato', category: 'Categoria', products: 'Produtos', status: 'Status', date: 'Data', actions: 'Ações' },
       footer: 'de',
+      viewProfile: 'Ver perfil',
+      viewSummary: 'Ver resumo',
+      profileDetailsTitle: 'Detalhes completos do perfil',
+      internalSummaryTitle: 'Resumo interno de onboarding',
+      sectionCompany: 'Empresa e contato',
+      sectionLocation: 'Localização',
+      sectionStore: 'Operação comercial',
+      noData: 'Sem informações disponíveis',
     },
     leadStatuses: { nuevo: 'novo', contactado: 'contactado', onboarding: 'onboarding', completado: 'concluído', descartado: 'descartado' },
     onboardingStatuses: { en_revision: 'Em revisão', aprobado: 'Aprovado', rechazado: 'Rejeitado' },
@@ -308,6 +373,17 @@ export const ADMIN_COPY: Record<AdminLang, {
       createLabel: 'Criar usuário', namePlaceholder: 'Nome (opcional)', emailPlaceholder: 'Email *',
       passPlaceholder: 'Senha (mín. 8 caracteres) *', createBtn: 'Criar usuário', creating: 'Criando...', errCreate: 'Erro ao criar',
       created: 'Usuário {email} criado',
+      languagesTitle: 'Idiomas',
+      languagesSubtitle: 'Landing e onboarding',
+      languagesInfo: 'Escolha quais idiomas estarão disponíveis nas páginas públicas. Pelo menos um idioma deve permanecer ativo.',
+      defaultLanguageLabel: 'Idioma padrão',
+      defaultLanguageHint: 'Visitantes sem preferência de idioma verão o site neste idioma.',
+      saveLanguagesBtn: 'Salvar idiomas',
+      saveLanguagesSuccess: 'A disponibilidade de idiomas foi atualizada para todos os visitantes.',
+      saveLanguagesError: 'Não foi possível salvar as configurações de idioma.',
+      languageEnglish: 'Inglês',
+      languageSpanish: 'Espanhol',
+      languagePortuguese: 'Português',
     },
     login: {
       title: 'Acesso admin',

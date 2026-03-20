@@ -35,11 +35,11 @@ export default function WizardShell({
   isLoading = false,
   hideNav = false,
 }: WizardShellProps) {
-  const { idioma, setIdioma } = useOnboardingStore();
+  const { idioma: language, setIdioma: setLanguage } = useOnboardingStore();
   const [langOpen, setLangOpen] = useState(false);
 
-  const defaultNext = idioma === 'en' ? 'Next' : idioma === 'pt' ? 'Próximo' : 'Siguiente';
-  const defaultBack = idioma === 'en' ? 'Back' : idioma === 'pt' ? 'Voltar' : 'Atrás';
+  const defaultNext = language === 'en' ? 'Next' : language === 'pt' ? 'Próximo' : 'Siguiente';
+  const defaultBack = language === 'en' ? 'Back' : language === 'pt' ? 'Voltar' : 'Atrás';
   const nextLabelResolved = nextLabel ?? defaultNext;
   const backLabelResolved = backLabel ?? defaultBack;
 
@@ -71,12 +71,12 @@ export default function WizardShell({
                       key={option.code}
                       type="button"
                       className={`w-full px-4 py-3 ${
-                        option.code === idioma
+                        option.code === language
                           ? 'bg-brand-50 text-brand-900'
                           : 'text-gray-500 hover:bg-brand-50 hover:text-brand-900'
                       } transition-colors`}
                       onClick={() => {
-                        setIdioma(option.code as 'en' | 'es' | 'pt');
+                        setLanguage(option.code as 'en' | 'es' | 'pt');
                         setLangOpen(false);
                       }}
                     >
@@ -90,8 +90,9 @@ export default function WizardShell({
             <div className="h-8 w-px bg-gray-100 mx-1" />
 
             <div className="flex flex-col items-end">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-900/40 leading-none mb-1">Onboarding</span>
-              <span className="text-xs font-bold text-gray-400 text-right">{t('stepLabel', idioma)} {currentStep} {t('stepOf', idioma)} 5</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-900/40 leading-none mb-1">{t('onboardingHeader', language)}</span>
+              <span className="text-xs font-bold text-gray-500 text-right">{t('stepLabel', language)} {currentStep} {t('stepOf', language)} 5</span>
+              <span className="text-[10px] text-gray-400">{t('estimatedTime', language)}</span>
             </div>
           </div>
         </div>
@@ -105,6 +106,7 @@ export default function WizardShell({
         <div className="mb-10 text-center sm:text-left">
           <h1 className="text-3xl sm:text-4xl font-black text-ink font-display leading-[1.1] mb-3">{title}</h1>
           {subtitle && <p className="text-gray-500 text-base sm:text-lg leading-relaxed">{subtitle}</p>}
+          <p className="text-xs text-gray-400 mt-3">{t('autosaveHint', language)}</p>
         </div>
 
         <div key={currentStep} className="bg-white rounded-[32px] border border-gray-100 p-6 sm:p-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.05)] animate-fade-in">
@@ -131,7 +133,7 @@ export default function WizardShell({
                 disabled={nextDisabled || isLoading}
                 className="px-8 py-3 rounded-full bg-brand-900 text-white text-sm font-bold hover:bg-brand-900/90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 transition-all duration-300 shadow-lg shadow-brand-900/20"
               >
-                {isLoading ? (idioma === 'en' ? 'Processing...' : idioma === 'pt' ? 'Processando...' : 'Procesando...') : nextLabelResolved}
+                {isLoading ? (language === 'en' ? 'Processing...' : language === 'pt' ? 'Processando...' : 'Procesando...') : nextLabelResolved}
               </button>
             )}
           </div>

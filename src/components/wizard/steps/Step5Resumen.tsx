@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, MapPin, Package, Award } from 'lucide-react';
+import { Building2, MapPin, FileText, Award } from 'lucide-react';
 import { useOnboardingStore } from '@/lib/store';
 import { CATEGORIAS } from '@/data/catalog';
 import { Categoria } from '@/types/onboarding';
@@ -12,6 +12,28 @@ interface Step5Props {
   onBack: () => void;
 }
 
+const DEFAULT_INTERVIEW = {
+  produtosPrincipais: [],
+  produtoAncora: '',
+  sazonalidade: '' as '' | 'yes' | 'no',
+  janelaSazonal: '',
+  moqTipico: '',
+  faixaPreco: '',
+  unidadeVenda: '',
+  formatos: '',
+  tipoOperacao: '',
+  origemProduto: '',
+  capacidadeMensalLinha: '',
+  mercadosAtendidos: '',
+  incoterms: '',
+  leadTime: '',
+  docsCertsVenda: '',
+  condicoesMinimas: '',
+  diferenciais: '',
+  riscosRestricoes: '',
+  onboardingSummary: '',
+};
+
 export default function Step5Resumen({ onBack }: Step5Props) {
   const store = useOnboardingStore();
   const router = useRouter();
@@ -20,6 +42,8 @@ export default function Step5Resumen({ onBack }: Step5Props) {
 
   const { registro, perfil, ubicacion, catalogo, setActivacion, idioma } = store;
   const catData = perfil.categoria ? CATEGORIAS[perfil.categoria as Categoria] : null;
+  const allCerts = [...perfil.certificaciones, ...(perfil.outrasCertificacoes ?? [])];
+  const entrevista = catalogo.entrevista ?? DEFAULT_INTERVIEW;
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -122,19 +146,18 @@ export default function Step5Resumen({ onBack }: Step5Props) {
           </div>
         </div>
 
-        {/* Products */}
+        {/* Interview */}
         <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-100/50 hover:bg-gray-100/50 transition-colors">
           <div className="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center shrink-0">
-            <Package className="w-5 h-5 text-brand-900" />
+            <FileText className="w-5 h-5 text-brand-900" />
           </div>
           <div>
-            <p className={labelClass}>{t('resumenCatalogoLabel', idioma)}</p>
+            <p className={labelClass}>{t('paso4SummaryTitle', idioma)}</p>
             <p className="text-sm font-bold text-ink leading-tight">
-              {catalogo.productosSeleccionados.length} {catalogo.productosSeleccionados.length !== 1 ? t('paso4SeleccionadosBadge', idioma) : t('paso4SeleccionadoBadge', idioma)}
+              {entrevista.produtoAncora || '-'}
             </p>
             <p className="text-xs text-gray-500 mt-1 font-medium italic">
-              {catalogo.productosSeleccionados.slice(0, 3).map((p) => p.nombre).join(', ')}
-              {catalogo.productosSeleccionados.length > 3 && ` +${catalogo.productosSeleccionados.length - 3} ${idioma === 'en' ? 'more' : idioma === 'es' ? 'más' : 'mais'}`}
+              {(entrevista.produtosPrincipais ?? []).slice(0, 3).join(', ') || t('paso4SummaryEmpty', idioma)}
             </p>
           </div>
         </div>
@@ -147,8 +170,8 @@ export default function Step5Resumen({ onBack }: Step5Props) {
           <div>
             <p className={labelClass}>{t('resumenCertificacionesLabel', idioma)}</p>
             <div className="flex flex-wrap gap-1.5 mt-1">
-              {perfil.certificaciones.length > 0 ? (
-                perfil.certificaciones.map((c) => (
+              {allCerts.length > 0 ? (
+                allCerts.map((c) => (
                   <span key={c} className="text-[9px] font-black uppercase tracking-widest bg-brand-900/10 text-brand-900 px-2.5 py-1 rounded-full border border-brand-900/10">
                     {c}
                   </span>
@@ -161,24 +184,10 @@ export default function Step5Resumen({ onBack }: Step5Props) {
         </div>
       </div>
 
-      {/* Products list detail */}
+      {/* Interview summary detail */}
       <div className="bg-gray-50/50 rounded-3xl p-6 border border-gray-100/50">
-        <h3 className="text-xs font-black text-brand-900/40 uppercase tracking-[0.2em] mb-4 ml-1">{t('resumenProductosTitulo', idioma)}</h3>
-        <div className="flex flex-col gap-3">
-          {catalogo.productosSeleccionados.map((p) => (
-            <div key={p.id} className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-gray-100/50 group hover:border-brand-500/20 transition-all">
-              <span className="text-sm font-bold text-ink">{p.nombre}</span>
-              <div className="flex items-center gap-3">
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full group-hover:bg-brand-50 group-hover:text-brand-900 transition-colors">
-                  MOQ {p.moq.valor} {p.moq.unidad}
-                </span>
-                <span className="text-xs font-black text-brand-900">
-                  USD {p.precio.min}–{p.precio.max}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+        <h3 className="text-xs font-black text-brand-900/40 uppercase tracking-[0.2em] mb-4 ml-1">{t('paso4SummaryGeneratedLabel', idioma)}</h3>
+        <p className="text-sm text-gray-700 whitespace-pre-line">{entrevista.onboardingSummary || t('paso4SummaryEmpty', idioma)}</p>
       </div>
 
       {/* Error */}

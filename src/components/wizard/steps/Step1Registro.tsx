@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { step1Schema, Step1Data } from '@/lib/schemas';
+import { createStep1Schema, Step1Data } from '@/lib/schemas';
 import { useOnboardingStore } from '@/lib/store';
 import PhoneInput from '@/components/ui/PhoneInput';
 import { t } from '@/lib/i18n';
@@ -11,50 +11,49 @@ import { getCountryPrefix } from '@/data/countries';
 import CountryCombobox from '@/components/ui/CountryCombobox';
 import clsx from 'clsx';
 
-const CARGOS = [
-  'Gerente General',
-  'Encargado de exportaciones',
-  'Jefe comercial',
-  'Dueño',
-  'Otro',
-];
-
 interface Step1Props {
   onNext: () => void;
 }
 
 export default function Step1Registro({ onNext }: Step1Props) {
-  const { registro, idioma, setRegistro } = useOnboardingStore();
+  const { registro: registration, idioma: language, setRegistro: setRegistration } = useOnboardingStore();
+  const step1Schema = useMemo(() => createStep1Schema(language), [language]);
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
+    trigger,
     formState: { errors },
   } = useForm<Step1Data>({
     resolver: zodResolver(step1Schema),
     defaultValues: {
-      nombre: registro.nombre,
-      empresa: registro.empresa,
-      ruc: registro.ruc,
-      email: registro.email,
-      whatsapp: registro.whatsapp,
-      cargo: registro.cargo,
-      pais: registro.pais || 'Peru',
+      nombre: registration.nombre,
+      empresa: registration.empresa,
+      ruc: registration.ruc,
+      email: registration.email,
+      whatsapp: registration.whatsapp,
+      cargo: registration.cargo,
+      pais: registration.pais || 'Peru',
     },
   });
 
   const whatsapp = watch('whatsapp');
-  const paisSeleccionado = watch('pais');
+  const selectedCountry = watch('pais');
 
   // Sync pais field when store changes (e.g. language toggle in header sets Brasil)
   useEffect(() => {
-    setValue('pais', registro.pais || 'Peru');
-  }, [registro.pais, setValue]);
+    setValue('pais', registration.pais || 'Peru');
+  }, [registration.pais, setValue]);
+
+  // Revalidate visible errors when language changes
+  useEffect(() => {
+    void trigger();
+  }, [language, trigger]);
 
   const onSubmit = (data: Step1Data) => {
-    setRegistro(data);
+    setRegistration(data);
     onNext();
   };
 
@@ -70,11 +69,11 @@ export default function Step1Registro({ onNext }: Step1Props) {
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
       {/* País (MOVIDO AL INICIO) */}
       <div className="flex flex-col sm:col-span-2">
-        <label className={labelClass}>{t('paisPaso1Label', idioma)}</label>
+        <label className={labelClass}>{t('paisPaso1Label', language)}</label>
         <CountryCombobox
-          value={paisSeleccionado}
+          value={selectedCountry}
           onChange={(country) => setValue('pais', country)}
-          placeholder={t('paisPaso1Label', idioma)}
+          placeholder={t('paisPaso1Label', language)}
           error={!!errors.pais}
         />
         {errors.pais && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.pais.message}</p>}
@@ -82,73 +81,73 @@ export default function Step1Registro({ onNext }: Step1Props) {
 
       {/* Nombre */}
       <div className="flex flex-col">
-        <label className={labelClass}>{t('nombreLabel', idioma)}</label>
+        <label className={labelClass}>{t('nombreLabel', language)}</label>
         <input
           {...register('nombre')}
           className={inputClass(errors.nombre)}
-          placeholder={t('nombrePlaceholder', idioma)}
+          placeholder={t('nombrePlaceholder', language)}
         />
         {errors.nombre && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.nombre.message}</p>}
       </div>
 
       {/* Empresa */}
       <div className="flex flex-col">
-        <label className={labelClass}>{t('empresaLabel', idioma)}</label>
+        <label className={labelClass}>{t('empresaLabel', language)}</label>
         <input
           {...register('empresa')}
           className={inputClass(errors.empresa)}
-          placeholder={t('empresaPlaceholder', idioma)}
+          placeholder={t('empresaPlaceholder', language)}
         />
         {errors.empresa && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.empresa.message}</p>}
       </div>
 
       {/* Email */}
       <div className="flex flex-col">
-        <label className={labelClass}>{t('emailLabel', idioma)}</label>
+        <label className={labelClass}>{t('emailLabel', language)}</label>
         <input
           {...register('email')}
           type="email"
           className={inputClass(errors.email)}
-          placeholder={t('emailPlaceholder', idioma)}
+          placeholder={t('emailPlaceholder', language)}
         />
         {errors.email && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.email.message}</p>}
       </div>
 
       {/* WhatsApp */}
       <div className="flex flex-col">
-        <label className={labelClass}>{t('whatsappLabel', idioma)}</label>
+        <label className={labelClass}>{t('whatsappLabel', language)}</label>
         <PhoneInput
           placeholder="999 999 999"
           value={whatsapp}
           onChange={(e) => setValue('whatsapp', e.target.value)}
           error={errors.whatsapp?.message}
-          defaultCountryCode={getCountryPrefix(paisSeleccionado)}
+          defaultCountryCode={getCountryPrefix(selectedCountry)}
         />
       </div>
 
       {/* RUC */}
       <div className="flex flex-col">
         <label className={labelClass}>
-          {t('rucLabel', idioma)} <span className="opacity-50 font-normal lowercase tracking-normal">{t('opcional', idioma)}</span>
+          {t('rucLabel', language)} <span className="opacity-50 font-normal lowercase tracking-normal">{t('opcional', language)}</span>
         </label>
         <input
           {...register('ruc')}
           className={inputClass(errors.ruc)}
-          placeholder={t('rucPlaceholder', idioma)}
+          placeholder={t('rucPlaceholder', language)}
           maxLength={11}
         />
         {errors.ruc && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.ruc.message}</p>}
       </div>
 
-      {/* Cargo */}
+      {/* Job title */}
       <div className="flex flex-col">
-        <label className={labelClass}>{t('cargoLabel', idioma)}</label>
-        <select {...register('cargo')} className={inputClass(errors.cargo)}>
-          <option value="">{t('cargoPlaceholder', idioma)}</option>
-          {CARGOS.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
+        <label className={labelClass}>{t('cargoLabel', language)}</label>
+        <input
+          {...register('cargo')}
+          className={inputClass(errors.cargo)}
+          placeholder={t('cargoPlaceholder', language)}
+          maxLength={50}
+        />
         {errors.cargo && <p className="mt-1 ml-1 text-[10px] font-bold text-red-500 uppercase tracking-wider">{errors.cargo.message}</p>}
       </div>
 
@@ -157,7 +156,7 @@ export default function Step1Registro({ onNext }: Step1Props) {
           type="submit"
           className="w-full py-4 rounded-full bg-brand-900 text-white font-bold text-base hover:bg-brand-900/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 shadow-lg shadow-brand-900/20"
         >
-          {t('btnContinuar', idioma)}
+          {t('btnContinuar', language)}
         </button>
       </div>
     </form>

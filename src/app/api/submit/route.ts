@@ -17,6 +17,8 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const state: OnboardingState = body;
+    // Server-side guard to keep DB consistent with UI validation
+    state.registro.cargo = String(state.registro.cargo ?? '').trim().slice(0, 50);
     const inviteToken: string | null = body.inviteToken ?? null;
     const storeJson = generateStoreJson(state);
 

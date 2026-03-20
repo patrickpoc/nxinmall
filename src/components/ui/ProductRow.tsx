@@ -196,6 +196,7 @@ export default function ProductRow({
                     })
                   }
                   previewVariant="square"
+                  locale={idioma}
                 />
               </div>
               {!selectedData?.imagen && (
