@@ -13,6 +13,40 @@ interface SectionProps {
   scrollToId?: (id: string) => (event: React.MouseEvent<HTMLElement>) => void;
 }
 
+export function TrustStrip({ content }: SectionProps) {
+  const trust = content?.trust;
+  if (!trust) return null;
+  const points: string[] = Array.isArray(trust.points) ? trust.points : [];
+
+  return (
+    <section className="bg-brand-50 py-8 sm:py-10">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="rounded-[30px] border border-brand-100 bg-white p-6 sm:p-8 shadow-[0_24px_50px_-42px_rgba(10,99,214,0.45)]">
+          <p className="text-xs uppercase tracking-[0.28em] text-brand-700 font-bold mb-3">
+            {trust.kicker}
+          </p>
+          <h2 className="text-[1.9rem] sm:text-[2.2rem] font-black text-ink font-display leading-[1.08]">
+            {trust.title}
+          </h2>
+          <p className="text-gray-600 mt-3 max-w-4xl leading-relaxed">
+            {trust.body}
+          </p>
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {points.map((point, index) => (
+              <div
+                key={`${point}-${index}`}
+                className="rounded-2xl border border-brand-100 bg-brand-50/55 px-4 py-3 text-sm text-brand-900 font-semibold"
+              >
+                {point}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function Hero({ content, scrollToId }: SectionProps) {
   const items = Array.isArray(content?.hero_images?.items) ? content.hero_images.items : [];
   const images: string[] = items

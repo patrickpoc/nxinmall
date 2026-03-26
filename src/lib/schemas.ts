@@ -128,6 +128,32 @@ export const step4Schema = z.object({
   productosSeleccionados: z.array(z.any()).min(1, 'Select at least one product'),
 });
 
+export const leadStep1Schema = z.object({
+  nombre: z.string().min(2, 'Name is required'),
+  empresa: z.string().min(2, 'Company is required'),
+  email: z.string().email('Invalid email'),
+  whatsapp: z.string().min(7, 'WhatsApp is required'),
+  pais: z.string().min(1, 'Country is required'),
+  categoria: z.string().min(1, 'Category is required'),
+  lead_type: z.enum(['supplier', 'buyer']).default('supplier'),
+  cta_source: z.string().optional(),
+  utm_source: z.string().optional(),
+  utm_medium: z.string().optional(),
+  utm_campaign: z.string().optional(),
+});
+
+export const leadStep2Schema = z.object({
+  lead_id: z.string().optional(),
+  email: z.string().email('Invalid email').optional(),
+  document_person_type: z.enum(['individual', 'company', '']).optional(),
+  document_type: z.enum(['cpf', 'cnpj', 'ruc', 'tax_id', '']).optional(),
+  document_number: z.string().optional(),
+  document_deferred: z.boolean().optional(),
+  cargo: z.string().max(80).optional(),
+  export_experience: z.enum(['none', 'occasional', 'recurring', '']).optional(),
+  primary_challenge: z.string().max(400).optional(),
+});
+
 export type Step1Data = z.infer<typeof step1Schema>;
 export type Step2Data = z.infer<typeof step2Schema>;
 export type Step3Data = z.infer<typeof step3Schema>;

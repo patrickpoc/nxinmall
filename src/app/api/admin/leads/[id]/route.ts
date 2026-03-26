@@ -9,7 +9,22 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const body = await req.json();
-  const { estado, nombre, empresa, email, whatsapp, pais, categoria, lead_type, document_person_type, document_type, document_number } = body as Record<string, string | null | undefined>;
+  const {
+    estado,
+    nombre,
+    empresa,
+    email,
+    whatsapp,
+    pais,
+    categoria,
+    lead_type,
+    document_person_type,
+    document_type,
+    document_number,
+    funnel_stage,
+    source_channel,
+    follow_up_notes,
+  } = body as Record<string, string | null | undefined>;
 
   if (estado && !ESTADOS_VALIDOS.includes(estado)) {
     return NextResponse.json({ error: 'Estado inválido' }, { status: 400 });
@@ -27,6 +42,10 @@ export async function PATCH(
   if (document_person_type !== undefined) updates.document_person_type = document_person_type;
   if (document_type !== undefined) updates.document_type = document_type;
   if (document_number !== undefined) updates.document_number = document_number;
+  if (funnel_stage !== undefined) updates.funnel_stage = funnel_stage;
+  if (source_channel !== undefined) updates.source_channel = source_channel;
+  if (follow_up_notes !== undefined) updates.follow_up_notes = follow_up_notes;
+  if (estado === 'contactado') updates.first_contact_at = new Date().toISOString();
 
   let { error } = await getSupabaseAdmin()
     .from('leads')
@@ -69,7 +88,7 @@ export async function DELETE(
     .from('leads')
     .delete()
     .eq('id', id)
-    .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token, lead_type, document_person_type, document_type, document_number, document_deferred')
+    .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token, lead_type, document_person_type, document_type, document_number, document_deferred, funnel_stage, source_channel, first_contact_at, step1_completed_at, step2_completed_at, follow_up_notes')
     .maybeSingle();
 
   if (deleteResult.error && /column .* does not exist/i.test(deleteResult.error.message)) {

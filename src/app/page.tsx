@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Globe, Menu, X } from 'lucide-react';
 import { COPY, LANG_OPTIONS, Lang } from '@/data/landing-content';
 import { useScrollReveal, useActiveSection } from '@/lib/hooks';
-import { Hero, Benefits, Logistics, Process, Buyers } from '@/components/landing/Sections';
+import { Hero, TrustStrip, Benefits, Logistics, Process, Buyers } from '@/components/landing/Sections';
 import { ContactForm, FaqSection } from '@/components/landing/ContactAndFaq';
 
 type LeadType = 'supplier' | 'buyer';
@@ -20,8 +20,6 @@ function HomeContent() {
   const [langOpen, setLangOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
   const [selectedLeadType, setSelectedLeadType] = useState<LeadType>('supplier');
   const [enabledLanguages, setEnabledLanguages] = useState<Lang[]>(['en', 'es', 'pt']);
   const [defaultLanguage, setDefaultLanguage] = useState<Lang>('en');
@@ -110,43 +108,6 @@ function HomeContent() {
     const target = document.getElementById(id);
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
-    setSubmitError(null);
-
-    try {
-      const res = await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, lead_type: selectedLeadType }),
-      });
-      if (res.ok) {
-        setSubmitted(true);
-        return;
-      }
-      const payload = await res.json().catch(() => ({}));
-      setSubmitError(
-        typeof payload?.error === 'string'
-          ? payload.error
-          : lang === 'pt'
-            ? 'Não foi possível enviar. Tente novamente.'
-            : lang === 'es'
-              ? 'No se pudo enviar. Inténtalo nuevamente.'
-              : 'Could not submit. Please try again.'
-      );
-    } catch {
-      setSubmitError(
-        lang === 'pt'
-          ? 'Não foi possível enviar. Tente novamente.'
-          : lang === 'es'
-            ? 'No se pudo enviar. Inténtalo nuevamente.'
-            : 'Could not submit. Please try again.'
-      );
     }
   };
 
@@ -254,37 +215,40 @@ function HomeContent() {
 
       <main>
         <Hero content={content} scrollToId={scrollToId} />
-        <div className="max-w-6xl mx-auto px-6 my-6 sm:my-8">
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedLeadType('supplier');
-                const target = document.getElementById('request');
-                target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-              className={`px-6 py-3 rounded-full text-sm font-black transition-all ${selectedLeadType === 'supplier' ? 'bg-brand-900 text-white shadow-lg shadow-brand-900/25' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'}`}
-            >
-              {lang === 'pt' ? 'Quero ser vendedor' : lang === 'es' ? 'Quiero ser vendedor' : 'I want to sell'}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedLeadType('buyer');
-                const target = document.getElementById('request');
-                target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-              className={`px-6 py-3 rounded-full text-sm font-black transition-all ${selectedLeadType === 'buyer' ? 'bg-brand-900 text-white shadow-lg shadow-brand-900/25' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'}`}
-            >
-              {lang === 'pt' ? 'Quero comprar no NxinMall' : lang === 'es' ? 'Quiero comprar en NxinMall' : 'I want to buy on NxinMall'}
-            </button>
+        <div className="bg-brand-50 py-6 sm:py-8">
+          <div className="max-w-6xl mx-auto px-6 flex justify-center">
+            <div className="w-full max-w-2xl flex flex-col sm:flex-row gap-3 justify-center rounded-[28px] border border-brand-100/80 bg-brand-50/80 p-3 sm:p-4 shadow-[0_18px_40px_-34px_rgba(10,99,214,0.5)]">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedLeadType('supplier');
+                  const target = document.getElementById('request');
+                  target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+                className={`px-6 py-3 rounded-full text-sm font-black transition-all ${selectedLeadType === 'supplier' ? 'bg-brand-900 text-white shadow-lg shadow-brand-900/25' : 'bg-white border border-brand-100 text-gray-700 hover:bg-white/95'}`}
+              >
+                {lang === 'pt' ? 'Quero vender globalmente' : lang === 'es' ? 'Quiero vender globalmente' : 'I want to sell globally'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedLeadType('buyer');
+                  const target = document.getElementById('request');
+                  target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+                className={`px-6 py-3 rounded-full text-sm font-black transition-all ${selectedLeadType === 'buyer' ? 'bg-brand-900 text-white shadow-lg shadow-brand-900/25' : 'bg-white border border-brand-100 text-gray-600 hover:bg-white/95'}`}
+              >
+                {lang === 'pt' ? 'Quero comprar no NxinMall' : lang === 'es' ? 'Quiero comprar en NxinMall' : 'I want to buy on NxinMall'}
+              </button>
+            </div>
           </div>
         </div>
+        <TrustStrip content={content} />
         <Benefits content={content} />
         <Logistics content={content} />
         <Process content={content} />
         <Buyers content={content} />
-        <ContactForm content={content} lang={lang} handleSubmit={handleSubmit} submitted={submitted} submitError={submitError} selectedLeadType={selectedLeadType} onLeadTypeChange={setSelectedLeadType} />
+        <ContactForm content={content} lang={lang} selectedLeadType={selectedLeadType} onLeadTypeChange={setSelectedLeadType} />
         <FaqSection content={content} />
       </main>
 

@@ -28,6 +28,12 @@ export type Lead = {
   document_type?: string | null;
   document_number?: string | null;
   document_deferred?: boolean | null;
+  funnel_stage?: 'started' | 'step1_completed' | 'step2_completed' | 'qualified' | 'contacted';
+  source_channel?: string | null;
+  first_contact_at?: string | null;
+  step1_completed_at?: string | null;
+  step2_completed_at?: string | null;
+  follow_up_notes?: string | null;
   estado: string;
   invite_token: string | null;
 };
@@ -92,6 +98,8 @@ function getOnboardingUrl(token: string | null, leadType?: 'supplier' | 'buyer')
 
 type SortKey = 'empresa' | 'pais' | 'estado' | 'created_at';
 type SortDir = 'asc' | 'desc';
+const FUNNEL_STAGES = ['started', 'step1_completed', 'step2_completed', 'qualified', 'contacted'] as const;
+type FunnelStage = typeof FUNNEL_STAGES[number];
 
 function SortIcon({ field, sortKey, sortDir }: { field: SortKey; sortKey: SortKey; sortDir: SortDir }) {
   if (sortKey !== field) return <ChevronsUpDown className="w-3 h-3 text-gray-300 ml-1 inline" />;
@@ -110,7 +118,9 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
   const [savingEdit, setSavingEdit] = useState(false);
   const [query, setQuery] = useState('');
   const [estadoFilter, setEstadoFilter] = useState<Estado | 'todos'>('todos');
+  const [stageFilter, setStageFilter] = useState<FunnelStage | 'all'>('all');
   const [paisFilter, setPaisFilter] = useState<'' | typeof PAISES_PRINCIPALES[number] | 'otros'>('');
+  const [sourceFilter, setSourceFilter] = useState<string>('all');
   const [sortKey, setSortKey] = useState<SortKey>('created_at');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
 
@@ -146,18 +156,20 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
       .filter((l) => {
         const matchQ = !q || [l.empresa, l.nombre, l.email, l.whatsapp].some((v) => v?.toLowerCase().includes(q));
         const matchE = estadoFilter === 'todos' || l.estado === estadoFilter;
+        const matchStage = stageFilter === 'all' || (l.funnel_stage ?? 'started') === stageFilter;
         const matchP = !paisFilter
           || (paisFilter === 'otros'
             ? !(PAISES_PRINCIPALES as readonly string[]).includes(l.pais)
             : l.pais === paisFilter);
-        return matchQ && matchE && matchP;
+        const matchSource = sourceFilter === 'all' || (l.source_channel ?? 'unknown') === sourceFilter;
+        return matchQ && matchE && matchP && matchStage && matchSource;
       })
       .sort((a, b) => {
         const va = a[sortKey] ?? '';
         const vb = b[sortKey] ?? '';
         return sortDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
       });
-  }, [rows, query, estadoFilter, paisFilter, sortKey, sortDir]);
+  }, [rows, query, estadoFilter, stageFilter, paisFilter, sourceFilter, sortKey, sortDir]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { todos: rows.length };
@@ -168,6 +180,9 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
   const total = rows.length;
   const nuevos = counts['nuevo'] ?? 0;
   const onboarding = counts['onboarding'] ?? 0;
+  const stage2Ready = rows.filter((l) => (l.funnel_stage ?? 'started') === 'step2_completed').length;
+  const overdueFirstContact = rows.filter((l) => !l.first_contact_at && (Date.now() - new Date(l.created_at).getTime()) > (24 * 60 * 60 * 1000)).length;
+  const sourceOptions = Array.from(new Set(rows.map((l) => l.source_channel ?? 'unknown'))).sort();
   const locale = lang === 'es' ? 'es-PE' : lang === 'pt' ? 'pt-BR' : 'en-US';
   const waTitle = lang === 'es'
     ? 'Enviar enlace de onboarding por WhatsApp'
@@ -246,6 +261,9 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
         document_person_type: next.document_person_type ?? null,
         document_type: next.document_type ?? null,
         document_number: next.document_number ?? null,
+        funnel_stage: next.funnel_stage ?? 'started',
+        source_channel: next.source_channel ?? null,
+        follow_up_notes: next.follow_up_notes ?? null,
       }),
     });
     setSavingEdit(false);
@@ -272,6 +290,10 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
           <span><span className="font-bold text-blue-700">{nuevos}</span> {t.leads.stats.new}</span>
           <span className="w-px h-3 bg-gray-200" />
           <span><span className="font-bold text-emerald-700">{onboarding}</span> {t.leads.stats.onboarding}</span>
+          <span className="w-px h-3 bg-gray-200" />
+          <span><span className="font-bold text-violet-700">{stage2Ready}</span> step2</span>
+          <span className="w-px h-3 bg-gray-200" />
+          <span><span className="font-bold text-rose-700">{overdueFirstContact}</span> SLA&gt;24h</span>
         </div>
       </div>
       {actionFeedback && (
@@ -314,6 +336,22 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
         </div>
 
         <select
+          value={stageFilter}
+          onChange={(e) => setStageFilter(e.target.value as typeof stageFilter)}
+          className="w-full sm:w-auto rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+        >
+          <option value="all">Funnel all</option>
+          {FUNNEL_STAGES.map((stage) => <option key={stage} value={stage}>{stage}</option>)}
+        </select>
+        <select
+          value={sourceFilter}
+          onChange={(e) => setSourceFilter(e.target.value)}
+          className="w-full sm:w-auto rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+        >
+          <option value="all">Source all</option>
+          {sourceOptions.map((source) => <option key={source} value={source}>{source}</option>)}
+        </select>
+        <select
           value={paisFilter}
           onChange={(e) => setPaisFilter(e.target.value as typeof paisFilter)}
           className="w-full sm:w-auto rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
@@ -341,6 +379,8 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                     {t.leads.cols.country} <SortIcon field="pais" sortKey={sortKey} sortDir={sortDir} />
                   </th>
                   <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>Type</th>
+                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>Funnel</th>
+                  <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>Source</th>
                   <th className={clsx(thClass, 'cursor-default hover:text-gray-500')}>{t.leads.cols.category}</th>
                   <th className={thClass} onClick={() => toggleSort('estado')}>
                     {t.leads.cols.status} <SortIcon field="estado" sortKey={sortKey} sortDir={sortDir} />
@@ -380,6 +420,14 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                         </span>
                       </td>
                       <td className={tdClass}>
+                        <span className="inline-block px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200 text-[11px] font-semibold text-slate-700">
+                          {lead.funnel_stage ?? 'started'}
+                        </span>
+                      </td>
+                      <td className={tdClass}>
+                        <span className="text-[11px] text-gray-500">{lead.source_channel ?? 'unknown'}</span>
+                      </td>
+                      <td className={tdClass}>
                         {lead.categoria
                           ? <span className="inline-block px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 border border-brand-200 text-[11px] font-semibold capitalize">{lead.categoria}</span>
                           : <span className="text-[11px] text-gray-300">—</span>
@@ -392,6 +440,9 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
                         <span className="text-[11px] text-gray-400 whitespace-nowrap">
                           {new Date(lead.created_at).toLocaleDateString(locale, { day: '2-digit', month: 'short', year: '2-digit' })}
                         </span>
+                        <p className={clsx('text-[10px] mt-0.5', lead.first_contact_at ? 'text-emerald-500' : 'text-rose-400')}>
+                          {lead.first_contact_at ? 'first contact ok' : 'pending first contact'}
+                        </p>
                       </td>
                       <td className={tdClass}>
                         <div className="flex flex-wrap items-center gap-1.5">
@@ -501,14 +552,23 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
               </button>
             </div>
             <div className="p-5 space-y-4">
-              {(['nombre', 'empresa', 'email', 'whatsapp', 'pais', 'categoria', 'lead_type', 'document_person_type', 'document_type', 'document_number'] as const).map((field) => (
+              {(['nombre', 'empresa', 'email', 'whatsapp', 'pais', 'categoria', 'lead_type', 'document_person_type', 'document_type', 'document_number', 'funnel_stage', 'source_channel', 'follow_up_notes'] as const).map((field) => (
                 <div key={field}>
                   <label className="block text-[11px] font-semibold uppercase tracking-wide text-gray-500 mb-1">{field}</label>
-                  <input
-                    value={(editingLead[field] ?? '') as string}
-                    onChange={(e) => setEditingLead((prev) => (prev ? { ...prev, [field]: e.target.value } : prev))}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20"
-                  />
+                  {field === 'follow_up_notes' ? (
+                    <textarea
+                      value={(editingLead[field] ?? '') as string}
+                      onChange={(e) => setEditingLead((prev) => (prev ? { ...prev, [field]: e.target.value } : prev))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                      rows={3}
+                    />
+                  ) : (
+                    <input
+                      value={(editingLead[field] ?? '') as string}
+                      onChange={(e) => setEditingLead((prev) => (prev ? { ...prev, [field]: e.target.value } : prev))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                    />
+                  )}
                 </div>
               ))}
               <button

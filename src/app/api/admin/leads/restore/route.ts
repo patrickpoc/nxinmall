@@ -24,12 +24,18 @@ export async function POST(req: NextRequest) {
       document_type: (lead.document_type as string | undefined) ?? null,
       document_number: (lead.document_number as string | undefined) ?? null,
       document_deferred: Boolean(lead.document_deferred),
+      funnel_stage: (lead.funnel_stage as string | undefined) ?? 'started',
+      source_channel: (lead.source_channel as string | undefined) ?? null,
+      first_contact_at: (lead.first_contact_at as string | undefined) ?? null,
+      step1_completed_at: (lead.step1_completed_at as string | undefined) ?? null,
+      step2_completed_at: (lead.step2_completed_at as string | undefined) ?? null,
+      follow_up_notes: (lead.follow_up_notes as string | undefined) ?? null,
     };
 
     let upsertResult = await getSupabaseAdmin()
       .from('leads')
       .upsert(payload, { onConflict: 'id' })
-      .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token, lead_type, document_person_type, document_type, document_number, document_deferred')
+      .select('id, created_at, nombre, empresa, email, whatsapp, pais, categoria, estado, invite_token, lead_type, document_person_type, document_type, document_number, document_deferred, funnel_stage, source_channel, first_contact_at, step1_completed_at, step2_completed_at, follow_up_notes')
       .single();
 
     if (upsertResult.error && /column .* does not exist/i.test(upsertResult.error.message)) {
